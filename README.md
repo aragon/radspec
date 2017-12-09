@@ -1,4 +1,4 @@
-# radspec
+# radspec 🤘
 
 Radspec is a safe alternative to Ethereum's natspec[[?](#aside-why-is-natspec-unsafe)].
 
