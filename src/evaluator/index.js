@@ -1,4 +1,16 @@
 const ABI = require('web3-eth-abi')
+const types = require('../types')
+
+class TypedValue {
+  constructor (type, value) {
+    this.type = type
+    this.value = value
+  }
+
+  toString () {
+    return this.value.toString()
+  }
+}
 
 class Evaluator {
   constructor (ast, bindings) {
@@ -14,34 +26,40 @@ class Evaluator {
 
   async evaluateNode (node) {
     if (node.type === 'ExpressionStatement') {
-      return await this.evaluateNodes(node.body)
+      return (await this.evaluateNodes(node.body)).join(' ')
     }
 
     if (node.type === 'MonologueStatement') {
-      return node.value
+      return new TypedValue('string', node.value)
     }
 
     if (node.type === 'StringLiteral') {
-      return node.value
+      return new TypedValue('string', node.value)
     }
 
     if (node.type === 'NumberLiteral') {
-      return node.value
+      return new TypedValue('int256', node.value)
     }
 
     if (node.type === 'BinaryExpression') {
       const left = await this.evaluateNode(node.left)
       const right = await this.evaluateNode(node.right)
 
+      // TODO Additionally check that the type is signed if subtracting
+      if (!types.isInteger(left.type)
+        || !types.isInteger(right.type)) {
+        this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer types "${left.type}" and "${right.type}"`)
+      }
+
       switch (node.operator) {
         case 'PLUS':
-          return left + right
+          return new TypedValue('int256', left.value + right.value)
         case 'MINUS':
-          return left - right
+          return new TypedValue('int256', left.value - right.value)
         case 'STAR':
-          return left * right
+          return new TypedValue('int256', left.value * right.value)
         case 'SLASH':
-          return left / right
+          return new TypedValue('int256', left.value / right.value)
         default:
           this.panic(`Undefined binary operator "${node.operator}"`)
       }
@@ -52,10 +70,11 @@ class Evaluator {
         this.panic(`Undefined binding "${node.value}"`)
       }
 
-      return this.bindings[node.value]
+      return new TypedValue('int256', this.bindings[node.value])
     }
 
     if (node.type === 'CallExpression') {
+      // TODO Add a check for number of return values (can only be 1 for now)
       const address = await this.evaluateNode(node.target)
       const inputs = await this.evaluateNodes(node.inputs)
       const outputs = await this.evaluateNode(node.outputs)
