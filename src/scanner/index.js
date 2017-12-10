@@ -258,6 +258,11 @@ class Scanner {
       this.scanToken()
     }
 
+    if (this.state === SCANNER_STATE.ERROR) {
+      console.error(`Errors encountered while scanning source`)
+      return
+    }
+
     return this.tokens
   }
 
