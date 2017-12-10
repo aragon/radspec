@@ -128,6 +128,11 @@ class Scanner {
     this.tokens = []
   }
 
+  /**
+   * Scans a single token from source and pushes it to `Scanner.tokens`.
+   *
+   * @return {void}
+   */
   scanToken () {
     const current = this.consume()
 
@@ -228,6 +233,13 @@ class Scanner {
     }
   }
 
+  /**
+   * Push a token to `Scanner.tokens`
+   *
+   * @param {string} The token type
+   * @param {value?} The token value
+   * @return {void}
+   */
   emitToken (type, value) {
     this.tokens.push({
       type,
@@ -235,16 +247,34 @@ class Scanner {
     })
   }
 
+  /**
+   * Get the current character and increase the cursor by 1
+   *
+   * @return {string}
+   */
   consume () {
     this.cursor++
 
     return this.source[this.cursor - 1]
   }
 
+  /**
+   * Get the character under the cursor without consuming it.
+   *
+   * @return {string}
+   */
   peek () {
     return this.source[this.cursor]
   }
 
+  /**
+   * Checks if the next character matches an expected one.
+   *
+   * Increases the cursor by 1 if the character matches.
+   *
+   * @param {string} The character to expect
+   * @return {bool} True if the next character matches, otherise false
+   */
   matches (expected) {
     if (this.eof()) return false
     if (this.peek() !== expected) {
@@ -255,6 +285,11 @@ class Scanner {
     return true
   }
 
+  /**
+   * Scans source and returns a list of tokens.
+   *
+   * @return {Array<Object>}
+   */
   async scan () {
     while (!this.eof()) {
       this.scanToken()
@@ -268,10 +303,22 @@ class Scanner {
     return this.tokens
   }
 
+  /**
+   * Returns true if we've reached the end of source, otherwise false.
+   *
+   * @return {bool}
+   */
   eof () {
     return this.cursor >= this.source.length
   }
 
+  /**
+   * Prints an error with location information to `stderr`
+   * and sets the scanner state to `SCANNER_STATE.ERROR`
+   *
+   * @param {string}
+   * @return {void}
+   */
   report (error) {
     this.state = SCANNER_STATE.ERROR
     console.error(
@@ -283,6 +330,12 @@ class Scanner {
 module.exports = {
   Scanner,
 
+  /**
+   * Scans source and returns a list of tokens.
+   *
+   * @param  {string}
+   * @return {Array<Object>}
+   */
   scan (source) {
     return new Scanner(source).scan()
   }
