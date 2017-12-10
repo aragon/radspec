@@ -236,8 +236,8 @@ class Scanner {
   /**
    * Push a token to `Scanner.tokens`
    *
-   * @param {string} The token type
-   * @param {value?} The token value
+   * @param {string} type The token type
+   * @param {string?} value The token value
    * @return {void}
    */
   emitToken (type, value) {
@@ -272,7 +272,7 @@ class Scanner {
    *
    * Increases the cursor by 1 if the character matches.
    *
-   * @param {string} The character to expect
+   * @param {string} expected The character to expect
    * @return {bool} True if the next character matches, otherise false
    */
   matches (expected) {
@@ -316,7 +316,7 @@ class Scanner {
    * Prints an error with location information to `stderr`
    * and sets the scanner state to `SCANNER_STATE.ERROR`
    *
-   * @param {string}
+   * @param {string} error
    * @return {void}
    */
   report (error) {
@@ -333,7 +333,7 @@ module.exports = {
   /**
    * Scans source and returns a list of tokens.
    *
-   * @param  {string}
+   * @param  {string} source
    * @return {Array<Object>}
    */
   scan (source) {
