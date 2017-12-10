@@ -145,6 +145,7 @@ class Scanner {
       if (!this.eof()) {
         this.isInExpression = true
         this.consume()
+        this.emitToken('TICK')
       }
       return
     }
@@ -152,6 +153,7 @@ class Scanner {
     switch (current) {
       case '`':
         this.isInExpression = false
+        this.emitToken('TICK')
         break
       case '(':
         this.emitToken('LEFT_PAREN')
