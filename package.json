@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "standard src",
-    "test": "tape 'test/**/*.js'"
+    "test": "nyc tape 'test/**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   "homepage": "https://github.com/aragon/radspec#readme",
   "devDependencies": {
     "coveralls": "^3.0.0",
+    "nyc": "^11.3.0",
     "standard": "^10.0.3",
     "tape": "^4.8.0"
   },
