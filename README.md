@@ -28,9 +28,8 @@ const call = {
   }
 }
 
-console.log(
-  radspec.evaluate(expression, call)
-) // => "Will multiply 122 by 7 and return 854.""
+radspec.evaluate(expression, call)
+  .then(console.log) // => "Will multiply 122 by 7 and return 854."
 ```
 
 ## Installation
