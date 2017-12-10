@@ -117,7 +117,15 @@ const TYPES = [
   'string'
 ]
 
+/**
+ * A scanner that identifies tokens in a source string.
+ */
 class Scanner {
+  /**
+   * Create a scanner.
+   *
+   * @param  {string} source
+   */
   constructor (source) {
     this.state = SCANNER_STATE.OK
     this.isInExpression = false
