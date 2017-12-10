@@ -4,6 +4,7 @@
   "description": "Radspec is a safe alternative to Ethereum's natspec",
   "main": "src/index.js",
   "scripts": {
+    "lint": "standard src",
     "test": "tape 'test/**/*.js'"
   },
   "repository": {
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/aragon/radspec#readme",
   "devDependencies": {
+    "standard": "^10.0.3",
     "tape": "^4.8.0"
   },
   "dependencies": {
