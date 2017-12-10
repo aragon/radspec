@@ -1,5 +1,8 @@
 # radspec 🤘
 
+[![Travis branch](https://img.shields.io/travis/aragon/radspec/master.svg?style=flat-square)](https://travis-ci.org/aragon/radspec)
+[![Coveralls github branch](https://img.shields.io/coveralls/github/aragon/radspec/master.svg?style=flat-square)](https://coveralls.io/github/aragon/radspec)
+
 Radspec is a safe alternative to Ethereum's natspec[[?](#aside-why-is-natspec-unsafe)].
 
 ## Features
