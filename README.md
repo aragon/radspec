@@ -32,6 +32,8 @@ radspec.evaluate(expression, call)
   .then(console.log) // => "Will multiply 122 by 7 and return 854."
 ```
 
+See more examples [here](examples).
+
 ## Installation
 
 Simply use your favorite Node.js package manager:
