@@ -2,6 +2,13 @@
 
 Radspec is a safe alternative to Ethereum's natspec[[?](#aside-why-is-natspec-unsafe)].
 
+## Features
+
+- **External calls**: Radspec can perform calls to external contracts
+- **Safe**: Radspec has no DOM access at all.
+- **Simple**: Even though radspec requires you to inline types for external calls, the syntax is very familiar and readable (it looks like Flow).
+- **Compatible**: Most natspec comments that already exist are also compatible ith Radspec.
+
 ## Quick Start
 
 ```js
