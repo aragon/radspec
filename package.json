@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/aragon/radspec#readme",
   "devDependencies": {
+    "coveralls": "^3.0.0",
     "standard": "^10.0.3",
     "tape": "^4.8.0"
   },
