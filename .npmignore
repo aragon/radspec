@@ -1,4 +1,5 @@
 /test
 /examples
 /docs
+/.nyc_output
 README.md
