@@ -1,0 +1,30 @@
+{
+  "name": "radspec",
+  "version": "0.0.0",
+  "description": "Radspec is a safe alternative to Ethereum's natspec",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "tape 'test/**/*.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aragon/radspec.git"
+  },
+  "keywords": [
+    "language",
+    "compiler",
+    "ethereum"
+  ],
+  "author": "Aragon Institution MTU <contact@aragon.one>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/aragon/radspec/issues"
+  },
+  "homepage": "https://github.com/aragon/radspec#readme",
+  "devDependencies": {
+    "tape": "^4.8.0"
+  },
+  "dependencies": {
+    "web3-eth-abi": "^1.0.0-beta.26"
+  }
+}
