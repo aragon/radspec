@@ -51,7 +51,7 @@ npm i radspec
 
 ## Documentation
 
-TBD.
+Documentation about radspec and the internals of radspec can be found [here](docs).
 
 ## Contributing
 
