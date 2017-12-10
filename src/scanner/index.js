@@ -1,121 +1,9 @@
+const types = require('../types')
+
 const SCANNER_STATE = {
   OK: 'OK',
   ERROR: 'ERROR'
 }
-
-// TODO Probably make this a bit easier on the eyes
-const TYPES = [
-  // Boolean
-  'bool',
-
-  // Signed integers
-  'int',
-  'int8',
-  'int16',
-  'int24',
-  'int32',
-  'int64',
-  'int72',
-  'int80',
-  'int88',
-  'int96',
-  'int104',
-  'int112',
-  'int120',
-  'int128',
-  'int136',
-  'int144',
-  'int152',
-  'int160',
-  'int168',
-  'int172',
-  'int180',
-  'int188',
-  'int196',
-  'int204',
-  'int212',
-  'int216',
-  'int224',
-  'int232',
-  'int240',
-  'int248',
-  'int256',
-
-  // Unsigned integers
-  'uint',
-  'uint8',
-  'uint16',
-  'uint24',
-  'uint32',
-  'uint64',
-  'uint72',
-  'uint80',
-  'uint88',
-  'uint96',
-  'uint104',
-  'uint112',
-  'uint120',
-  'uint128',
-  'uint136',
-  'uint144',
-  'uint152',
-  'uint160',
-  'uint168',
-  'uint172',
-  'uint180',
-  'uint188',
-  'uint196',
-  'uint204',
-  'uint212',
-  'uint216',
-  'uint224',
-  'uint232',
-  'uint240',
-  'uint248',
-  'uint256',
-
-  // TODO Fixed point types
-  // Address
-  'address',
-
-  // Bytes
-  'byte',
-  'bytes1',
-  'bytes2',
-  'bytes3',
-  'bytes4',
-  'bytes5',
-  'bytes6',
-  'bytes7',
-  'bytes8',
-  'bytes9',
-  'bytes10',
-  'bytes11',
-  'bytes12',
-  'bytes13',
-  'bytes14',
-  'bytes15',
-  'bytes16',
-  'bytes17',
-  'bytes18',
-  'bytes19',
-  'bytes20',
-  'bytes21',
-  'bytes22',
-  'bytes23',
-  'bytes24',
-  'bytes25',
-  'bytes26',
-  'bytes27',
-  'bytes28',
-  'bytes29',
-  'bytes30',
-  'bytes31',
-  'bytes32',
-
-  // Strings
-  'string'
-]
 
 /**
  * A scanner that identifies tokens in a source string.
@@ -221,7 +109,7 @@ class Scanner {
             identifier += this.consume()
           }
 
-          if (TYPES.includes(identifier)) {
+          if (types.isType(identifier)) {
             this.emitToken('TYPE', identifier)
           } else {
             this.emitToken('IDENTIFIER', identifier)
