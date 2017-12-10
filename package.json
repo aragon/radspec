@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "standard src",
-    "test": "nyc tape 'test/**/*.js'"
+    "test": "nyc ava"
   },
   "repository": {
     "type": "git",
@@ -23,10 +23,10 @@
   },
   "homepage": "https://github.com/aragon/radspec#readme",
   "devDependencies": {
+    "ava": "^0.24.0",
     "coveralls": "^3.0.0",
     "nyc": "^11.3.0",
-    "standard": "^10.0.3",
-    "tape": "^4.8.0"
+    "standard": "^10.0.3"
   },
   "dependencies": {
     "web3-eth-abi": "^1.0.0-beta.26"

@@ -13,6 +13,6 @@ module.exports = function (wallaby) {
       runner: 'node'
     },
 
-    testFramework: 'tape'
+    testFramework: 'ava'
   }
 }
