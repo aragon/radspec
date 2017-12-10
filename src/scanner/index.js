@@ -144,6 +144,12 @@ class Scanner {
   scanToken () {
     const current = this.consume()
 
+    if (current === '`') {
+      this.isInExpression = !this.isInExpression
+      this.emitToken('TICK')
+      return
+    }
+
     // We haven't hit a tick yet, so we're not in an expression
     if (!this.isInExpression) {
       // Scan until tick
@@ -152,22 +158,11 @@ class Scanner {
         monologue += this.consume()
       }
       this.emitToken('MONOLOGUE', monologue)
-
-      // If we did not hit EOF (i.e. we hit a tick) then we enter
-      // an expression and consume the tick
-      if (!this.eof()) {
-        this.isInExpression = true
-        this.consume()
-        this.emitToken('TICK')
-      }
       return
     }
 
     switch (current) {
-      case '`':
-        this.isInExpression = false
-        this.emitToken('TICK')
-        break
+      // Single character tokens
       case '(':
         this.emitToken('LEFT_PAREN')
         break
@@ -195,22 +190,29 @@ class Scanner {
       case '/':
         this.emitToken('SLASH')
         break
+
+      // One or two character tokens
       case '!':
-        this.emitToken(this.match('=') ? 'BANG_EQUAL' : 'BANG')
+        this.emitToken(this.matches('=') ? 'BANG_EQUAL' : 'BANG')
         break
       case '=':
-        this.emitToken(this.match('=') ? 'EQUAL_EQUAL' : 'EQUAL')
+        this.emitToken(this.matches('=') ? 'EQUAL_EQUAL' : 'EQUAL')
         break
       case '<':
-        this.emitToken(this.match('=') ? 'LESS_EQUAL' : 'LESS')
+        this.emitToken(this.matches('=') ? 'LESS_EQUAL' : 'LESS')
         break
       case '>':
-        this.emitToken(this.match('=') ? 'GREATER_EQUAL' : 'GREATER')
+        this.emitToken(this.matches('=') ? 'GREATER_EQUAL' : 'GREATER')
         break
+
+      // Whitespace
       case ' ':
       case '\r':
+      case '\n':
       case '\t':
         break
+
+      // Multi-character tokens
       default:
         const IDENTIFIERS = /[_a-z]/i
         if (IDENTIFIERS.test(current)) {
@@ -249,10 +251,10 @@ class Scanner {
    * @return {void}
    */
   emitToken (type, value) {
-    this.tokens.push({
-      type,
-      value
-    })
+    let token = { type }
+    if (value) token.value = value
+
+    this.tokens.push(token)
   }
 
   /**
