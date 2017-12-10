@@ -70,14 +70,15 @@ class Evaluator {
         this.panic(`Undefined binding "${node.value}"`)
       }
 
-      return new TypedValue('int256', this.bindings[node.value])
+      const binding = this.bindings[node.value]
+      return new TypedValue(binding.type, binding.value)
     }
 
     if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
       const address = await this.evaluateNode(node.target)
       const inputs = await this.evaluateNodes(node.inputs)
-      const outputs = await this.evaluateNode(node.outputs)
+      const outputs = node.outputs
       const call = ABI.encodeFunctionCall({
         name: node.callee,
         type: 'function',

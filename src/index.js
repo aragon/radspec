@@ -20,10 +20,19 @@ module.exports = {
       methodId === ABI.encodeFunctionSignature(abi))
     
     // Decode parameters
-    const parameters = ABI.decodeParameters(
+    const parameterValues = ABI.decodeParameters(
       method.inputs,
       '0x' + call.transaction.data.substr(10)
     )
+    const parameters = method.inputs.reduce((parameters, input) =>
+      Object.assign(
+        parameters, {
+          [input.name]: {
+            type: input.type,
+            value: parameterValues[input.name]
+          }
+        }
+      ), {})
 
     // Evaluate expression with bindings from
     // the transaction data
