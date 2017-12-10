@@ -96,6 +96,7 @@ class Parser {
 
       return {
         type: 'UnaryExpression',
+        operator,
         right: right
       }
     }

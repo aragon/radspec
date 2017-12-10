@@ -28,7 +28,7 @@ module.exports = {
   },
 
   isInteger (identifier) {
-    return this.types.int.isType(identifier)
-      || this.types.uint.isType(identifier)
+    return this.types.int.isType(identifier) ||
+      this.types.uint.isType(identifier)
   }
 }

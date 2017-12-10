@@ -46,8 +46,8 @@ class Evaluator {
       const right = await this.evaluateNode(node.right)
 
       // TODO Additionally check that the type is signed if subtracting
-      if (!types.isInteger(left.type)
-        || !types.isInteger(right.type)) {
+      if (!types.isInteger(left.type) ||
+        !types.isInteger(right.type)) {
         this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer types "${left.type}" and "${right.type}"`)
       }
 
@@ -84,7 +84,7 @@ class Evaluator {
 
         inputs: inputs.map((input) => input.type),
         outputs: outputs.map((output) => output.type)
-      }, call.inputs.map((input) => input.value))
+      }, inputs.map((input) => input.value))
 
       return `(${call} -> ${address})`
     }

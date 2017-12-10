@@ -16,8 +16,8 @@ module.exports = {
     
     // Find method ABI
     const method = call.abi.find((abi) =>
-      abi.type === 'function'
-        && methodId === ABI.encodeFunctionSignature(abi))
+      abi.type === 'function' &&
+      methodId === ABI.encodeFunctionSignature(abi))
     
     // Decode parameters
     const parameters = ABI.decodeParameters(
