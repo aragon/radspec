@@ -114,12 +114,27 @@ class Scanner {
       // Multi-character tokens
       default:
         const NUMBERS = /[0-9]/
+        const HEX = /[0-9a-f]/i
         if (NUMBERS.test(current)) {
           let number = current
-          while (NUMBERS.test(this.peek())) {
+          let type = 'NUMBER'
+
+          // Detect hexadecimals
+          if (current === '0' &&
+            this.peek() === 'x') {
+            type = 'HEXADECIMAL'
             number += this.consume()
+
+            while (HEX.test(this.peek())) {
+              number += this.consume()
+            }
+          } else {
+            while (NUMBERS.test(this.peek())) {
+              number += this.consume()
+            }
           }
-          this.emitToken('NUMBER', number)
+
+          this.emitToken(type, number)
           break
         }
 
