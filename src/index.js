@@ -9,7 +9,6 @@ const { evaluate } = require('./evaluator')
 module.exports = {
   scan,
   parse,
-  evaluate,
 
   /**
    * Evaluate a radspec expression with manual bindings.
