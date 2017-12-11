@@ -3,6 +3,12 @@
  */
 const types = require('../types')
 
+/**
+ * Enum for scanner state.
+ *
+ * @readonly
+ * @enum {string}
+ */
 const SCANNER_STATE = {
   OK: 'OK',
   ERROR: 'ERROR'

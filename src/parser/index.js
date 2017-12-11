@@ -1,10 +1,32 @@
 /**
+ * @module radspec/parser
+ */
+
+/**
  * A token.
  * @typedef {Object} Token
  * @property {string} type The token type
  * @property {*?} value The value of the token
  */
 
+/**
+ * An AST node.
+ * @typedef {Object} Node
+ * @property {string} type The node type
+ */
+/**
+ * An AST.
+ * @typedef {Object} AST
+ * @property {string} type
+ * @property {Array<Node>} body The AST nodes
+ */
+
+/**
+ * Enum for parser state.
+ *
+ * @readonly
+ * @enum {string}
+ */
 const PARSER_STATE = {
   OK: 'OK',
   ERROR: 'ERROR'
@@ -76,6 +98,11 @@ class Parser {
     return false
   }
 
+  /**
+   * Try to parse comparison operators.
+   *
+   * @return {Node}
+   */
   comparison () {
     let node = this.addition()
 
@@ -93,6 +120,11 @@ class Parser {
     return node
   }
 
+  /**
+   * Try to parse arithmetic operators.
+   *
+   * @return {Node}
+   */
   addition () {
     let node = this.multiplication()
 
@@ -110,6 +142,11 @@ class Parser {
     return node
   }
 
+  /**
+   * Try to parse binary operators.
+   *
+   * @return {Node}
+   */
   multiplication () {
     let node = this.unary()
 
@@ -128,6 +165,11 @@ class Parser {
     return node
   }
 
+  /**
+   * Try to parse unary operators.
+   *
+   * @return {Node}
+   */
   unary () {
     if (this.matches('BANG', 'MINUS')) {
       let operator = this.previous().type
@@ -143,6 +185,11 @@ class Parser {
     return this.identifier()
   }
 
+  /**
+   * Try to parse identifiers and call expressions.
+   *
+   * @return {Node}
+   */
   identifier () {
     if (this.matches('IDENTIFIER')) {
       let node = {
@@ -202,6 +249,11 @@ class Parser {
     return this.primary()
   }
 
+  /**
+   * Try to parse primaries (literals).
+   *
+   * @return {Node}
+   */
   primary () {
     if (this.matches('NUMBER', 'STRING')) {
       let type = this.previous().type === 'NUMBER'
@@ -218,6 +270,11 @@ class Parser {
     this.cursor++
   }
 
+  /**
+   * Try to parse a type.
+   *
+   * @return {string} The type
+   */
   type () {
     if (!this.matches('COLON') &&
       this.peek().type !== 'TYPE') {
@@ -228,6 +285,12 @@ class Parser {
     return this.consume().value
   }
 
+  /**
+   * Walk all possible paths and try to parse a single node
+   * from the list of tokens.
+   *
+   * @return {Node}
+   */
   walk () {
     let token = this.peek()
 
@@ -265,7 +328,7 @@ class Parser {
   /**
    * Walks the token list and returns an AST.
    *
-   * @return {Object}
+   * @return {AST} The AST
    */
   async parse () {
     let ast = {
@@ -312,6 +375,13 @@ class Parser {
 module.exports = {
   Parser,
 
+  /**
+   * Walks token list and returns an AST.
+   *
+   * @memberof radspec/parser
+   * @param  {Array<Token>} tokens
+   * @return {AST} The AST
+   */
   parse (tokens) {
     return new Parser(tokens).parse()
   }
