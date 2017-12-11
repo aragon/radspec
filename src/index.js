@@ -4,6 +4,7 @@
 const ABI = require('web3-eth-abi')
 const { scan } = require('./scanner')
 const { parse } = require('./parser')
+const { evaluate } = require('./evaluator')
 
 module.exports = {
   scan,
@@ -68,12 +69,12 @@ module.exports = {
   evaluate (source, call) {
     // Get method ID
     const methodId = call.transaction.data.substr(0, 10)
-    
+
     // Find method ABI
     const method = call.abi.find((abi) =>
       abi.type === 'function' &&
       methodId === ABI.encodeFunctionSignature(abi))
-    
+
     // Decode parameters
     const parameterValues = ABI.decodeParameters(
       method.inputs,
