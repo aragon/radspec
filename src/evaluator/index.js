@@ -48,6 +48,15 @@ class Evaluator {
       return new TypedValue('int256', node.value)
     }
 
+    if (node.type === 'BytesLiteral') {
+      const length = (node.value.length - 2) / 2
+      if (length > 32) {
+        this.panic('Byte literal represents more than 32 bytes')
+      }
+
+      return new TypedValue(`bytes${length}`, node.value)
+    }
+
     if (node.type === 'BinaryExpression') {
       const left = await this.evaluateNode(node.left)
       const right = await this.evaluateNode(node.right)
@@ -83,6 +92,7 @@ class Evaluator {
 
     if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
+      // TODO Check that target is actually an address
       const target = await this.evaluateNode(node.target)
       const inputs = await this.evaluateNodes(node.inputs)
       const outputs = node.outputs
