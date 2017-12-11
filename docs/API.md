@@ -61,6 +61,36 @@ Evaluate a radspec expression (`source`) for a transaction (`call`)
         -   `call.transaction.to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The destination address for this transaction
         -   `call.transaction.data` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The transaction data
 
+**Examples**
+
+```javascript
+const radspec = require('radspec')
+
+const expression = 'Will multiply `a` by 7 and return `a * 7`.'
+const call = {
+  abi: [{
+    name: 'multiply',
+    constant: false,
+    type: 'function',
+    inputs: [{
+      name: 'a',
+      type: 'uint256'
+    }],
+    outputs: [{
+      name: 'd',
+      type: 'uint256'
+    }]
+  }],
+  transaction: {
+    to: '0x8521742d3f456bd237e312d6e30724960f72517a',
+    data: '0xc6888fa1000000000000000000000000000000000000000000000000000000000000007a'
+  }
+}
+
+radspec.evaluate(expression, call)
+  .then(console.log) // => "Will multiply 122 by 7 and return 854."
+```
+
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** The result of the evaluation
 
 ## Scanner
