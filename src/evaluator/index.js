@@ -92,10 +92,14 @@ class Evaluator {
 
     if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
-      // TODO Check that target is actually an address
       const target = await this.evaluateNode(node.target)
       const inputs = await this.evaluateNodes(node.inputs)
       const outputs = node.outputs
+
+      if (target.type !== 'bytes20' &&
+        target.type !== 'address') {
+        this.panic('Target of call expression was not an address')
+      }
 
       const call = ABI.encodeFunctionCall({
         name: node.callee,
