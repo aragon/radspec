@@ -7,13 +7,15 @@ const SCANNER_STATE = {
 
 /**
  * A scanner that identifies tokens in a source string.
+ *
+ * @class Scanner
+ * @param {string} source The source code
+ * @property {string} state The state of the parser (`OK` or `ERROR`)
+ * @property {string} source The source code
+ * @property {number} cursor
+ * @property {Array<Token>} tokens The currently identified tokens
  */
 class Scanner {
-  /**
-   * Create a scanner.
-   *
-   * @param  {string} source
-   */
   constructor (source) {
     this.state = SCANNER_STATE.OK
     this.isInExpression = false
@@ -171,7 +173,7 @@ class Scanner {
    * Increases the cursor by 1 if the character matches.
    *
    * @param {string} expected The character to expect
-   * @return {bool} True if the next character matches, otherise false
+   * @return {boolean} True if the next character matches, otherise false
    */
   matches (expected) {
     if (this.eof()) return false
@@ -186,7 +188,7 @@ class Scanner {
   /**
    * Scans source and returns a list of tokens.
    *
-   * @return {Array<Object>}
+   * @return {Array<Token>}
    */
   async scan () {
     while (!this.eof()) {
@@ -204,7 +206,7 @@ class Scanner {
   /**
    * Returns true if we've reached the end of source, otherwise false.
    *
-   * @return {bool}
+   * @return {boolean}
    */
   eof () {
     return this.cursor >= this.source.length
@@ -232,7 +234,7 @@ module.exports = {
    * Scans source and returns a list of tokens.
    *
    * @param  {string} source
-   * @return {Array<Object>}
+   * @return {Array<Token>}
    */
   scan (source) {
     return new Scanner(source).scan()

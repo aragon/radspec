@@ -1,8 +1,24 @@
+/**
+ * A token.
+ * @typedef {Object} Token
+ * @property {string} type The token type
+ * @property {*?} value The value of the token
+ */
+
 const PARSER_STATE = {
   OK: 'OK',
   ERROR: 'ERROR'
 }
 
+/**
+ * Parses a token list into an AST.
+ *
+ * @class Parser
+ * @param {Array<Token>} tokens
+ * @property {string} state The state of the parser (`OK` or `ERROR`)
+ * @property {Array<Token>} tokens
+ * @property {number} cursor
+ */
 class Parser {
   constructor (tokens) {
     this.state = PARSER_STATE.OK
@@ -11,20 +27,43 @@ class Parser {
     this.cursor = 0
   }
 
+  /**
+   * Get the current token and increase the cursor by 1
+   *
+   * @return {Token}
+   */
   consume () {
     this.cursor++
 
     return this.tokens[this.cursor - 1]
   }
 
+  /**
+   * Get the previous token.
+   *
+   * @return {Token}
+   */
   previous () {
     return this.tokens[this.cursor - 1]
   }
 
+  /**
+   * Get the token under the cursor without consuming it.
+   *
+   * @return {Token}
+   */
   peek () {
     return this.tokens[this.cursor]
   }
 
+  /**
+   * Checks if the type of the next token matches any of the expected types.
+   *
+   * Increases the cursor by 1 if the token matches.
+   *
+   * @param {...string} expected The expected types
+   * @return {boolean} True if the next token matches, otherwise false
+   */
   matches (...expected) {
     if (this.eof()) return false
     for (let type of expected) {
@@ -223,6 +262,11 @@ class Parser {
     return this.comparison()
   }
 
+  /**
+   * Walks the token list and returns an AST.
+   *
+   * @return {object}
+   */
   async parse () {
     let ast = {
       type: 'Program',
@@ -241,10 +285,22 @@ class Parser {
     return ast
   }
 
+  /**
+   * Returns true if we've reached the end of the token list, otherwise false.
+   *
+   * @return {boolean}
+   */
   eof () {
     return this.cursor >= this.tokens.length
   }
 
+  /**
+   * Prints an error with location information to `stderr`
+   * and sets the parser state to `PARSER_STATE.ERROR`
+   *
+   * @param {string} error
+   * @return {void}
+   */
   report (error) {
     this.state = PARSER_STATE.ERROR
     console.error(
