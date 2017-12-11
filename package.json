@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "docs": "documentation build src/index.js -f md -o docs/API.md",
-    "lint": "standard src/**/*.js",
+    "lint": "standard src/**/*.js && documentation lint src/**/*.js",
     "test": "nyc ava"
   },
   "repository": {
