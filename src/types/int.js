@@ -1,6 +1,9 @@
 module.exports = {
   isType (identifier) {
-    const n = identifier.substr(3)
+    let n = identifier.substr(3)
+
+    // Default to int256
+    if (!n) n = 256
 
     return identifier.startsWith('int') &&
       (n % 8 === 0) &&
