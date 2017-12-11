@@ -4,6 +4,10 @@ const { parse } = require('./parser')
 const { evaluate } = require('./evaluator')
 
 module.exports = {
+  scan,
+  parse,
+  evaluate,
+
   evaluateRaw (source, bindings) {
     return scan(source)
       .then(parse)
