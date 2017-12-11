@@ -4,6 +4,7 @@
   "description": "Radspec is a safe alternative to Ethereum's natspec",
   "main": "src/index.js",
   "scripts": {
+    "docs": "documentation build src/index.js -f md -o docs/API.md",
     "lint": "standard src/**/*.js",
     "test": "nyc ava"
   },
@@ -25,6 +26,7 @@
   "devDependencies": {
     "ava": "^0.24.0",
     "coveralls": "^3.0.0",
+    "documentation": "^5.3.3",
     "nyc": "^11.3.0",
     "standard": "^10.0.3"
   },
