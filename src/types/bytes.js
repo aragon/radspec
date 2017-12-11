@@ -1,6 +1,6 @@
 module.exports = {
   isType (identifier) {
-    const n = identifier.substr(5)
+    let n = identifier.substr(5)
 
     // `byte` is bytes1
     if (!n && identifier === 'byte') {

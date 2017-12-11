@@ -104,7 +104,7 @@ class Parser {
     return this.identifier()
   }
 
-  identifier () {
+  identifier () {
     if (this.matches('IDENTIFIER')) {
       let node = {
         type: 'Identifier',
@@ -147,7 +147,7 @@ class Parser {
             this.peek().type !== 'RIGHT_PAREN') break
         }
 
-        if(this.eof()) {
+        if (this.eof()) {
           // TODO Better error
           this.report('Unterminated call expression')
         }
