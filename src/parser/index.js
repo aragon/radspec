@@ -233,8 +233,6 @@ class Parser {
       ast.body.push(this.walk())
     }
 
-    console.log(require('util').inspect(ast, { depth: 1000 }))
-
     if (this.state === PARSER_STATE.ERROR) {
       console.error(`Errors encountered while parsing source`)
       return ast
