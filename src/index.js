@@ -1,4 +1,13 @@
 /**
+ * @typedef {Object} Binding
+ * @property {string} type The type of the binding (a valid Radspec type)
+ * @property {*} value The value of the binding
+ */
+/**
+ * @typedef {Object.<string, Binding>} Bindings
+ */
+
+/**
  * @module radspec
  */
 const ABI = require('web3-eth-abi')
@@ -20,7 +29,7 @@ module.exports = {
    *   a: { type: 'int256', value: 10 }
    * }).then(console.log)
    * @param  {string} source The radspec expression
-   * @param  {object} bindings An object of bindings and their values
+   * @param  {Bindings} bindings An object of bindings and their values
    * @return {Promise<string>} The result of the evaluation
    */
   evaluateRaw (source, bindings) {

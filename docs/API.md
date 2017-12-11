@@ -2,9 +2,24 @@
 
 ### Table of Contents
 
+-   [Binding](#binding)
+-   [Bindings](#bindings)
 -   [radspec](#radspec)
     -   [evaluateRaw](#evaluateraw)
     -   [evaluate](#evaluate)
+
+## Binding
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+**Properties**
+
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The type of the binding (a valid Radspec type)
+-   `value` **any** The value of the binding
+
+## Bindings
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Binding](#binding)>
 
 ## radspec
 
@@ -15,7 +30,7 @@ Evaluate a radspec expression with manual bindings.
 **Parameters**
 
 -   `source` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The radspec expression
--   `bindings` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object of bindings and their values
+-   `bindings` **[Bindings](#bindings)** An object of bindings and their values
 
 **Examples**
 
