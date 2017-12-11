@@ -1,3 +1,6 @@
+/**
+ * @module radspec/scanner
+ */
 const types = require('../types')
 
 const SCANNER_STATE = {
@@ -233,6 +236,7 @@ module.exports = {
   /**
    * Scans source and returns a list of tokens.
    *
+   * @memberof radspec/scanner
    * @param  {string} source
    * @return {Array<Token>}
    */

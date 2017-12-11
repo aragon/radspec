@@ -265,7 +265,7 @@ class Parser {
   /**
    * Walks the token list and returns an AST.
    *
-   * @return {object}
+   * @return {Object}
    */
   async parse () {
     let ast = {

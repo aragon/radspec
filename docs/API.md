@@ -5,16 +5,17 @@
 -   [radspec](#radspec)
     -   [evaluateRaw](#evaluateraw)
     -   [evaluate](#evaluate)
+-   [radspec/scanner](#radspecscanner)
+    -   [scan](#scan)
 -   [Scanner](#scanner)
     -   [scanToken](#scantoken)
     -   [emitToken](#emittoken)
     -   [consume](#consume)
     -   [peek](#peek)
     -   [matches](#matches)
-    -   [scan](#scan)
+    -   [scan](#scan-1)
     -   [eof](#eof)
     -   [report](#report)
--   [scan](#scan-1)
 -   [Token](#token)
 -   [Parser](#parser)
     -   [consume](#consume-1)
@@ -92,6 +93,18 @@ radspec.evaluate(expression, call)
 ```
 
 Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** The result of the evaluation
+
+## radspec/scanner
+
+### scan
+
+Scans source and returns a list of tokens.
+
+**Parameters**
+
+-   `source` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+
+Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Token](#token)>** 
 
 ## Scanner
 
@@ -172,16 +185,6 @@ and sets the scanner state to `SCANNER_STATE.ERROR`
 
 Returns **void** 
 
-## scan
-
-Scans source and returns a list of tokens.
-
-**Parameters**
-
--   `source` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
-
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Token](#token)>** 
-
 ## Token
 
 A token.
@@ -241,7 +244,7 @@ Returns **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/
 
 Walks the token list and returns an AST.
 
-Returns **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
 
 ### eof
 
