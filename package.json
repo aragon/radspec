@@ -29,6 +29,7 @@
     "standard": "^10.0.3"
   },
   "dependencies": {
+    "web3-eth": "^1.0.0-beta.26",
     "web3-eth-abi": "^1.0.0-beta.26"
   }
 }

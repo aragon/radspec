@@ -1,4 +1,5 @@
 const ABI = require('web3-eth-abi')
+const Eth = require('web3-eth')
 const types = require('../types')
 
 class TypedValue {
@@ -16,6 +17,7 @@ class Evaluator {
   constructor (ast, bindings) {
     this.ast = ast
     this.bindings = bindings
+    this.eth = new Eth('https://mainnet.infura.io')
   }
 
   async evaluateNodes (nodes) {
@@ -76,18 +78,25 @@ class Evaluator {
 
     if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
-      const address = await this.evaluateNode(node.target)
+      const target = await this.evaluateNode(node.target)
       const inputs = await this.evaluateNodes(node.inputs)
       const outputs = node.outputs
+
       const call = ABI.encodeFunctionCall({
         name: node.callee,
         type: 'function',
 
-        inputs: inputs.map((input) => input.type),
-        outputs: outputs.map((output) => output.type)
+        inputs,
+        outputs
       }, inputs.map((input) => input.value))
 
-      return `(${call} -> ${address})`
+      const returnType = outputs[0].type
+      return this.eth.call({
+        to: target.value,
+        data: call
+      }).then(
+        (data) => new TypedValue(returnType, ABI.decodeParameter(returnType, data))
+      )
     }
   }
 

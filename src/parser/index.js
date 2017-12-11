@@ -101,6 +101,65 @@ class Parser {
       }
     }
 
+    return this.identifier()
+  }
+
+  identifier () {
+    if (this.matches('IDENTIFIER')) {
+      let node = {
+        type: 'Identifier',
+        value: this.previous().value
+      }
+
+      while (this.matches('DOT')) {
+        let property = this.consume().value
+
+        node = {
+          type: 'PropertyAccessExpression',
+          target: node,
+          property
+        }
+      }
+
+      if (this.matches('LEFT_PAREN')) {
+        node = {
+          type: 'CallExpression',
+          target: node.target,
+          callee: node.property,
+          inputs: [],
+          outputs: []
+        }
+
+        while (!this.eof() && !this.matches('RIGHT_PAREN')) {
+          let input = this.comparison()
+          if (!input.type) {
+            input.type = this.type()
+          } else if (this.matches('COLON')) {
+            this.report(`Unexpected type (already inferred type of parameter)`)
+          }
+
+          node.inputs.push(input)
+
+          // Break if the next character is not a comma or a right parenthesis
+          // If this is true, then we are specifying more parameters without
+          // delimiting them using comma.
+          if (!this.matches('COMMA') &&
+            this.peek().type !== 'RIGHT_PAREN') break
+        }
+
+        if(this.eof()) {
+          // TODO Better error
+          this.report('Unterminated call expression')
+        }
+
+        node.outputs.push({
+          type: this.type()
+        })
+      }
+
+      return node
+    }
+
     return this.primary()
   }
 
@@ -116,18 +175,18 @@ class Parser {
       }
     }
 
-    if (this.matches('IDENTIFIER')) {
-      let node = {
-        type: 'Identifier',
-        value: this.previous().value
-      }
+    // TODO Error out
+    this.cursor++
+  }
 
-      // TODO Handle calls (`foo(): string` and `xyz.foo(): string`)
-
-      return node
+  type () {
+    if (!this.matches('COLON') &&
+      this.peek().type !== 'TYPE') {
+      // TODO Better error
+      this.report(`Expected a type, got "${this.peek().type}"`)
     }
 
-    this.cursor++
+    return this.consume().value
   }
 
   walk () {
@@ -173,6 +232,8 @@ class Parser {
     while (!this.eof()) {
       ast.body.push(this.walk())
     }
+
+    console.log(require('util').inspect(ast, { depth: 1000 }))
 
     if (this.state === PARSER_STATE.ERROR) {
       console.error(`Errors encountered while parsing source`)
