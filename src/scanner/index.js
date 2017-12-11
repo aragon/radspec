@@ -102,7 +102,17 @@ class Scanner {
 
       // Multi-character tokens
       default:
-        const IDENTIFIERS = /[_a-z]/i
+        const NUMBERS = /[0-9]/
+        if (NUMBERS.test(current)) {
+          let number = current
+          while (NUMBERS.test(this.peek())) {
+            number += this.consume()
+          }
+          this.emitToken('NUMBER', number)
+          break
+        }
+
+        const IDENTIFIERS = /[_a-z0-9]/i
         if (IDENTIFIERS.test(current)) {
           let identifier = current
           while (IDENTIFIERS.test(this.peek())) {
@@ -114,16 +124,6 @@ class Scanner {
           } else {
             this.emitToken('IDENTIFIER', identifier)
           }
-          break
-        }
-
-        const NUMBERS = /[0-9]/
-        if (NUMBERS.test(current)) {
-          let number = current
-          while (NUMBERS.test(this.peek())) {
-            number += this.consume()
-          }
-          this.emitToken('NUMBER', number)
           break
         }
 
