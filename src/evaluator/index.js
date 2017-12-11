@@ -1,11 +1,16 @@
 const ABI = require('web3-eth-abi')
 const Eth = require('web3-eth')
+const BigNumber = require('bignumber.js')
 const types = require('../types')
 
 class TypedValue {
   constructor (type, value) {
     this.type = type
     this.value = value
+
+    if (types.isInteger(this.type)) {
+      this.value = new BigNumber(this.value)
+    }
   }
 
   toString () {
@@ -55,13 +60,13 @@ class Evaluator {
 
       switch (node.operator) {
         case 'PLUS':
-          return new TypedValue('int256', left.value + right.value)
+          return new TypedValue('int256', left.value.add(right.value))
         case 'MINUS':
-          return new TypedValue('int256', left.value - right.value)
+          return new TypedValue('int256', left.value.sub(right.value))
         case 'STAR':
-          return new TypedValue('int256', left.value * right.value)
+          return new TypedValue('int256', left.value.mul(right.value))
         case 'SLASH':
-          return new TypedValue('int256', left.value / right.value)
+          return new TypedValue('int256', left.value.div(right.value))
         default:
           this.panic(`Undefined binary operator "${node.operator}"`)
       }
