@@ -255,10 +255,12 @@ class Parser {
    * @return {Node}
    */
   primary () {
-    if (this.matches('NUMBER', 'STRING')) {
-      let type = this.previous().type === 'NUMBER'
-        ? 'NumberLiteral'
-        : 'StringLiteral'
+    if (this.matches('NUMBER', 'STRING', 'HEXADECIMAL')) {
+      let type = {
+        NUMBER: 'NumberLiteral',
+        STRING: 'StringLiteral',
+        HEXADECIMAL: 'BytesLiteral'
+      }[this.previous().type]
 
       return {
         type,
