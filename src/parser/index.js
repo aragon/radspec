@@ -266,7 +266,20 @@ class Parser {
       }
     }
 
-    // TODO Error out
+    if (this.matches('LEFT_PAREN')) {
+      let expression = this.comparison()
+
+      if (!this.matches('RIGHT_PAREN')) {
+        this.report('Unterminated grouping')
+      }
+
+      return {
+        type: 'GroupedExpression',
+        body: expression
+      }
+    }
+
+    this.report(`Unknown token "${this.peek().type}"`)
     this.cursor++
   }
 
