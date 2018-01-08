@@ -37,7 +37,7 @@ class Evaluator {
     }
 
     if (node.type === 'GroupedExpression') {
-      return await this.evaluateNode(node.body)
+      return this.evaluateNode(node.body)
     }
 
     if (node.type === 'MonologueStatement') {
