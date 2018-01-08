@@ -36,6 +36,10 @@ class Evaluator {
       return (await this.evaluateNodes(node.body)).join(' ')
     }
 
+    if (node.type === 'GroupedExpression') {
+      return this.evaluateNode(node.body)
+    }
+
     if (node.type === 'MonologueStatement') {
       return new TypedValue('string', node.value)
     }
