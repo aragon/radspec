@@ -11,6 +11,7 @@ test('Scanner: Single character tokens', async (t) => {
     ['`-`', ['TICK', 'MINUS', 'TICK']],
     ['`+`', ['TICK', 'PLUS', 'TICK']],
     ['`*`', ['TICK', 'STAR', 'TICK']],
+    ['`^`', ['TICK', 'POWER', 'TICK']],
     ['`/`', ['TICK', 'SLASH', 'TICK']]
   ]
   t.plan(cases.length)

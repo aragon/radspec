@@ -66,12 +66,12 @@ class Evaluator {
         case 'PLUS':
           return new TypedValue('int256', left.value.add(right.value))
         case 'POWER':
-          const power = new BigNumber(10).pow(right.value)
-          return new TypedValue('int256', left.value.mul(power))
+          return new TypedValue('int256', left.value.pow(right.value))
         case 'MINUS':
           return new TypedValue('int256', left.value.sub(right.value))
         case 'STAR':
-          return new TypedValue('int256', left.value.mul(right.value))
+          const r = await this.evaluateNode(right)
+          return new TypedValue('int256', left.value.mul(r.value))
         case 'SLASH':
           return new TypedValue('int256', left.value.div(right.value))
         default:
