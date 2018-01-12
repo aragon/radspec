@@ -66,7 +66,8 @@ class Evaluator {
         case 'PLUS':
           return new TypedValue('int256', left.value.add(right.value))
         case 'POWER':
-          return new TypedValue('int256', left.value.pow(right.value))
+          const power = new BigNumber(10).pow(right.value)
+          return new TypedValue('int256', left.value.mul(power))
         case 'MINUS':
           return new TypedValue('int256', left.value.sub(right.value))
         case 'STAR':
