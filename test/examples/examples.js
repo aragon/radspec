@@ -24,6 +24,9 @@ const cases = [
     bindings: { a: int(122) }
   }, 'Will multiply 122 by 7 and return 854'],
   [{
+    source: 'First case is `2^5`, second case is `2^2 + 1`'
+  }, 'First case is 200000, second case is 201'],
+  [{
     source: 'First case is `2 * 2 + 6`, second case is `2 * (2 + 6)`'
   }, 'First case is 10, second case is 16'],
   [{

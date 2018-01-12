@@ -128,7 +128,7 @@ class Parser {
   addition () {
     let node = this.multiplication()
 
-    while (this.matches('MINUS', 'PLUS')) {
+    while (this.matches('MINUS', 'PLUS', 'POWER')) {
       let operator = this.previous().type
       let right = this.multiplication()
       node = {
