@@ -30,11 +30,8 @@ const cases = [
     source: 'First case is `2^5`, second case is `2^2 + 1`'
   }, 'First case is 32, second case is 5'],
   [{
-    source: 'First case is `3 * 2^3`'
-  }, 'First case is 320'],
-  [{
-    source: 'First case is `(11 - 1) * 2^5`'
-  }, 'First case is 320'],
+    source: 'First case is `(11 - 1) * 2^5`, second case is `3 * 2^3`'
+  }, 'First case is 320, second case is 24'],
   [{
    source: 'Basic arithmetic: `a` + `b` is `a + b`, - `c` that\'s `a + b - c`, quick mafs',
    bindings: { a: int(2), b: int(2), c: int(1) }

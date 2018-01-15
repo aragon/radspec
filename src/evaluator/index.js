@@ -70,8 +70,9 @@ class Evaluator {
         case 'MINUS':
           return new TypedValue('int256', left.value.sub(right.value))
         case 'STAR':
-          const r = await this.evaluateNode(right)
-          return new TypedValue('int256', left.value.mul(r.value))
+          return new TypedValue('int256', left.value.mul(right.value))
+        case 'POWER':
+          return new TypedValue('int256', left.value.pow(right.value))
         case 'SLASH':
           return new TypedValue('int256', left.value.div(right.value))
         default:
