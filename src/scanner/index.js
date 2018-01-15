@@ -83,6 +83,9 @@ class Scanner {
       case '+':
         this.emitToken('PLUS')
         break
+      case '^':
+        this.emitToken('POWER')
+        break
       case '*':
         this.emitToken('STAR')
         break

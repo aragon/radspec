@@ -69,6 +69,8 @@ class Evaluator {
           return new TypedValue('int256', left.value.sub(right.value))
         case 'STAR':
           return new TypedValue('int256', left.value.mul(right.value))
+        case 'POWER':
+          return new TypedValue('int256', left.value.pow(right.value))
         case 'SLASH':
           return new TypedValue('int256', left.value.div(right.value))
         default:

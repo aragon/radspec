@@ -27,6 +27,12 @@ const cases = [
     source: 'First case is `2 * 2 + 6`, second case is `2 * (2 + 6)`'
   }, 'First case is 10, second case is 16'],
   [{
+    source: 'First case is `2^5`, second case is `2^2 + 1`'
+  }, 'First case is 32, second case is 5'],
+  [{
+    source: 'First case is `(11 - 1) * 2^5`, second case is `3 * 2 ^ (4 - 1) + 1`'
+  }, 'First case is 320, second case is 25'],
+  [{
    source: 'Basic arithmetic: `a` + `b` is `a + b`, - `c` that\'s `a + b - c`, quick mafs',
    bindings: { a: int(2), b: int(2), c: int(1) }
   }, 'Basic arithmetic: 2 + 2 is 4, - 1 that\'s 3, quick mafs'],

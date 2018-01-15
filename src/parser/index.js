@@ -142,17 +142,35 @@ class Parser {
     return node
   }
 
+  power () {
+    let node = this.unary()
+
+    while (this.matches('POWER')) {
+      let operator = this.previous().type
+      let right = this.unary()
+
+      node = {
+        type: 'BinaryExpression',
+        operator,
+        left: node,
+        right
+      }
+    }
+
+    return node
+  }
+
   /**
    * Try to parse binary operators.
    *
    * @return {Node}
    */
   multiplication () {
-    let node = this.unary()
+    let node = this.power()
 
     while (this.matches('SLASH', 'STAR')) {
       let operator = this.previous().type
-      let right = this.unary()
+      let right = this.power()
 
       node = {
         type: 'BinaryExpression',
