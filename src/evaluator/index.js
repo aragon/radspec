@@ -65,8 +65,6 @@ class Evaluator {
       switch (node.operator) {
         case 'PLUS':
           return new TypedValue('int256', left.value.add(right.value))
-        case 'POWER':
-          return new TypedValue('int256', left.value.pow(right.value))
         case 'MINUS':
           return new TypedValue('int256', left.value.sub(right.value))
         case 'STAR':
