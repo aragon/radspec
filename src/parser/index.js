@@ -273,14 +273,22 @@ class Parser {
    * @return {Node}
    */
   primary () {
-    if (this.matches('NUMBER', 'STRING')) {
-      let type = this.previous().type === 'NUMBER'
-        ? 'NumberLiteral'
-        : 'StringLiteral'
+    if (this.matches('NUMBER')) {
+      return {
+        type: 'NumberLiteral',
+        value: this.previous().value
+      }
+    }
+
+    if (this.matches('QUOTE')) {
+      let value = ''
+      while (!this.matches('QUOTE')) {
+        value += this.consume().value
+      }
 
       return {
-        type,
-        value: this.previous().value
+        type: 'StringLiteral',
+        value
       }
     }
 
