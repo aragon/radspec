@@ -1,5 +1,6 @@
 const ABI = require('web3-eth-abi')
 const Eth = require('web3-eth')
+const Web3Utils = require('web3-utils')
 const BigNumber = require('bignumber.js')
 const types = require('../types')
 
@@ -10,6 +11,14 @@ class TypedValue {
 
     if (types.isInteger(this.type)) {
       this.value = new BigNumber(this.value)
+    }
+
+    if (this.type === 'address') {
+      const isChecksum = /[a-f]/.test(this.value)
+
+      if (!Web3Utils.checkAddressChecksum(this.value)) {
+        throw new Error(`Checksum failed for address "${this.value}"`)
+      }
     }
   }
 
@@ -99,6 +108,8 @@ class Evaluator {
       if (target.type !== 'bytes20' &&
         target.type !== 'address') {
         this.panic('Target of call expression was not an address')
+      } else if (!Web3Utils.checkAddressChecksum(target.value)) {
+        this.panic(`Checksum failed for address "${target.value}"`)
       }
 
       const call = ABI.encodeFunctionCall({
