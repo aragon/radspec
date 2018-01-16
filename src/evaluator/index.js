@@ -1,9 +1,22 @@
+/**
+ * @module radspec/evaluator
+ */
+
 const ABI = require('web3-eth-abi')
 const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
 const BigNumber = require('bignumber.js')
 const types = require('../types')
 
+/**
+ * A value coupled with a type
+ *
+ * @class TypedValue
+ * @param {string} type The type of the value
+ * @param {*} value The value
+ * @property {string} type
+ * @property {*} value
+ */
 class TypedValue {
   constructor (type, value) {
     this.type = type
@@ -16,17 +29,31 @@ class TypedValue {
     if (this.type === 'address') {
       const isChecksum = /[a-f]/.test(this.value)
 
-      if (!Web3Utils.checkAddressChecksum(this.value)) {
+      if (isChecksum && !Web3Utils.checkAddressChecksum(this.value)) {
         throw new Error(`Checksum failed for address "${this.value}"`)
       }
     }
   }
 
+  /**
+   * Get the string representation of the wrapped value
+   *
+   * @return {string}
+   */
   toString () {
     return this.value.toString()
   }
 }
 
+/**
+ * Walks an AST and evaluates each node.
+ *
+ * @class Evaluator
+ * @param {radspec/parser/AST} ast The AST to evaluate
+ * @param {radspec/Bindings} bindings An object of bindings and their values
+ * @property {radspec/parser/AST} ast
+ * @property {radspec/Bindings} bindings
+ */
 class Evaluator {
   constructor (ast, bindings) {
     this.ast = ast
@@ -34,12 +61,24 @@ class Evaluator {
     this.eth = new Eth('https://mainnet.infura.io')
   }
 
+  /**
+   * Evaluate an array of AST nodes.
+   *
+   * @param  {Array<radspec/parser/Node>} nodes
+   * @return {Promise<Array<string>>}
+   */
   async evaluateNodes (nodes) {
     return Promise.all(
       nodes.map(this.evaluateNode.bind(this))
     )
   }
 
+  /**
+   * Evaluate a single node.
+   *
+   * @param  {radspec/parser/Node} node
+   * @return {string}
+   */
   async evaluateNode (node) {
     if (node.type === 'ExpressionStatement') {
       return (await this.evaluateNodes(node.body)).join(' ')
@@ -136,6 +175,11 @@ class Evaluator {
     }
   }
 
+  /**
+   * Evaluate the entire AST.
+   *
+   * @return {string}
+   */
   async evaluate () {
     return this.evaluateNodes(
       this.ast.body
@@ -144,6 +188,11 @@ class Evaluator {
     )
   }
 
+  /**
+   * Report an error and abort evaluation.
+   *
+   * @param  {string} msg
+   */
   panic (msg) {
     throw new Error(`Error: ${msg}`)
   }
@@ -152,6 +201,14 @@ class Evaluator {
 module.exports = {
   Evaluator,
 
+  /**
+   * Evaluates an AST
+   *
+   * @memberof radspec/evaluator
+   * @param {radspec/parser/AST} ast The AST to evaluate
+   * @param {radspec/Bindings} bindings An object of bindings and their values
+   * @return {string}
+   */
   evaluate (ast, bindings) {
     return new Evaluator(ast, bindings).evaluate()
   }
