@@ -45,7 +45,12 @@ const cases = [
   [{
     source: 'Burns the `token.symbol(): string` balance of `person` (balance is `token.balanceOf(person): uint256 / 1000000000000000000`)',
     bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), person: address('0x0') }
-  }, 'Burns the ANT balance of 0x0 (balance is 0)']
+  }, 'Burns the ANT balance of 0x0 (balance is 0)'],
+
+  // Strings
+  [{
+    source: 'Hello `"world"`'
+  }, 'Hello world']
 ]
 
 test('Examples', async (t) => {
