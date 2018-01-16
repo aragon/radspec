@@ -1,5 +1,6 @@
 const ABI = require('web3-eth-abi')
 const Eth = require('web3-eth')
+const Web3Utils = require('web3-utils')
 const BigNumber = require('bignumber.js')
 const types = require('../types')
 
@@ -10,6 +11,14 @@ class TypedValue {
 
     if (types.isInteger(this.type)) {
       this.value = new BigNumber(this.value)
+    }
+
+    if (this.type === 'address') {
+      const isChecksum = /[a-f]/.test(this.value)
+
+      if (!Web3Utils.checkAddressChecksum(this.value)) {
+        throw new Error(`Checksum failed for address "${this.value}"`)
+      }
     }
   }
 
@@ -52,6 +61,15 @@ class Evaluator {
       return new TypedValue('int256', node.value)
     }
 
+    if (node.type === 'BytesLiteral') {
+      const length = (node.value.length - 2) / 2
+      if (length > 32) {
+        this.panic('Byte literal represents more than 32 bytes')
+      }
+
+      return new TypedValue(`bytes${length}`, node.value)
+    }
+
     if (node.type === 'BinaryExpression') {
       const left = await this.evaluateNode(node.left)
       const right = await this.evaluateNode(node.right)
@@ -92,6 +110,13 @@ class Evaluator {
       const target = await this.evaluateNode(node.target)
       const inputs = await this.evaluateNodes(node.inputs)
       const outputs = node.outputs
+
+      if (target.type !== 'bytes20' &&
+        target.type !== 'address') {
+        this.panic('Target of call expression was not an address')
+      } else if (!Web3Utils.checkAddressChecksum(target.value)) {
+        this.panic(`Checksum failed for address "${target.value}"`)
+      }
 
       const call = ABI.encodeFunctionCall({
         name: node.callee,
