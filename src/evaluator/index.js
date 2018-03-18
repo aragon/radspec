@@ -130,6 +130,8 @@ class Evaluator {
           return new TypedValue('int256', left.value.pow(right.value))
         case 'SLASH':
           return new TypedValue('int256', left.value.div(right.value))
+        case 'MODULO':
+          return new TypedValue('int256', left.value.modulo(right.value))
         default:
           this.panic(`Undefined binary operator "${node.operator}"`)
       }

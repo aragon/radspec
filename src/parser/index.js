@@ -168,7 +168,7 @@ class Parser {
   multiplication () {
     let node = this.power()
 
-    while (this.matches('SLASH', 'STAR')) {
+    while (this.matches('SLASH', 'STAR', 'MODULO')) {
       let operator = this.previous().type
       let right = this.power()
 

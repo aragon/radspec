@@ -92,6 +92,9 @@ class Scanner {
       case '/':
         this.emitToken('SLASH')
         break
+      case '%':
+        this.emitToken('MODULO')
+        break
 
       // One or two character tokens
       case '!':
