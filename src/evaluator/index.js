@@ -137,6 +137,35 @@ class Evaluator {
       }
     }
 
+    if (node.type === 'ComparisonExpression') {
+      const left = await this.evaluateNode(node.left)
+      const right = await this.evaluateNode(node.right)
+
+      if (!types.isInteger(left.type) ||
+        !types.isInteger(right.type)) {
+        this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer types "${left.type}" and "${right.type}"`)
+      }
+
+      switch (node.operator) {
+        case 'GREATER':
+          return new TypedValue('bool', left.value.gt(right.value))
+        case 'GREATER_EQUAL':
+          return new TypedValue('bool', left.value.gte(right.value))
+        case 'LESS':
+          return new TypedValue('bool', left.value.lt(right.value))
+        case 'LESS_EQUAL':
+          return new TypedValue('bool', left.value.lte(right.value))
+      }
+    }
+
+    if (node.type === 'TernaryExpression') {
+      if (await this.evaluateNode(node.predicate)) {
+        return this.evaluateNode(node.left)
+      }
+
+      return this.evaluateNode(node.right)
+    }
+
     if (node.type === 'Identifier') {
       if (!this.bindings.hasOwnProperty(node.value)) {
         this.panic(`Undefined binding "${node.value}"`)

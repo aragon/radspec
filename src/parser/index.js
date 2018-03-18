@@ -117,6 +117,20 @@ class Parser {
       }
     }
 
+    if (this.matches('QUESTION_MARK')) {
+      node = {
+        type: 'TernaryExpression',
+        predicate: node,
+        left: this.comparison()
+      }
+
+      if (!this.matches('COLON')) {
+        this.report('Half-baked ternary (expected colon)')
+      }
+
+      node.right = this.comparison()
+    }
+
     return node
   }
 

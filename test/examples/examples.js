@@ -33,8 +33,8 @@ const cases = [
     source: 'First case is `(11 - 1) * 2^5`, second case is `3 * 2 ^ (4 - 1) + 1`'
   }, 'First case is 320, second case is 25'],
   [{
-   source: 'Basic arithmetic: `a` + `b` is `a + b`, - `c` that\'s `a + b - c`, quick mafs',
-   bindings: { a: int(2), b: int(2), c: int(1) }
+    source: 'Basic arithmetic: `a` + `b` is `a + b`, - `c` that\'s `a + b - c`, quick mafs',
+    bindings: { a: int(2), b: int(2), c: int(1) }
   }, 'Basic arithmetic: 2 + 2 is 4, - 1 that\'s 3, quick mafs'],
 
   // External calls
@@ -45,7 +45,11 @@ const cases = [
   [{
     source: 'Burns the `token.symbol(): string` balance of `person` (balance is `token.balanceOf(person): uint256 / 1000000000000000000`)',
     bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), person: address('0x0000000000000000000000000000000000000000') }
-  }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000000 (balance is 0)']
+  }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000000 (balance is 0)'],
+  [{
+    source: 'Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? \'s\' : \'\'`',
+    bindings: { _periodDuration: int(86400 * 2), _vault: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
+  }, 'Initialize Finance app for Vault at 0x960b236A07cf122663c4303350609A66A7B288C0 with period length of 2 days']
 ]
 
 test('Examples', async (t) => {

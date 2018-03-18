@@ -95,6 +95,9 @@ class Scanner {
       case '%':
         this.emitToken('MODULO')
         break
+      case '?':
+        this.emitToken('QUESTION_MARK')
+        break
 
       // One or two character tokens
       case '!':
@@ -156,6 +159,15 @@ class Scanner {
           } else {
             this.emitToken('IDENTIFIER', identifier)
           }
+          break
+        }
+
+        if (current === `'` || current === `"`) {
+          let string = ''
+          while (!this.matches(`'`) && !this.matches(`"`)) {
+            string += this.consume()
+          }
+          this.emitToken('STRING', string)
           break
         }
 
