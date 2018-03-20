@@ -159,7 +159,7 @@ class Evaluator {
     }
 
     if (node.type === 'TernaryExpression') {
-      if (await this.evaluateNode(node.predicate)) {
+      if ((await this.evaluateNode(node.predicate)).value) {
         return this.evaluateNode(node.left)
       }
 

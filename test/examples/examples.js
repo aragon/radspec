@@ -11,6 +11,11 @@ const address = (value) => ({
   value
 })
 
+const bool = (value) => ({
+  type: 'bool',
+  value
+})
+
 const cases = [
   // Bindings
   [{
@@ -47,9 +52,13 @@ const cases = [
     bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), person: address('0x0000000000000000000000000000000000000000') }
   }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000000 (balance is 0)'],
   [{
-    source: 'Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? \'s\' : \'\'`',
+    source: 'Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? \'s\' : \' \'`',
     bindings: { _periodDuration: int(86400 * 2), _vault: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
-  }, 'Initialize Finance app for Vault at 0x960b236A07cf122663c4303350609A66A7B288C0 with period length of 2 days']
+  }, 'Initialize Finance app for Vault at 0x960b236A07cf122663c4303350609A66A7B288C0 with period length of 2 days'],
+  [{
+    source: 'Vote `_supports ? \'yay\' : \'nay\'`',
+    bindings: { _supports: bool(false) }
+  }, 'Vote nay']
 ]
 
 test('Examples', async (t) => {
