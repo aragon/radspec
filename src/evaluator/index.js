@@ -22,7 +22,7 @@ class TypedValue {
     this.type = type
     this.value = value
 
-    if (types.isInteger(this.type)) {
+    if (types.isInteger(this.type) && !this.value._isBigNumber) {
       this.value = new BigNumber(this.value)
     }
 

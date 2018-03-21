@@ -1,5 +1,6 @@
 const test = require('ava')
 const { evaluateRaw } = require('../../src')
+const BigNumber = require('bignumber.js')
 
 const int = (value) => ({
   type: 'int256',
@@ -58,7 +59,11 @@ const cases = [
   [{
     source: 'Vote `_supports ? \'yay\' : \'nay\'`',
     bindings: { _supports: bool(false) }
-  }, 'Vote nay']
+  }, 'Vote nay'],
+  [{
+    source: 'Token `_amount / 10^18`',
+    bindings: { _amount: int(new BigNumber(10).times(Math.pow(10, 18))) }
+  }, 'Token 10']
 ]
 
 test('Examples', async (t) => {
