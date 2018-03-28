@@ -17,6 +17,11 @@ const bool = (value) => ({
   value
 })
 
+const string = (value) => ({
+  type: 'string',
+  value
+})
+
 const cases = [
   // Bindings
   [{
@@ -63,7 +68,11 @@ const cases = [
   [{
     source: 'Token `_amount / 10^18`',
     bindings: { _amount: int(new BigNumber(10).times(Math.pow(10, 18))) }
-  }, 'Token 10']
+  }, 'Token 10'],
+  [{
+    source: '`_bool ? \'h\' + _var + \'o\' : \'damn\'`',
+    bindings: { _bool: bool(true), _var: string('ell') }
+  }, 'hello']
 ]
 
 test('Examples', async (t) => {

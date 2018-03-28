@@ -113,6 +113,13 @@ class Evaluator {
       const left = await this.evaluateNode(node.left)
       const right = await this.evaluateNode(node.right)
 
+      // String concatenation
+      if ((left.type === 'string' ||
+        right.type === 'string') &&
+        node.operator === 'PLUS') {
+        return new TypedValue('string', left.value.toString() + right.value.toString())
+      }
+
       // TODO Additionally check that the type is signed if subtracting
       if (!types.isInteger(left.type) ||
         !types.isInteger(right.type)) {
