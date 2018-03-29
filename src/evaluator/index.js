@@ -246,9 +246,10 @@ module.exports = {
    * @memberof radspec/evaluator
    * @param {radspec/parser/AST} ast The AST to evaluate
    * @param {radspec/Bindings} bindings An object of bindings and their values
+   * @param {?string} ethNode The URL to an Ethereum node
    * @return {string}
    */
-  evaluate (ast, bindings) {
-    return new Evaluator(ast, bindings).evaluate()
+  evaluate (ast, bindings, ethNode) {
+    return new Evaluator(ast, bindings, ethNode).evaluate()
   }
 }
