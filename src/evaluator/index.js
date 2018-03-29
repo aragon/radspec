@@ -51,14 +51,15 @@ class TypedValue {
  * @class Evaluator
  * @param {radspec/parser/AST} ast The AST to evaluate
  * @param {radspec/Bindings} bindings An object of bindings and their values
+ * @param {?string} ethNode The URL to an Ethereum node
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
  */
 class Evaluator {
-  constructor (ast, bindings) {
+  constructor (ast, bindings, ethNode) {
     this.ast = ast
     this.bindings = bindings
-    this.eth = new Eth('https://mainnet.infura.io')
+    this.eth = new Eth(ethNode || 'https://mainnet.infura.io')
   }
 
   /**
