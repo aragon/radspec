@@ -28,7 +28,8 @@
     "coveralls": "^3.0.0",
     "documentation": "^5.3.3",
     "nyc": "^11.3.0",
-    "standard": "^10.0.3"
+    "standard": "^10.0.3",
+    "websocket": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible"
   },
   "dependencies": {
     "bignumber.js": "^5.0.0",
