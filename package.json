@@ -28,12 +28,13 @@
     "coveralls": "^3.0.0",
     "documentation": "^5.3.3",
     "nyc": "^11.3.0",
-    "standard": "^10.0.3"
+    "standard": "^10.0.3",
+    "websocket": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible"
   },
   "dependencies": {
     "bignumber.js": "^5.0.0",
-    "web3-eth": "^1.0.0-beta.26",
-    "web3-eth-abi": "^1.0.0-beta.26",
-    "web3-utils": "^1.0.0-beta.27"
+    "web3-eth": "1.0.0-beta.33",
+    "web3-eth-abi": "1.0.0-beta.33",
+    "web3-utils": "1.0.0-beta.33"
   }
 }
