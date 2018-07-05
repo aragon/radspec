@@ -5,7 +5,7 @@
 const ABI = require('web3-eth-abi')
 const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
-const BigNumber = require('bignumber.js')
+const BN = require('bn.js')
 const types = require('../types')
 
 /**
@@ -22,8 +22,8 @@ class TypedValue {
     this.type = type
     this.value = value
 
-    if (types.isInteger(this.type) && !this.value._isBigNumber) {
-      this.value = new BigNumber(this.value)
+    if (types.isInteger(this.type) && !BN.isBN(this.value)) {
+      this.value = new BN(this.value)
     }
 
     if (this.type === 'address') {
@@ -139,7 +139,7 @@ class Evaluator {
         case 'SLASH':
           return new TypedValue('int256', left.value.div(right.value))
         case 'MODULO':
-          return new TypedValue('int256', left.value.modulo(right.value))
+          return new TypedValue('int256', left.value.mod(right.value))
         default:
           this.panic(`Undefined binary operator "${node.operator}"`)
       }

@@ -1,6 +1,6 @@
 const test = require('ava')
 const { evaluateRaw } = require('../../src')
-const BigNumber = require('bignumber.js')
+const BN = require('BN.js')
 
 const int = (value) => ({
   type: 'int256',
@@ -44,6 +44,12 @@ const cases = [
     source: 'First case is `(11 - 1) * 2^5`, second case is `3 * 2 ^ (4 - 1) + 1`'
   }, 'First case is 320, second case is 25'],
   [{
+    source: 'First case is `(11 - 1) / 2`, second case is `3 * 2 ^ (4 - 1) / 3`'
+  }, 'First case is 5, second case is 8'],
+  [{
+    source: 'First case is `(11 - 1) % 3`, second case is `3 * 2 % 5`'
+  }, 'First case is 1, second case is 1'],
+  [{
     source: 'Basic arithmetic: `a` + `b` is `a + b`, - `c` that\'s `a + b - c`, quick mafs',
     bindings: { a: int(2), b: int(2), c: int(1) }
   }, 'Basic arithmetic: 2 + 2 is 4, - 1 that\'s 3, quick mafs'],
@@ -67,7 +73,7 @@ const cases = [
   }, 'Vote nay'],
   [{
     source: 'Token `_amount / 10^18`',
-    bindings: { _amount: int(new BigNumber(10).times(Math.pow(10, 18))) }
+    bindings: { _amount: int(new BN(10).mul(new BN(10).pow(new BN(18)))) }
   }, 'Token 10'],
   [{
     source: '`_bool ? \'h\' + _var + \'o\' : \'damn\'`',
@@ -75,13 +81,14 @@ const cases = [
   }, 'hello']
 ]
 
-test('Examples', async (t) => {
-  for (let [input, expected] of cases) {
+for (let [input, expected] of cases) {
+  test(input.source, async (t) => {
+    t.pass()
     const actual = await evaluateRaw(input.source, input.bindings)
     t.is(
       actual,
       expected,
       `Expected "${input.source}" to evaluate to "${expected}", but evaluated to "${actual}"`
     )
-  }
-})
+  })
+}
