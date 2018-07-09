@@ -1,6 +1,6 @@
 const test = require('ava')
 const { evaluateRaw } = require('../../src')
-const BN = require('BN.js')
+const BN = require('bn.js')
 
 const int = (value) => ({
   type: 'int256',
