@@ -4,7 +4,7 @@ const ufixed = require('../../src/types/ufixed')
 test('Type: ufixed', (t) => {
   t.true(ufixed.isType('ufixed8x11'))
   t.true(ufixed.isType('ufixed248x35'))
-  t.false(ufixed.isType('ufixed'), 'You should specify M and N')
+  t.true(ufixed.isType('ufixed'))
   t.false(ufixed.isType('asdaufixed'), 'Should start with ufixed')
   t.false(ufixed.isType('fixed'), 'Should start with ufixed')
   t.false(ufixed.isType('ufixed256x'), 'N should be provided')

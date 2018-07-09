@@ -4,7 +4,7 @@ const fixed = require('../../src/types/fixed')
 test('Type: fixed', (t) => {
   t.true(fixed.isType('fixed8x11'))
   t.true(fixed.isType('fixed248x35'))
-  t.false(fixed.isType('fixed'), 'You should specify M and N')
+  t.true(fixed.isType('fixed'))
   t.false(fixed.isType('asdafixed'), 'Should start with fixed')
   t.false(fixed.isType('fixedAxB'), 'M and N should be numerical')
   t.false(fixed.isType('fixed256x'), 'N should be provided')

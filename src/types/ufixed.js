@@ -2,7 +2,8 @@ module.exports = {
   isType (identifier) {
     let mXn = identifier.substr(6)
 
-    if (!mXn || mXn.indexOf('x') === -1) return false
+    if (!mXn) mXn = '128x18'
+    if (mXn.indexOf('x') === -1) return false
 
     let m = mXn.substr(0, mXn.indexOf('x'))
     let n = mXn.substr(mXn.indexOf('x') + 1, mXn.length)
