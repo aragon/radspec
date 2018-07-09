@@ -4,6 +4,8 @@ const uint = require('./uint')
 const address = require('./address')
 const bytes = require('./bytes')
 const string = require('./string')
+const fixed = require('./fixed')
+const ufixed = require('./ufixed')
 
 module.exports = {
   types: {
@@ -12,7 +14,9 @@ module.exports = {
     uint,
     address,
     bytes,
-    string
+    string,
+    fixed,
+    ufixed
   },
 
   isType (identifier) {
