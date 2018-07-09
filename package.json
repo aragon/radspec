@@ -18,7 +18,7 @@
     "ethereum"
   ],
   "author": "Aragon Institution MTU <contact@aragon.one>",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/aragon/radspec/issues"
   },
