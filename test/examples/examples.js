@@ -83,7 +83,6 @@ const cases = [
 
 for (let [input, expected] of cases) {
   test(input.source, async (t) => {
-    t.pass()
     const actual = await evaluateRaw(input.source, input.bindings)
     t.is(
       actual,
