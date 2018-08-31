@@ -174,6 +174,21 @@ class Evaluator {
       return this.evaluateNode(node.right)
     }
 
+    if (node.type === 'DefaultExpression') {
+      const left = await this.evaluateNode(node.left)
+      let leftFalsey
+
+      if (types.isInteger(left.type)) {
+        leftFalsey = left.value.isZero()
+      } else if (left.type === 'address' || left.type.startsWith('bytes')) {
+        leftFalsey = /^0x[0]*$/.test(left.value)
+      } else {
+        leftFalsey = !left.value
+      }
+
+      return leftFalsey ? this.evaluateNode(node.right) : left
+    }
+
     if (node.type === 'Identifier') {
       if (!this.bindings.hasOwnProperty(node.value)) {
         this.panic(`Undefined binding "${node.value}"`)

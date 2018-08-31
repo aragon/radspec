@@ -22,6 +22,11 @@ const string = (value) => ({
   value
 })
 
+const bytes32 = (value) => ({
+  type: 'bytes32',
+  value
+})
+
 const cases = [
   // Bindings
   [{
@@ -53,6 +58,21 @@ const cases = [
     source: 'Basic arithmetic: `a` + `b` is `a + b`, - `c` that\'s `a + b - c`, quick mafs',
     bindings: { a: int(2), b: int(2), c: int(1) }
   }, 'Basic arithmetic: 2 + 2 is 4, - 1 that\'s 3, quick mafs'],
+  [{
+    source: 'This will default to `b`: `a || b`',
+    bindings: { a: int(0), b: int(1) }
+  }, 'This will default to 1: 1'],
+  [{
+    source: 'This will default to `a`: `a || b`',
+    bindings: { a: int(1), b: int(0) }
+  }, 'This will default to 1: 1'],
+  [{
+    source: 'This will default to `b`: `a || b`',
+    bindings: {
+      a: bytes32('0x0000000000000000000000000000000000000000000000000000000000000000'),
+      b: int(1)
+    }
+  }, 'This will default to 1: 1'],
 
   // External calls
   [{

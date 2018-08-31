@@ -131,6 +131,14 @@ class Parser {
       node.right = this.comparison()
     }
 
+    if (this.matches('DOUBLE_VERTICAL_BAR')) {
+      node = {
+        left: node,
+        right: this.comparison(),
+        type: 'DefaultExpression'
+      }
+    }
+
     return node
   }
 
