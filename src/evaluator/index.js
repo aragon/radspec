@@ -51,15 +51,18 @@ class TypedValue {
  * @class Evaluator
  * @param {radspec/parser/AST} ast The AST to evaluate
  * @param {radspec/Bindings} bindings An object of bindings and their values
- * @param {?string} ethNode The URL to an Ethereum node
+ * @param {?Object} options An options object
+ * @param {?string} options.ethNode The URL to an Ethereum node
+ * @param {?string} options.to The destination address for this expression's transaction
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
  */
 class Evaluator {
-  constructor (ast, bindings, ethNode) {
+  constructor (ast, bindings, { ethNode, to } = {}) {
     this.ast = ast
     this.bindings = bindings
     this.eth = new Eth(ethNode || 'https://mainnet.infura.io')
+    this.to = to && new TypedValue('address', to)
   }
 
   /**
@@ -246,10 +249,12 @@ module.exports = {
    * @memberof radspec/evaluator
    * @param {radspec/parser/AST} ast The AST to evaluate
    * @param {radspec/Bindings} bindings An object of bindings and their values
-   * @param {?string} ethNode The URL to an Ethereum node
+   * @param {?Object} options An options object
+   * @param {?string} options.ethNode The URL to an Ethereum node
+   * @param {?string} options.to The destination address for this expression's transaction
    * @return {string}
    */
-  evaluate (ast, bindings, ethNode) {
-    return new Evaluator(ast, bindings, ethNode).evaluate()
+  evaluate (ast, bindings, options) {
+    return new Evaluator(ast, bindings, options).evaluate()
   }
 }
