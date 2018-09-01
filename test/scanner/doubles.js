@@ -10,7 +10,8 @@ test('Scanner: One or two character tokens', async (t) => {
     ['`<`', ['TICK', 'LESS', 'TICK']],
     ['`<=`', ['TICK', 'LESS_EQUAL', 'TICK']],
     ['`>`', ['TICK', 'GREATER', 'TICK']],
-    ['`>=`', ['TICK', 'GREATER_EQUAL', 'TICK']]
+    ['`>=`', ['TICK', 'GREATER_EQUAL', 'TICK']],
+    ['`||`', ['TICK', 'DOUBLE_VERTICAL_BAR', 'TICK']]
   ]
   t.plan(cases.length)
 

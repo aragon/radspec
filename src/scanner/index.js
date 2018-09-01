@@ -113,6 +113,15 @@ class Scanner {
         this.emitToken(this.matches('=') ? 'GREATER_EQUAL' : 'GREATER')
         break
 
+      // Two character tokens
+      case '|':
+        if (this.matches('|')) {
+          this.emitToken('DOUBLE_VERTICAL_BAR')
+        } else {
+          this.report(`Unexpected single "|" (expecting two)`)
+        }
+        break
+
       // Whitespace
       case ' ':
       case '\r':
