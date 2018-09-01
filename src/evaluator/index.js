@@ -188,9 +188,14 @@ class Evaluator {
 
     if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
-      const target = await this.evaluateNode(node.target)
-      const inputs = await this.evaluateNodes(node.inputs)
-      const outputs = node.outputs
+      let target
+
+      // Inject self
+      if (node.target.type === 'Identifier' && node.target.value === 'self') {
+        target = this.to
+      } else {
+        target = await this.evaluateNode(node.target)
+      }
 
       if (target.type !== 'bytes20' &&
         target.type !== 'address') {
@@ -198,6 +203,9 @@ class Evaluator {
       } else if (!Web3Utils.checkAddressChecksum(target.value)) {
         this.panic(`Checksum failed for address "${target.value}"`)
       }
+
+      const inputs = await this.evaluateNodes(node.inputs)
+      const outputs = node.outputs
 
       const call = ABI.encodeFunctionCall({
         name: node.callee,
