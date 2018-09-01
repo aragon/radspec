@@ -101,14 +101,15 @@ class Parser {
   /**
    * Try to parse comparison operators.
    *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
    * @return {Node}
    */
-  comparison () {
-    let node = this.addition()
+  comparison (astBody) {
+    let node = this.addition(astBody)
 
     while (this.matches('GREATER', 'GREATER_EQUAL', 'LESS', 'LESS_EQUAL')) {
       let operator = this.previous().type
-      let right = this.addition()
+      let right = this.addition(astBody)
       node = {
         type: 'ComparisonExpression',
         operator,
@@ -121,14 +122,14 @@ class Parser {
       node = {
         type: 'TernaryExpression',
         predicate: node,
-        left: this.comparison()
+        left: this.comparison(astBody)
       }
 
       if (!this.matches('COLON')) {
         this.report('Half-baked ternary (expected colon)')
       }
 
-      node.right = this.comparison()
+      node.right = this.comparison(astBody)
     }
 
     return node
@@ -137,32 +138,15 @@ class Parser {
   /**
    * Try to parse arithmetic operators.
    *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
    * @return {Node}
    */
-  addition () {
-    let node = this.multiplication()
+  addition (astBody) {
+    let node = this.multiplication(astBody)
 
     while (this.matches('MINUS', 'PLUS')) {
       let operator = this.previous().type
-      let right = this.multiplication()
-      node = {
-        type: 'BinaryExpression',
-        operator,
-        left: node,
-        right
-      }
-    }
-
-    return node
-  }
-
-  power () {
-    let node = this.unary()
-
-    while (this.matches('POWER')) {
-      let operator = this.previous().type
-      let right = this.unary()
-
+      let right = this.multiplication(astBody)
       node = {
         type: 'BinaryExpression',
         operator,
@@ -177,14 +161,39 @@ class Parser {
   /**
    * Try to parse binary operators.
    *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
    * @return {Node}
    */
-  multiplication () {
-    let node = this.power()
+  multiplication (astBody) {
+    let node = this.power(astBody)
 
     while (this.matches('SLASH', 'STAR', 'MODULO')) {
       let operator = this.previous().type
-      let right = this.power()
+      let right = this.power(astBody)
+
+      node = {
+        type: 'BinaryExpression',
+        operator,
+        left: node,
+        right
+      }
+    }
+
+    return node
+  }
+
+  /**
+   * Try to parse exponential operators.
+   *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
+   * @return {Node}
+   */
+  power (astBody) {
+    let node = this.unary(astBody)
+
+    while (this.matches('POWER')) {
+      let operator = this.previous().type
+      let right = this.unary(astBody)
 
       node = {
         type: 'BinaryExpression',
@@ -200,12 +209,13 @@ class Parser {
   /**
    * Try to parse unary operators.
    *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
    * @return {Node}
    */
-  unary () {
+  unary (astBody) {
     if (this.matches('BANG', 'MINUS')) {
       let operator = this.previous().type
-      let right = this.unary()
+      let right = this.unary(astBody)
 
       return {
         type: 'UnaryExpression',
@@ -214,21 +224,40 @@ class Parser {
       }
     }
 
-    return this.identifier()
+    return this.identifier(astBody)
   }
 
   /**
    * Try to parse identifiers and call expressions.
    *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
    * @return {Node}
    */
-  identifier () {
+  identifier (astBody) {
+    let node
+
     if (this.matches('IDENTIFIER')) {
-      let node = {
+      node = {
         type: 'Identifier',
         value: this.previous().value
       }
+    }
 
+    if (!node) {
+      const previousNode = astBody.length && astBody[astBody.length - 1]
+      if (previousNode && (
+          previousNode.type === 'Identifier' ||
+          previousNode.type === 'GroupedExpression' ||
+          previousNode.type === 'CallExpression'
+        )
+      ) {
+        node = previousNode
+        // Consume the last node as part of this node
+        astBody.pop()
+      }
+    }
+
+    if (node) {
       while (this.matches('DOT')) {
         let property = this.consume().value
 
@@ -249,7 +278,7 @@ class Parser {
         }
 
         while (!this.eof() && !this.matches('RIGHT_PAREN')) {
-          let input = this.comparison()
+          let input = this.comparison(astBody)
           if (!input.type) {
             input.type = this.type()
           } else if (this.matches('COLON')) {
@@ -278,15 +307,16 @@ class Parser {
       return node
     }
 
-    return this.primary()
+    return this.primary(astBody)
   }
 
   /**
    * Try to parse primaries (literals).
    *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
    * @return {Node}
    */
-  primary () {
+  primary (astBody) {
     if (this.matches('NUMBER', 'STRING', 'HEXADECIMAL')) {
       let type = {
         NUMBER: 'NumberLiteral',
@@ -301,9 +331,14 @@ class Parser {
     }
 
     if (this.matches('LEFT_PAREN')) {
-      let expression = this.comparison()
+      let expression
 
-      if (!this.matches('RIGHT_PAREN')) {
+      do {
+        // Keep munching expressions in the context of the current expression
+        expression = this.comparison(expression ? [expression] : [])
+      } while (!this.eof() && !this.matches('RIGHT_PAREN'))
+
+      if (this.eof()) {
         this.report('Unterminated grouping')
       }
 
@@ -313,8 +348,7 @@ class Parser {
       }
     }
 
-    this.report(`Unknown token "${this.peek().type}"`)
-    this.cursor++
+    this.report(`Unknown token "${this.consume().type}"`)
   }
 
   /**
@@ -336,9 +370,10 @@ class Parser {
    * Walk all possible paths and try to parse a single node
    * from the list of tokens.
    *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
    * @return {Node}
    */
-  walk () {
+  walk (astBody) {
     let token = this.peek()
 
     if (token.type === 'MONOLOGUE') {
@@ -357,7 +392,7 @@ class Parser {
       this.matches('TICK')
 
       while (!this.eof() && this.peek().type !== 'TICK') {
-        node.body.push(this.walk())
+        node.body.push(this.walk(node.body))
       }
 
       if (this.eof()) {
@@ -369,7 +404,7 @@ class Parser {
       return node
     }
 
-    return this.comparison()
+    return this.comparison(astBody)
   }
 
   /**
@@ -384,7 +419,7 @@ class Parser {
     }
 
     while (!this.eof()) {
-      ast.body.push(this.walk())
+      ast.body.push(this.walk(ast.body))
     }
 
     if (this.state === PARSER_STATE.ERROR) {
