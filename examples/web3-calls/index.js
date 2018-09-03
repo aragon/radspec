@@ -2,7 +2,7 @@ const radspec = require('../../src')
 
 const expressions = [
   {
-    expression: 'Deposit `_amount` to `(_token.controller(): address).sale(): address` `_token.symbol(): string`',
+    expression: 'Allocate `_amount _token.symbol(): string`.',
     call: {
       abi: [{
         name: 'allocate',
@@ -23,7 +23,7 @@ const expressions = [
     }
   },
   {
-    expression: 'Send `_amount` ETH to `(_token.controller(): address).sale(): address` to buy `_token.symbol(): string`',
+    expression: 'Send `_amount` wei to `(_token.controller(): address).sale(): address` to buy `_token.symbol(): string`',
     call: {
       abi: [{
         name: 'allocate',
@@ -45,7 +45,9 @@ const expressions = [
   }
 ]
 
+// => "Allocate 100 ANT."
+// => "Send 100 wei to 0x0cEB0D54A7e87Dfa16dDF7656858cF7e29851fD7 to buy ANT"
 expressions.forEach(({ expression, call }) => {
   radspec.evaluate(expression, call)
-    .then(console.log) // => "Allocate 100 ANT."
+    .then(console.log)
 })
