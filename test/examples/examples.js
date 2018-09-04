@@ -84,6 +84,16 @@ const cases = [
     bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), person: address('0x0000000000000000000000000000000000000000') }
   }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000000 (balance is 0)'],
   [{
+    source: 'Burns the `self.symbol(): string` balance of `person` (balance is `self.balanceOf(person): uint256 / 1000000000000000000`)',
+    bindings: { person: address('0x0000000000000000000000000000000000000000') },
+    options: { to: '0x960b236A07cf122663c4303350609A66A7B288C0' }
+  }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000000 (balance is 0)'],
+  [{
+    source: 'Send ETH to the sale at block `((self.controller(): address).sale(): address).initialBlock(): uint` from `person`',
+    bindings: { person: address('0x0000000000000000000000000000000000000000') },
+    options: { to: '0x960b236A07cf122663c4303350609A66A7B288C0' }
+  }, 'Send ETH to the sale at block 3723000 from 0x0000000000000000000000000000000000000000'],
+  [{
     source: 'Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? \'s\' : \' \'`',
     bindings: { _periodDuration: int(86400 * 2), _vault: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
   }, 'Initialize Finance app for Vault at 0x960b236A07cf122663c4303350609A66A7B288C0 with period length of 2 days'],
@@ -103,7 +113,7 @@ const cases = [
 
 for (let [input, expected] of cases) {
   test(input.source, async (t) => {
-    const actual = await evaluateRaw(input.source, input.bindings)
+    const actual = await evaluateRaw(input.source, input.bindings, input.options)
     t.is(
       actual,
       expected,

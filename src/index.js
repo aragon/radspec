@@ -26,13 +26,13 @@ const evaluator = require('./evaluator')
  * }).then(console.log)
  * @param  {string} source The radspec expression
  * @param  {Bindings} bindings An object of bindings and their values
- * @param {?string} ethNode The URL to an Ethereum node
+ * @param {?Object} evaluatorOptions An options object for the evaluator
  * @return {Promise<string>} The result of the evaluation
  */
-function evaluateRaw (source, bindings, ethNode) {
+function evaluateRaw (source, bindings, options) {
   return scanner.scan(source)
     .then(parser.parse)
-    .then((ast) => evaluator.evaluate(ast, bindings, ethNode))
+    .then((ast) => evaluator.evaluate(ast, bindings, options))
 }
 
 /**
@@ -70,10 +70,11 @@ function evaluateRaw (source, bindings, ethNode) {
  * @param {Object} call.transaction The transaction to decode for this evaluation
  * @param {string} call.transaction.to The destination address for this transaction
  * @param {string} call.transaction.data The transaction data
- * @param {?string} ethNode The URL to an Ethereum node
+ * @param {?Object} options An options object
+ * @param {?string} options.ethNode The URL to an Ethereum node
  * @return {Promise<string>} The result of the evaluation
  */
-function evaluate (source, call, ethNode) {
+function evaluate (source, call, options = {}) {
   // Get method ID
   const methodId = call.transaction.data.substr(0, 10)
 
@@ -99,7 +100,7 @@ function evaluate (source, call, ethNode) {
 
   // Evaluate expression with bindings from
   // the transaction data
-  return evaluateRaw(source, parameters, ethNode)
+  return evaluateRaw(source, parameters, { ...options, to: call.transaction.to })
 }
 
 module.exports = {

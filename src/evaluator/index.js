@@ -51,15 +51,18 @@ class TypedValue {
  * @class Evaluator
  * @param {radspec/parser/AST} ast The AST to evaluate
  * @param {radspec/Bindings} bindings An object of bindings and their values
- * @param {?string} ethNode The URL to an Ethereum node
+ * @param {?Object} options An options object
+ * @param {?string} options.ethNode The URL to an Ethereum node
+ * @param {?string} options.to The destination address for this expression's transaction
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
  */
 class Evaluator {
-  constructor (ast, bindings, ethNode) {
+  constructor (ast, bindings, { ethNode, to } = {}) {
     this.ast = ast
     this.bindings = bindings
     this.eth = new Eth(ethNode || 'https://mainnet.infura.io')
+    this.to = to && new TypedValue('address', to)
   }
 
   /**
@@ -200,9 +203,14 @@ class Evaluator {
 
     if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
-      const target = await this.evaluateNode(node.target)
-      const inputs = await this.evaluateNodes(node.inputs)
-      const outputs = node.outputs
+      let target
+
+      // Inject self
+      if (node.target.type === 'Identifier' && node.target.value === 'self') {
+        target = this.to
+      } else {
+        target = await this.evaluateNode(node.target)
+      }
 
       if (target.type !== 'bytes20' &&
         target.type !== 'address') {
@@ -210,6 +218,9 @@ class Evaluator {
       } else if (!Web3Utils.checkAddressChecksum(target.value)) {
         this.panic(`Checksum failed for address "${target.value}"`)
       }
+
+      const inputs = await this.evaluateNodes(node.inputs)
+      const outputs = node.outputs
 
       const call = ABI.encodeFunctionCall({
         name: node.callee,
@@ -261,10 +272,12 @@ module.exports = {
    * @memberof radspec/evaluator
    * @param {radspec/parser/AST} ast The AST to evaluate
    * @param {radspec/Bindings} bindings An object of bindings and their values
-   * @param {?string} ethNode The URL to an Ethereum node
+   * @param {?Object} options An options object
+   * @param {?string} options.ethNode The URL to an Ethereum node
+   * @param {?string} options.to The destination address for this expression's transaction
    * @return {string}
    */
-  evaluate (ast, bindings, ethNode) {
-    return new Evaluator(ast, bindings, ethNode).evaluate()
+  evaluate (ast, bindings, options) {
+    return new Evaluator(ast, bindings, options).evaluate()
   }
 }
