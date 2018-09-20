@@ -105,7 +105,7 @@ class Evaluator {
     }
 
     if (node.type === 'BytesLiteral') {
-      const length = (node.value.length - 2) / 2
+      const length = Math.ceil((node.value.length - 2) / 2)
       if (length > 32) {
         this.panic('Byte literal represents more than 32 bytes')
       }
