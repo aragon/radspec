@@ -27,6 +27,13 @@ const bytes32 = (value) => ({
   value
 })
 
+const helperCases = [
+  [{
+    source: 'helper `@echo(@echo(\'hi\', 2), 9 / 3)`',
+    bindings: { }
+  }, 'helper hihihihihihi'],
+]
+
 const cases = [
   // Bindings
   [{
@@ -108,7 +115,9 @@ const cases = [
   [{
     source: '`_bool ? \'h\' + _var + \'o\' : \'damn\'`',
     bindings: { _bool: bool(true), _var: string('ell') }
-  }, 'hello']
+  }, 'hello'],
+
+  ...helperCases,
 ]
 
 for (let [input, expected] of cases) {
