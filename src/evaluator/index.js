@@ -152,20 +152,44 @@ class Evaluator {
       const left = await this.evaluateNode(node.left)
       const right = await this.evaluateNode(node.right)
 
-      if (!types.isInteger(left.type) ||
+      let leftValue = left.value
+      let rightValue = right.value
+
+      const bothTypesAddress = (left, right) => (
+        // isAddress is true if type is address or bytes with size less than 20
+        types.isAddress(left.type) &&
+        types.isAddress(right.type)
+      )
+
+      const bothTypesBytes = (left, right) => (
+        types.types.bytes.isType(left.type) &&
+        types.types.bytes.isType(right.type)
+      )
+
+      // Conversion to BN for comparaison will happen if:
+      // - Both types are addresses or bytes of any size (can be different sizes)
+      // - If one of the types if an address and the other bytes with size less than 20
+      if (bothTypesAddress(left, right) || bothTypesBytes(left, right)) {
+        leftValue = Web3Utils.toBN(leftValue)
+        rightValue = Web3Utils.toBN(rightValue)
+      } else if (!types.isInteger(left.type) ||
         !types.isInteger(right.type)) {
-        this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer types "${left.type}" and "${right.type}"`)
+        this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer or fixed-size bytes types "${left.type}" and "${right.type}"`)
       }
 
       switch (node.operator) {
         case 'GREATER':
-          return new TypedValue('bool', left.value.gt(right.value))
+          return new TypedValue('bool', leftValue.gt(rightValue))
         case 'GREATER_EQUAL':
-          return new TypedValue('bool', left.value.gte(right.value))
+          return new TypedValue('bool', leftValue.gte(rightValue))
         case 'LESS':
-          return new TypedValue('bool', left.value.lt(right.value))
+          return new TypedValue('bool', leftValue.lt(rightValue))
         case 'LESS_EQUAL':
-          return new TypedValue('bool', left.value.lte(right.value))
+          return new TypedValue('bool', leftValue.lte(rightValue))
+        case 'EQUAL_EQUAL':
+          return new TypedValue('bool', leftValue.eq(rightValue))
+        case 'BANG_EQUAL':
+          return new TypedValue('bool', !leftValue.eq(rightValue))
       }
     }
 
