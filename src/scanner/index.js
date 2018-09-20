@@ -98,6 +98,9 @@ class Scanner {
       case '?':
         this.emitToken('QUESTION_MARK')
         break
+      case '@':
+        this.emitToken('AT')
+        break
 
       // One or two character tokens
       case '!':

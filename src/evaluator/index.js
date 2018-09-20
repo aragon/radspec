@@ -7,6 +7,7 @@ const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
 const BN = require('bn.js')
 const types = require('../types')
+const helpers = require('../helpers')
 
 /**
  * A value coupled with a type
@@ -81,7 +82,7 @@ class Evaluator {
    * Evaluate a single node.
    *
    * @param  {radspec/parser/Node} node
-   * @return {string}
+   * @return {Promise<string>}
    */
   async evaluateNode (node) {
     if (node.type === 'ExpressionStatement') {
@@ -237,6 +238,19 @@ class Evaluator {
       }).then(
         (data) => new TypedValue(returnType, ABI.decodeParameter(returnType, data))
       )
+    }
+
+    if (node.type === 'HelperFunction') {
+      const helperName = node.name
+
+      if (!helpers.exists(helperName)) {
+        this.panic(`${helperName} helper function is not defined`)
+      }
+
+      const inputs = await this.evaluateNodes(node.inputs)
+      const { type, value } = await helpers.execute(helperName, inputs)
+
+      return new TypedValue(type, value)
     }
   }
 
