@@ -1,11 +1,13 @@
 const formatDate = require('./formatDate')
 const echo = require('./echo')
 const tokenAmount = require('./tokenAmount')
+const transformTime = require('./transformTime')
 
 const defaultHelpers = {
   formatDate,
-  echo,
-  tokenAmount
+  transformTime,
+  tokenAmount,
+  echo
 }
 
 class Helpers {

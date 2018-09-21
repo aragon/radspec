@@ -52,6 +52,14 @@ const helperCases = [
     source: 'Ethereum launched on a `@formatDate(date, \'dddd\')` in `@formatDate(date, \'MMMM YYYY\')`',
     bindings: { date: int('1438269793') }
   }, 'Ethereum launched on a Thursday in July 2015'],
+  [{
+    source: 'Period duration is `@transformTime(time, \'days\')` days',
+    bindings: { time: int(3600 * 24 * 2 + 50) }
+  }, 'Period duration is 2 days'],
+  [{
+    source: '3600 seconds is `@transformTime(3600, \'humanize\', \'second\')`',
+    bindings: { }
+  }, '3600 seconds is an hour'],
 ]
 
 const cases = [
