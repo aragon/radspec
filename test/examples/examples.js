@@ -44,6 +44,14 @@ const helperCases = [
     source: 'Balance: `@tokenAmount(token, balance)`',
     bindings: { token: address('0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7'), balance: int('10') }
   }, 'Balance: 10 🦄'],
+  [{
+    source: 'Ethereum launched `@formatDate(date)`',
+    bindings: { date: int('1438269793') }
+  }, 'Ethereum launched 07-30-2015'],
+  [{
+    source: 'Ethereum launched on a `@formatDate(date, \'dddd\')` in `@formatDate(date, \'MMMM YYYY\')`',
+    bindings: { date: int('1438269793') }
+  }, 'Ethereum launched on a Thursday in July 2015'],
 ]
 
 const cases = [
