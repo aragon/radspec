@@ -1,3 +1,3 @@
-module.exports = async (node, repeat = 1) => {
-  return { type: 'string', value: node.value.repeat(repeat) }
+module.exports = () => async (echo, repeat = 1) => {
+  return { type: 'string', value: echo.repeat(repeat) }
 }

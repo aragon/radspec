@@ -1,17 +1,31 @@
 const formatDate = require('./formatDate')
 const echo = require('./echo')
+const tokenAmount = require('./tokenAmount')
 
-module.exports = {
-  helpers: {
-    formatDate,
-    echo,
-  },
+const defaultHelpers = {
+  formatDate,
+  echo,
+  tokenAmount,
+}
+
+class Helpers {
+  constructor (eth, userHelpers = {}) {
+    this.eth = eth
+    this.helpers = { ...defaultHelpers, ...userHelpers }
+  }
 
   exists (helper) {
     return !!this.helpers[helper]
-  },
+  }
 
   execute (helper, inputs) {
-    return this.helpers[helper](...inputs)
+    inputs = inputs.map(input => input.value) // pass values directly
+    return this.helpers[helper](this.eth)(...inputs)
   }
+}
+
+module.exports = {
+  Helpers,
+
+  defaultHelpers
 }

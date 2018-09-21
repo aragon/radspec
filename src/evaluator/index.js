@@ -7,7 +7,7 @@ const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
 const BN = require('bn.js')
 const types = require('../types')
-const helpers = require('../helpers')
+const { Helpers } = require('../helpers')
 
 /**
  * A value coupled with a type
@@ -64,6 +64,7 @@ class Evaluator {
     this.bindings = bindings
     this.eth = new Eth(ethNode || 'https://mainnet.infura.io')
     this.to = to && new TypedValue('address', to)
+    this.helpers = new Helpers(this.eth)
   }
 
   /**
@@ -243,12 +244,12 @@ class Evaluator {
     if (node.type === 'HelperFunction') {
       const helperName = node.name
 
-      if (!helpers.exists(helperName)) {
+      if (!this.helpers.exists(helperName)) {
         this.panic(`${helperName} helper function is not defined`)
       }
 
       const inputs = await this.evaluateNodes(node.inputs)
-      const { type, value } = await helpers.execute(helperName, inputs)
+      const { type, value } = await this.helpers.execute(helperName, inputs)
 
       return new TypedValue(type, value)
     }
