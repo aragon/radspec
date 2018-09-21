@@ -29,9 +29,21 @@ const bytes32 = (value) => ({
 
 const helperCases = [
   [{
-    source: 'helper `@echo(@echo(\'hi\', 2), 9 / 3)`',
+    source: 'helper `@echo(@echo(\'hi \'), 1 + 100000 ^ 0)`',
     bindings: { }
-  }, 'helper hihihihihihi'],
+  }, 'helper hi hi '],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT',
+    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054595780000000000'), false: bool(false) } // TODO: make false a special identifier
+  }, 'Balance: 647413.05459 ANT'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance)`',
+    bindings: { token: address('0x0000000000000000000000000000000000000000'), balance: int('647413054595780000000000') }
+  }, 'Balance: 647413.05 ETH'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance)`',
+    bindings: { token: address('0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7'), balance: int('10') }
+  }, 'Balance: 10 🦄'],
 ]
 
 const cases = [
@@ -120,7 +132,7 @@ const cases = [
   ...helperCases,
 ]
 
-for (let [input, expected] of cases) {
+for (let [input, expected] of helperCases) {
   test(input.source, async (t) => {
     const actual = await evaluateRaw(input.source, input.bindings, input.options)
     t.is(
