@@ -132,7 +132,7 @@ const cases = [
   ...helperCases,
 ]
 
-for (let [input, expected] of helperCases) {
+for (let [input, expected] of cases) {
   test(input.source, async (t) => {
     const actual = await evaluateRaw(input.source, input.bindings, input.options)
     t.is(
