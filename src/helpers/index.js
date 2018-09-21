@@ -5,7 +5,7 @@ const tokenAmount = require('./tokenAmount')
 const defaultHelpers = {
   formatDate,
   echo,
-  tokenAmount,
+  tokenAmount
 }
 
 class Helpers {

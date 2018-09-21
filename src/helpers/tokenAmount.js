@@ -5,15 +5,15 @@ module.exports = (eth) => async (addr, amount, showSymbol = true, precision = ne
   let decimals
   let symbol
 
-  if (addr == ETH) {
-  	decimals = new BN(18)
+  if (addr === ETH) {
+    decimals = new BN(18)
     if (showSymbol) {
       symbol = 'ETH'
     }
   } else {
-  	const token = new eth.Contract(ABI, addr)
+    const token = new eth.Contract(ABI, addr)
 
-  	decimals = new BN(await token.methods.decimals().call())
+    decimals = new BN(await token.methods.decimals().call())
     if (showSymbol) {
       symbol = await token.methods.symbol().call()
     }
@@ -32,7 +32,7 @@ module.exports = (eth) => async (addr, amount, showSymbol = true, precision = ne
   const formattedAmount = `${whole}${fraction === '0' ? '' : `.${fraction.slice(0, precision)}`}`
 
   return {
-  	type: 'string',
-  	value: showSymbol ? `${formattedAmount} ${symbol}` : formattedAmount
+    type: 'string',
+    value: showSymbol ? `${formattedAmount} ${symbol}` : formattedAmount
   }
 }

@@ -312,13 +312,13 @@ class Parser {
       const identifier = this.consume()
       const name = identifier.value
 
-      if (identifier.type != 'IDENTIFIER') {
+      if (identifier.type !== 'IDENTIFIER') {
         this.report(`Invalid helper function name '${name}' provided after @`)
       }
 
       let node = {
         type: 'HelperFunction',
-        name: name,
+        name: name
       }
 
       if (this.matches('LEFT_PAREN')) {

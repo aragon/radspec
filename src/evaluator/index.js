@@ -7,7 +7,7 @@ const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
 const BN = require('bn.js')
 const types = require('../types')
-const { Helpers } = require('../helpers')
+const Helpers = require('../helpers').Helpers
 
 /**
  * A value coupled with a type
@@ -249,9 +249,9 @@ class Evaluator {
       }
 
       const inputs = await this.evaluateNodes(node.inputs)
-      const { type, value } = await this.helpers.execute(helperName, inputs)
+      const result = await this.helpers.execute(helperName, inputs)
 
-      return new TypedValue(type, value)
+      return new TypedValue(result.type, result.value)
     }
   }
 
