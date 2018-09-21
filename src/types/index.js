@@ -37,8 +37,9 @@ module.exports = {
   },
 
   isAddress (identifier) {
-    return this.types.address.isType(identifier) ||
+    return this.types.address.isType(identifier) || (
       this.types.bytes.isType(identifier) &&
       this.types.bytes.size(identifier) <= 20
+    )
   }
 }
