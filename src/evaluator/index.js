@@ -7,7 +7,7 @@ const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
 const BN = require('bn.js')
 const types = require('../types')
-const Helpers = require('../helpers').Helpers
+const { Helpers } = require('../helpers')
 
 /**
  * A value coupled with a type
