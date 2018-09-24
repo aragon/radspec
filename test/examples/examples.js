@@ -1,6 +1,8 @@
 const test = require('ava')
 const { evaluateRaw } = require('../../src')
+const { tenPow } = require('../../src/helpers/lib/formatBN')
 const BN = require('bn.js')
+
 
 const int = (value) => ({
   type: 'int256',
@@ -60,6 +62,14 @@ const helperCases = [
     source: '3600 seconds is `@transformTime(3600, \'humanize\', \'second\')`',
     bindings: { }
   }, '3600 seconds is an hour'],
+  [{
+    source: 'Change required support to `@formatPct(support)`%',
+    bindings: { support: int((new BN(50)).mul(tenPow(16))) } // 50 * 10^16
+  }, 'Change required support to 50%'],
+  [{
+    source: 'Change required support to `@formatPct(support, 10 ^ 18, 1)`%',
+    bindings: { support: int((new BN(40)).mul(tenPow(16)).add((new BN(43)).mul(tenPow(14)))) } // 40 * 10^16 + 43 * 10^14
+  }, 'Change required support to 40.4%'],
 ]
 
 const cases = [
