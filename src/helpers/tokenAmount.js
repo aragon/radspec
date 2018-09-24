@@ -1,5 +1,6 @@
 const BN = require('bn.js')
 const { ABI, ETH } = require('./lib/token')
+const { formatBN, tenPow } = require('./lib/formatBN')
 
 module.exports = (eth) => async (addr, amount, showSymbol = true, precision = new BN(2)) => {
   let decimals
@@ -19,17 +20,7 @@ module.exports = (eth) => async (addr, amount, showSymbol = true, precision = ne
     }
   }
 
-  // Inspired by: https://github.com/ethjs/ethjs-unit/blob/35d870eae1c32c652da88837a71e252a63a83ebb/src/index.js#L83
-  const tenPow = x => (new BN(10)).pow(new BN(x))
-  const base = tenPow(decimals)
-  const baseLength = base.toString().length
-
-  let fraction = amount.mod(base).toString()
-  const zeros = '0'.repeat(Math.max(0, baseLength - fraction.length - 1))
-  fraction = `${zeros}${fraction}`
-  const whole = amount.div(base).toString()
-
-  const formattedAmount = `${whole}${fraction === '0' ? '' : `.${fraction.slice(0, precision)}`}`
+  const formattedAmount = formatBN(amount, tenPow(decimals), precision)
 
   return {
     type: 'string',
