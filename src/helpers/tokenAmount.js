@@ -1,6 +1,6 @@
 const BN = require('bn.js')
 const { ABI, ETH } = require('./lib/token')
-const { formatBN, tenPow } = require('./lib/formatBN')
+const { formatBN, tenPow } = require('./lib/formatBN')
 
 module.exports = (eth) => async (addr, amount, showSymbol = true, precision = new BN(2)) => {
   let decimals

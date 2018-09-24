@@ -1,4 +1,4 @@
-const { formatBN, tenPow } = require('./lib/formatBN')
+const { formatBN, tenPow } = require('./lib/formatBN')
 
 module.exports = () => async (value, base = tenPow(18), precision = 2) => {
   const oneHundred = tenPow(2)
