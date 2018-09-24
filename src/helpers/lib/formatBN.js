@@ -6,7 +6,6 @@ exports.tenPow = x => (
 
 exports.formatBN = (value, base, precision) => {
   // Inspired by: https://github.com/ethjs/ethjs-unit/blob/35d870eae1c32c652da88837a71e252a63a83ebb/src/index.js#L83
-
   const baseLength = base.toString().length
 
   let fraction = value.mod(base).toString()
