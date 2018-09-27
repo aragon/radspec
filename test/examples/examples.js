@@ -55,13 +55,17 @@ const helperCases = [
     bindings: { date: int('1438269793') }
   }, 'Ethereum launched on a Thursday in July 2015'],
   [{
-    source: 'Period duration is `@transformTime(time, \'days\')` days',
+    source: 'Period duration is `@transformTime(time, \'days\')`',
     bindings: { time: int(3600 * 24 * 2 + 50) }
   }, 'Period duration is 2 days'],
   [{
-    source: '3600 seconds is `@transformTime(3600, \'humanize\', \'second\')`',
+    source: '3600 seconds is `@transformTime(3600)`',
     bindings: { }
-  }, '3600 seconds is an hour'],
+  }, '3600 seconds is 1 hour'],
+  [{
+    source: '10k minutes is `@transformTime(10 ^ 4, \'seconds\', \'minutes\')`',
+    bindings: { }
+  }, '10k minutes is 600000 seconds'],
   [{
     source: 'Change required support to `@formatPct(support)`%',
     bindings: { support: int((new BN(50)).mul(tenPow(16))) } // 50 * 10^16
