@@ -12,6 +12,6 @@ exports.formatBN = (value, base, precision) => {
   const zeros = '0'.repeat(Math.max(0, baseLength - fraction.length - 1))
   fraction = `${zeros}${fraction}`
   const whole = value.div(base).toString()
-  
+
   return `${whole}${parseInt(fraction) === 0 ? '' : `.${fraction.slice(0, precision)}`}`
 }

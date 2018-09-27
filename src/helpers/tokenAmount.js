@@ -1,5 +1,5 @@
 const BN = require('bn.js')
-const { ABI, ETH } = require('./lib/token')
+const { ERC20_SYMBOL_DECIMALS_ABI, ETH } = require('./lib/token')
 const { formatBN, tenPow } = require('./lib/formatBN')
 
 module.exports = (eth) =>
@@ -22,7 +22,7 @@ module.exports = (eth) =>
         symbol = 'ETH'
       }
     } else {
-      const token = new eth.Contract(ABI, tokenAddress)
+      const token = new eth.Contract(ERC20_SYMBOL_DECIMALS_ABI, tokenAddress)
 
       decimals = new BN(await token.methods.decimals().call())
       if (showSymbol) {
