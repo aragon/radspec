@@ -13,14 +13,11 @@ module.exports = {
   },
 
   size (identifier) {
-    let n = identifier.substr(5)
-
     // `byte` is bytes1
-    if (!n && identifier === 'byte') {
+    if (identifier === 'byte') {
       identifier = 'bytes1'
-      n = 1
     }
 
-    return n
+    return identifier.substr(5)
   }
 }
