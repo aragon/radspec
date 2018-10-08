@@ -107,7 +107,7 @@ class Parser {
   comparison (astBody) {
     let node = this.addition(astBody)
 
-    while (this.matches('GREATER', 'GREATER_EQUAL', 'LESS', 'LESS_EQUAL')) {
+    while (this.matches('GREATER', 'GREATER_EQUAL', 'LESS', 'LESS_EQUAL', 'EQUAL_EQUAL', 'BANG_EQUAL')) {
       let operator = this.previous().type
       let right = this.addition(astBody)
       node = {
