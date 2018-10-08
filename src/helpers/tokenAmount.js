@@ -12,19 +12,19 @@ module.exports = (eth) =>
    * @param {integer} precision The number of decimals that will be printed (if any)
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
-  async (tokenAddress, amount, showSymbol = true, precision = new BN(2)) => {
+  async (tokenAddress, amount, showSymbol = true, precision = new BN(2, 10)) => {
     let decimals
     let symbol
 
     if (tokenAddress === ETH) {
-      decimals = new BN(18)
+      decimals = new BN(18, 10)
       if (showSymbol) {
         symbol = 'ETH'
       }
     } else {
       const token = new eth.Contract(ERC20_SYMBOL_DECIMALS_ABI, tokenAddress)
 
-      decimals = new BN(await token.methods.decimals().call())
+      decimals = new BN(await token.methods.decimals().call(), 10)
       if (showSymbol) {
         symbol = await token.methods.symbol().call()
       }

@@ -1,7 +1,7 @@
 const BN = require('bn.js')
 
 exports.tenPow = x => (
-  (new BN(10)).pow(new BN(x))
+  (new BN(10, 10)).pow(new BN(x, 10))
 )
 
 exports.formatBN = (value, base, precision) => {
@@ -13,5 +13,5 @@ exports.formatBN = (value, base, precision) => {
   fraction = `${zeros}${fraction}`
   const whole = value.div(base).toString()
 
-  return `${whole}${parseInt(fraction) === 0 ? '' : `.${fraction.slice(0, precision)}`}`
+  return `${whole}${parseInt(fraction, 10) === 0 ? '' : `.${fraction.slice(0, precision)}`}`
 }

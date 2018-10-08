@@ -24,7 +24,7 @@ class TypedValue {
     this.value = value
 
     if (types.isInteger(this.type) && !BN.isBN(this.value)) {
-      this.value = new BN(this.value)
+      this.value = new BN(this.value, 10)
     }
 
     if (this.type === 'address') {
