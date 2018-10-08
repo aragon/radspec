@@ -166,9 +166,9 @@ class Evaluator {
         types.types.bytes.isType(right.type)
       )
 
-      // Conversion to BN for comparaison will happen if:
+      // Conversion to BN for comparison will happen if:
       // - Both types are addresses or bytes of any size (can be different sizes)
-      // - If one of the types if an address and the other bytes with size less than 20
+      // - If one of the types is an address and the other bytes with size less than 20
       if (bothTypesAddress(left, right) || bothTypesBytes(left, right)) {
         leftValue = Web3Utils.toBN(leftValue)
         rightValue = Web3Utils.toBN(rightValue)

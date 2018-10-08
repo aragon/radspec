@@ -27,7 +27,7 @@ const bytes32 = (value) => ({
   value
 })
 
-const comparaisonCases = [
+const comparisonCases = [
   [{
     source: '`a > 2`',
     bindings: { a: int(3) }
@@ -99,7 +99,7 @@ const comparaisonCases = [
 ]
 
 const cases = [
-  ...comparaisonCases,
+  ...comparisonCases,
   // Bindings
   [{
     source: 'a is `a`, b is `b` and "c d" is `c d`',
