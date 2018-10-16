@@ -183,8 +183,8 @@ const cases = [
   }, 'hello']
 ]
 
-for (let [input, expected] of cases) {
-  test(input.source, async (t) => {
+cases.forEach(([input, expected], index) => {
+  test(`${index} - ${input.source}`, async (t) => {
     const actual = await evaluateRaw(input.source, input.bindings, input.options)
     t.is(
       actual,
@@ -192,4 +192,4 @@ for (let [input, expected] of cases) {
       `Expected "${input.source}" to evaluate to "${expected}", but evaluated to "${actual}"`
     )
   })
-}
+})

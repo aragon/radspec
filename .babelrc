@@ -1,0 +1,31 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": [
+            ">2%",
+            "last 1 edge versions",
+            "not ie > 0",
+            "not op_mini all"
+          ]
+        },
+        "useBuiltIns": false
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/transform-runtime"
+  ],
+  "env": {
+    "production": {
+      "presets": [
+        ["minify", {
+          "mangle": false
+        }]
+      ]
+    }
+  }
+}
