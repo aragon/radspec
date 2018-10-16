@@ -254,11 +254,10 @@ class Parser {
     if (!node) {
       const previousNode = astBody.length && astBody[astBody.length - 1]
       if (previousNode && (
-          previousNode.type === 'Identifier' ||
-          previousNode.type === 'GroupedExpression' ||
-          previousNode.type === 'CallExpression'
-        )
-      ) {
+        previousNode.type === 'Identifier' ||
+        previousNode.type === 'GroupedExpression' ||
+        previousNode.type === 'CallExpression'
+      )) {
         node = previousNode
         // Consume the last node as part of this node
         astBody.pop()
