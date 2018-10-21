@@ -38,7 +38,7 @@ module.exports = () =>
     const add = require(`date-fns/add${capitalize(fromUnit)}`)
 
     const zeroDate = new Date(0)
-    const duration = add(zeroDate, time.toNumber())
+    const duration = addTime(zeroDate, Number(time))
 
     const options = toUnit === BEST_UNIT ? {} : { unit: TO_UNIT_MAP[toUnit] }
     return {

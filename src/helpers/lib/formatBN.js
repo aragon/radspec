@@ -1,7 +1,7 @@
 const BN = require('bn.js')
 
 exports.tenPow = x => (
-  (new BN(10, 10)).pow(new BN(x, 10))
+  (new BN(10)).pow(new BN(x))
 )
 
 exports.formatBN = (amount, base, precision) => {

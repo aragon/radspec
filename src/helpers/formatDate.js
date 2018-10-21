@@ -12,6 +12,6 @@ module.exports = () =>
   async (timestamp, format = 'MMM. do y') => {
     return {
       type: 'string',
-      value: formatDate(new Date(timestamp.toNumber() * 1000), format)
+      value: formatDate(new Date(Number(timestamp) * 1000), format)
     }
   }
