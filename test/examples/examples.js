@@ -119,9 +119,9 @@ const helperCases = [
   [{
     source: 'Ethereum launched `@formatDate(date)`',
     bindings: { date: int('1438269793') }
-  }, 'Ethereum launched 07-30-2015'],
+  }, 'Ethereum launched Jul. 30th 2015'],
   [{
-    source: 'Ethereum launched on a `@formatDate(date, \'dddd\')` in `@formatDate(date, \'MMMM YYYY\')`',
+    source: 'Ethereum launched on a `@formatDate(date, \'EEEE\')` in `@formatDate(date, \'MMMM yyyy\')`',
     bindings: { date: int('1438269793') }
   }, 'Ethereum launched on a Thursday in July 2015'],
   [{
