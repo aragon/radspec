@@ -22,7 +22,7 @@ const defaultHelpers = {
 class Helpers {
   constructor (eth, userHelpers = {}) {
     this.eth = eth
-    this.helpers = { ...defaultHelpers, ...userHelpers }
+    this.availableHelpers = { ...defaultHelpers, ...userHelpers }
   }
 
   /**
@@ -32,7 +32,7 @@ class Helpers {
    * @return {bool}
    */
   exists (helper) {
-    return !!this.helpers[helper]
+    return !!this.availableHelpers[helper]
   }
 
   /**

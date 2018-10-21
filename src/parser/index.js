@@ -315,7 +315,7 @@ class Parser {
         this.report(`Invalid helper function name '${name}' provided after @`)
       }
 
-      let node = {
+      const node = {
         type: 'HelperFunction',
         name: name
       }
@@ -390,16 +390,16 @@ class Parser {
   }
 
   /**
-   * Try to parse a type.
+   * Try to parse function arguments.
    *
    * @param  {Array<Node>} astBody Subtree of AST being walked
    * @return {Array<Node>}
    */
   functionInputs (astBody) {
-    let inputs = []
+    const inputs = []
 
     while (!this.eof() && !this.matches('RIGHT_PAREN')) {
-      let input = this.comparison(astBody)
+      const input = this.comparison(astBody)
       if (!input.type) {
         input.type = this.type()
       } else if (this.matches('COLON')) {

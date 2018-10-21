@@ -1,7 +1,8 @@
 const test = require('ava')
+const BN = require('bn.js')
 const { evaluateRaw } = require('../../src')
 const { tenPow } = require('../../src/helpers/lib/formatBN')
-const BN = require('bn.js')
+const { ETH } = require('../../src/helpers/lib/token')
 
 const int = (value) => ({
   type: 'int256',
@@ -110,7 +111,7 @@ const helperCases = [
   }, 'Balance: 647413.05459 ANT'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
-    bindings: { token: address('0x0000000000000000000000000000000000000000'), balance: int('647413054595780000000000') }
+    bindings: { token: address(ETH), balance: int('647413054595780000000000') }
   }, 'Balance: 647413.05 ETH'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
@@ -143,7 +144,7 @@ const helperCases = [
   [{
     source: 'Change required support to `@formatPct(support, 10 ^ 18, 1)`%',
     bindings: { support: int((new BN(40)).mul(tenPow(16)).add((new BN(43)).mul(tenPow(14)))) } // 40 * 10^16 + 43 * 10^14
-  }, 'Change required support to 40.4%'],
+  }, 'Change required support to 40.4%']
 ]
 
 const cases = [
@@ -200,18 +201,18 @@ const cases = [
   }, 'Allocate 100 ANT.'],
   [{
     source: 'Burns the `token.symbol(): string` balance of `person` (balance is `token.balanceOf(person): uint256 / 1000000000000000000`)',
-    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), person: address('0x0000000000000000000000000000000000000000') }
-  }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000000 (balance is 0)'],
+    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), person: address('0x0000000000000000000000000000000000000001') }
+  }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000001 (balance is 0)'],
   [{
     source: 'Burns the `self.symbol(): string` balance of `person` (balance is `self.balanceOf(person): uint256 / 1000000000000000000`)',
-    bindings: { person: address('0x0000000000000000000000000000000000000000') },
+    bindings: { person: address('0x0000000000000000000000000000000000000001') },
     options: { to: '0x960b236A07cf122663c4303350609A66A7B288C0' }
-  }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000000 (balance is 0)'],
+  }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000001 (balance is 0)'],
   [{
     source: 'Send ETH to the sale at block `((self.controller(): address).sale(): address).initialBlock(): uint` from `person`',
-    bindings: { person: address('0x0000000000000000000000000000000000000000') },
+    bindings: { person: address('0x0000000000000000000000000000000000000001') },
     options: { to: '0x960b236A07cf122663c4303350609A66A7B288C0' }
-  }, 'Send ETH to the sale at block 3723000 from 0x0000000000000000000000000000000000000000'],
+  }, 'Send ETH to the sale at block 3723000 from 0x0000000000000000000000000000000000000001'],
   [{
     source: 'Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? \'s\' : \' \'`',
     bindings: { _periodDuration: int(86400 * 2), _vault: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
