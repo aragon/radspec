@@ -25,7 +25,7 @@ class Helpers {
     this.helpers = { ...defaultHelpers, ...userHelpers }
   }
 
-   /**
+  /**
    * Does a helper exist
    *
    * @param  {string} helper Helper name
