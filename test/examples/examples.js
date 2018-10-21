@@ -3,7 +3,6 @@ const { evaluateRaw } = require('../../src')
 const { tenPow } = require('../../src/helpers/lib/formatBN')
 const BN = require('bn.js')
 
-
 const int = (value) => ({
   type: 'int256',
   value
@@ -28,6 +27,77 @@ const bytes32 = (value) => ({
   type: 'bytes32',
   value
 })
+
+const comparisonCases = [
+  [{
+    source: '`a > 2`',
+    bindings: { a: int(3) }
+  }, 'true'],
+  [{
+    source: '`a > b`',
+    bindings: { a: int(2), b: int(3) }
+  }, 'false'],
+  [{
+    source: '`a >= b`',
+    bindings: { a: int(3), b: int(2) }
+  }, 'true'],
+  [{
+    source: '`a >= b`',
+    bindings: { a: int(1), b: int(2) }
+  }, 'false'],
+  [{
+    source: '`a >= b`',
+    bindings: { a: int(2), b: int(2) }
+  }, 'true'],
+  [{
+    source: '`a < b`',
+    bindings: { a: int(3), b: int(2) }
+  }, 'false'],
+  [{
+    source: '`a < b`',
+    bindings: { a: int(2), b: int(3) }
+  }, 'true'],
+  [{
+    source: '`a <= b`',
+    bindings: { a: int(3), b: int(2) }
+  }, 'false'],
+  [{
+    source: '`a <= b`',
+    bindings: { a: int(1), b: int(2) }
+  }, 'true'],
+  [{
+    source: '`a <= b`',
+    bindings: { a: int(3), b: int(3) }
+  }, 'true'],
+  [{
+    source: '`a == b`',
+    bindings: { a: int(3), b: int(3) }
+  }, 'true'],
+  [{
+    source: '`a != b`',
+    bindings: { a: int(3), b: int(3) }
+  }, 'false'],
+  [{
+    source: '`a > 0x01`',
+    bindings: { a: address('0x0000000000000000000000000000000000000002') }
+  }, 'true'],
+  [{
+    source: '`a == 0x0`',
+    bindings: { a: address('0x0000000000000000000000000000000000000000') }
+  }, 'true'],
+  [{
+    source: '`a != 0x01`',
+    bindings: { a: address('0x0000000000000000000000000000000000000002') }
+  }, 'true'],
+  [{
+    source: '`a != 0x01`',
+    bindings: { a: address('0x0000000000000000000000000000000000000002') }
+  }, 'true'],
+  [{
+    source: '`a > 0x01`',
+    bindings: { a: bytes32('0x0000000000000000000000000000000000000000000000000000000000000002') }
+  }, 'true']
+]
 
 const helperCases = [
   [{
@@ -159,11 +229,12 @@ const cases = [
     bindings: { _bool: bool(true), _var: string('ell') }
   }, 'hello'],
 
-  ...helperCases,
+  ...comparisonCases,
+  ...helperCases
 ]
 
-for (let [input, expected] of cases) {
-  test(input.source, async (t) => {
+cases.forEach(([input, expected], index) => {
+  test(`${index} - ${input.source}`, async (t) => {
     const actual = await evaluateRaw(input.source, input.bindings, input.options)
     t.is(
       actual,
@@ -171,4 +242,4 @@ for (let [input, expected] of cases) {
       `Expected "${input.source}" to evaluate to "${expected}", but evaluated to "${actual}"`
     )
   })
-}
+})

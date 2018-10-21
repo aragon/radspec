@@ -107,7 +107,7 @@ class Parser {
   comparison (astBody) {
     let node = this.addition(astBody)
 
-    while (this.matches('GREATER', 'GREATER_EQUAL', 'LESS', 'LESS_EQUAL')) {
+    while (this.matches('GREATER', 'GREATER_EQUAL', 'LESS', 'LESS_EQUAL', 'EQUAL_EQUAL', 'BANG_EQUAL')) {
       let operator = this.previous().type
       let right = this.addition(astBody)
       node = {
@@ -254,11 +254,10 @@ class Parser {
     if (!node) {
       const previousNode = astBody.length && astBody[astBody.length - 1]
       if (previousNode && (
-          previousNode.type === 'Identifier' ||
-          previousNode.type === 'GroupedExpression' ||
-          previousNode.type === 'CallExpression'
-        )
-      ) {
+        previousNode.type === 'Identifier' ||
+        previousNode.type === 'GroupedExpression' ||
+        previousNode.type === 'CallExpression'
+      )) {
         node = previousNode
         // Consume the last node as part of this node
         astBody.pop()

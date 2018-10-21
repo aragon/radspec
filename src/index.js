@@ -29,10 +29,10 @@ const evaluator = require('./evaluator')
  * @param {?Object} evaluatorOptions An options object for the evaluator
  * @return {Promise<string>} The result of the evaluation
  */
-function evaluateRaw (source, bindings, options) {
+function evaluateRaw (source, bindings, evaluatorOptions) {
   return scanner.scan(source)
     .then(parser.parse)
-    .then((ast) => evaluator.evaluate(ast, bindings, options))
+    .then((ast) => evaluator.evaluate(ast, bindings, evaluatorOptions))
 }
 
 /**

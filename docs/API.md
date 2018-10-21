@@ -2,35 +2,36 @@
 
 ### Table of Contents
 
--   [Binding](#binding)
--   [Bindings](#bindings)
--   [radspec](#radspec)
-    -   [evaluateRaw](#evaluateraw)
-    -   [evaluate](#evaluate)
+-   [Binding][1]
+-   [Bindings][2]
+-   [radspec][3]
+-   [evaluateRaw][4]
+-   [evaluate][5]
 
 ## Binding
 
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+Type: [Object][6]
 
 **Properties**
 
--   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The type of the binding (a valid Radspec type)
+-   `type` **[string][7]** The type of the binding (a valid Radspec type)
 -   `value` **any** The value of the binding
 
 ## Bindings
 
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String), [Binding](#binding)>
+Type: [Object][6]&lt;[string][7], [Binding][8]>
 
 ## radspec
 
-### evaluateRaw
+## evaluateRaw
 
 Evaluate a radspec expression with manual bindings.
 
 **Parameters**
 
--   `source` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The radspec expression
--   `bindings` **[Bindings](#bindings)** An object of bindings and their values
+-   `source` **[string][7]** The radspec expression
+-   `bindings` **[Bindings][9]** An object of bindings and their values
+-   `evaluatorOptions` **[Object][6]?** An options object for the evaluator
 
 **Examples**
 
@@ -42,20 +43,22 @@ radspec.evaluateRaw('a is `a`', {
 }).then(console.log)
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** The result of the evaluation
+Returns **[Promise][10]&lt;[string][7]>** The result of the evaluation
 
-### evaluate
+## evaluate
 
 Evaluate a radspec expression (`source`) for a transaction (`call`)
 
 **Parameters**
 
--   `source` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The radspec expression
--   `call` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The call that determines the bindings for this evaluation
-    -   `call.abi` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** The ABI used to decode the transaction data
-    -   `call.transaction` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The transaction to decode for this evaluation
-        -   `call.transaction.to` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The destination address for this transaction
-        -   `call.transaction.data` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The transaction data
+-   `source` **[string][7]** The radspec expression
+-   `call` **[Object][6]** The call that determines the bindings for this evaluation
+    -   `call.abi` **[Array][11]** The ABI used to decode the transaction data
+    -   `call.transaction` **[Object][6]** The transaction to decode for this evaluation
+        -   `call.transaction.to` **[string][7]** The destination address for this transaction
+        -   `call.transaction.data` **[string][7]** The transaction data
+-   `options` **[Object][6]?** An options object (optional, default `{}`)
+    -   `options.ethNode` **[string][7]?** The URL to an Ethereum node
 
 **Examples**
 
@@ -87,4 +90,26 @@ radspec.evaluate(expression, call)
   .then(console.log) // => "Will multiply 122 by 7 and return 854."
 ```
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** The result of the evaluation
+Returns **[Promise][10]&lt;[string][7]>** The result of the evaluation
+
+[1]: #binding
+
+[2]: #bindings
+
+[3]: #radspec
+
+[4]: #evaluateraw
+
+[5]: #evaluate
+
+[6]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[7]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[8]: #binding
+
+[9]: #bindings
+
+[10]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[11]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array

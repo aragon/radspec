@@ -1,12 +1,17 @@
 {
   "name": "radspec",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.1",
   "description": "Radspec is a safe alternative to Ethereum's natspec",
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "docs": "documentation build src/index.js -f md -o docs/API.md --shallow",
-    "lint": "standard src/**/*.js && documentation lint src/**/*.js",
-    "test": "nyc ava"
+    "lint": "standard \"src/**/*.js\" && documentation lint \"src/**/*.js\"",
+    "test": "nyc ava",
+    "build": "babel -d dist src",
+    "prepublishOnly": "env NODE_ENV=production npm run build"
   },
   "repository": {
     "type": "git",
@@ -24,18 +29,34 @@
   },
   "homepage": "https://github.com/aragon/radspec#readme",
   "devDependencies": {
-    "ava": "^0.24.0",
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "ava": "^1.0.0-rc.1",
+    "babel-eslint": "^10.0.1",
+    "babel-preset-minify": "^0.5.0",
     "coveralls": "^3.0.0",
-    "documentation": "^5.3.3",
+    "documentation": "^9.0.0-alpha.0",
     "nyc": "^11.3.0",
-    "standard": "^10.0.3",
-    "websocket": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible"
+    "standard": "^12.0.1"
   },
   "dependencies": {
+    "@babel/runtime": "^7.1.2",
     "bn.js": "4.11.6",
     "date-fns": "2.0.0-alpha.7",
     "web3-eth": "1.0.0-beta.33",
     "web3-eth-abi": "1.0.0-beta.33",
     "web3-utils": "1.0.0-beta.33"
+  },
+  "ava": {
+    "require": [
+      "@babel/register"
+    ]
+  },
+  "standard": {
+    "parser": "babel-eslint"
   }
 }
