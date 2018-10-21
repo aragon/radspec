@@ -44,12 +44,12 @@ class Helpers {
    */
   execute (helper, inputs) {
     inputs = inputs.map(input => input.value) // pass values directly
-    return this.helpers[helper](this.eth)(...inputs)
+    return this.availableHelpers[helper](this.eth)(...inputs)
   }
 }
 
 module.exports = {
   Helpers,
 
-  defaultHelpers
+  ...defaultHelpers
 }
