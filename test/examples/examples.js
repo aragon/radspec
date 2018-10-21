@@ -125,7 +125,7 @@ const helperCases = [
     bindings: { date: int('1438269793') }
   }, 'Ethereum launched on a Thursday in July 2015'],
   [{
-    source: 'Period duration is `@transformTime(time, \'days\')`',
+    source: 'Period duration is `@transformTime(time, \'day\')`',
     bindings: { time: int(3600 * 24 * 2 + 50) }
   }, 'Period duration is 2 days'],
   [{
@@ -133,7 +133,7 @@ const helperCases = [
     bindings: { }
   }, '3600 seconds is 1 hour'],
   [{
-    source: '10k minutes is `@transformTime(10 ^ 4, \'seconds\', \'minutes\')`',
+    source: '10k minutes is `@transformTime(10 ^ 4, \'second\', \'minute\')`',
     bindings: { }
   }, '10k minutes is 600000 seconds'],
   [{
