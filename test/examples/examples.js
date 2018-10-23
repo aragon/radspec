@@ -130,6 +130,10 @@ const helperCases = [
     bindings: { time: int(3600 * 24 * 2 + 50) }
   }, 'Period duration is 2 days'],
   [{
+    source: 'Period duration is `@transformTime(time, \'best\')`',
+    bindings: { time: int(3600 * 24 * 30) }
+  }, 'Period duration is 1 month'],
+  [{
     source: '3600 seconds is `@transformTime(3600)`',
     bindings: { }
   }, '3600 seconds is 1 hour'],
