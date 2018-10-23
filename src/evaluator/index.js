@@ -7,6 +7,7 @@ const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
 const BN = require('bn.js')
 const types = require('../types')
+const { Helpers } = require('../helpers')
 
 /**
  * A value coupled with a type
@@ -63,6 +64,7 @@ class Evaluator {
     this.bindings = bindings
     this.eth = new Eth(ethNode || 'https://mainnet.infura.io')
     this.to = to && new TypedValue('address', to)
+    this.helpers = new Helpers(this.eth)
   }
 
   /**
@@ -81,7 +83,7 @@ class Evaluator {
    * Evaluate a single node.
    *
    * @param  {radspec/parser/Node} node
-   * @return {string}
+   * @return {Promise<string>}
    */
   async evaluateNode (node) {
     if (node.type === 'ExpressionStatement') {
@@ -261,6 +263,19 @@ class Evaluator {
       }).then(
         (data) => new TypedValue(returnType, ABI.decodeParameter(returnType, data))
       )
+    }
+
+    if (node.type === 'HelperFunction') {
+      const helperName = node.name
+
+      if (!this.helpers.exists(helperName)) {
+        this.panic(`${helperName} helper function is not defined`)
+      }
+
+      const inputs = await this.evaluateNodes(node.inputs)
+      const result = await this.helpers.execute(helperName, inputs)
+
+      return new TypedValue(result.type, result.value)
     }
   }
 

@@ -280,25 +280,8 @@ class Parser {
           type: 'CallExpression',
           target: node.target,
           callee: node.property,
-          inputs: [],
+          inputs: this.functionInputs(astBody),
           outputs: []
-        }
-
-        while (!this.eof() && !this.matches('RIGHT_PAREN')) {
-          let input = this.comparison(astBody)
-          if (!input.type) {
-            input.type = this.type()
-          } else if (this.matches('COLON')) {
-            this.report(`Unexpected type (already inferred type of parameter)`)
-          }
-
-          node.inputs.push(input)
-
-          // Break if the next character is not a comma or a right parenthesis
-          // If this is true, then we are specifying more parameters without
-          // delimiting them using comma.
-          if (!this.matches('COMMA') &&
-            this.peek().type !== 'RIGHT_PAREN') break
         }
 
         if (this.eof()) {
@@ -309,6 +292,39 @@ class Parser {
         node.outputs.push({
           type: this.type()
         })
+      }
+
+      return node
+    }
+
+    return this.helper(astBody)
+  }
+
+  /**
+   * Try to parse helper functions
+   *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
+   * @return {Node}
+   */
+  helper (astBody) {
+    if (this.matches('AT')) {
+      const identifier = this.consume()
+      const name = identifier.value
+
+      if (identifier.type !== 'IDENTIFIER') {
+        this.report(`Invalid helper function name '${name}' provided after @`)
+      }
+
+      const node = {
+        type: 'HelperFunction',
+        name: name
+      }
+
+      if (this.matches('LEFT_PAREN')) {
+        node.inputs = this.functionInputs(astBody)
+      } else {
+        // There is actually no good reason not to allow calling a helper without ()
+        // this.report(`Expected '(' for executing helper function`)
       }
 
       return node
@@ -371,6 +387,35 @@ class Parser {
     }
 
     return this.consume().value
+  }
+
+  /**
+   * Try to parse function arguments.
+   *
+   * @param  {Array<Node>} astBody Subtree of AST being walked
+   * @return {Array<Node>}
+   */
+  functionInputs (astBody) {
+    const inputs = []
+
+    while (!this.eof() && !this.matches('RIGHT_PAREN')) {
+      const input = this.comparison(astBody)
+      if (!input.type) {
+        input.type = this.type()
+      } else if (this.matches('COLON')) {
+        this.report(`Unexpected type (already inferred type of parameter)`)
+      }
+
+      inputs.push(input)
+
+      // Break if the next character is not a comma or a right parenthesis
+      // If this is true, then we are specifying more parameters without
+      // delimiting them using comma.
+      if (!this.matches('COMMA') &&
+        this.peek().type !== 'RIGHT_PAREN') break
+    }
+
+    return inputs
   }
 
   /**
