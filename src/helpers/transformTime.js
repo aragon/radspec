@@ -1,12 +1,12 @@
-const addMilliseconds = require('date-fns/addMilliseconds')
-const addSeconds = require('date-fns/addSeconds')
-const addMinutes = require('date-fns/addMinutes')
-const addHours = require('date-fns/addHours')
-const addDays = require('date-fns/addDays')
-const addWeeks = require('date-fns/addWeeks')
-const addMonths = require('date-fns/addMonths')
-const addYears = require('date-fns/addYears')
-const formatDistanceStrict = require('date-fns/formatDistanceStrict')
+import addMilliseconds from 'date-fns/addMilliseconds'
+import addSeconds from 'date-fns/addSeconds'
+import addMinutes from 'date-fns/addMinutes'
+import addHours from 'date-fns/addHours'
+import addDays from 'date-fns/addDays'
+import addWeeks from 'date-fns/addWeeks'
+import addMonths from 'date-fns/addMonths'
+import addYears from 'date-fns/addYears'
+import formatDistanceStrict from 'date-fns/formatDistanceStrict'
 
 const BEST_UNIT = 'best'
 
