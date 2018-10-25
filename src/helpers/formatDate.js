@@ -1,4 +1,4 @@
-const formatDate = require('date-fns/format')
+import formatDate from 'date-fns/format'
 
 module.exports = () =>
   /**
