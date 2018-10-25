@@ -118,6 +118,11 @@ const helperCases = [
     bindings: { token: address('0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7'), balance: int('10') }
   }, 'Balance: 10 🦄'],
   [{
+    source: 'Balance: `@tokenAmount(self.token(): address, balance)`',
+    bindings: { balance: int('10000000000000000000') },
+    options: { to: '0xD39902f046B5885D70e9E66594b65f84D4d1c952' }
+  }, 'Balance: 10 ANT'],
+  [{
     source: 'Ethereum launched `@formatDate(date)`',
     bindings: { date: int('1438269793') }
   }, 'Ethereum launched Jul. 30th 2015'],
