@@ -340,11 +340,12 @@ class Parser {
    * @return {Node}
    */
   primary (astBody) {
-    if (this.matches('NUMBER', 'STRING', 'HEXADECIMAL')) {
+    if (this.matches('NUMBER', 'STRING', 'HEXADECIMAL', 'BOOLEAN')) {
       let type = {
         NUMBER: 'NumberLiteral',
         STRING: 'StringLiteral',
-        HEXADECIMAL: 'BytesLiteral'
+        HEXADECIMAL: 'BytesLiteral',
+        BOOLEAN: 'BoolLiteral'
       }[this.previous().type]
 
       return {

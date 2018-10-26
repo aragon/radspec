@@ -166,6 +166,11 @@ class Scanner {
             identifier += this.consume()
           }
 
+          if (identifier === 'true' || identifier === 'false') {
+            this.emitToken('BOOLEAN', identifier)
+            break
+          }
+
           if (types.isType(identifier)) {
             this.emitToken('TYPE', identifier)
           } else {

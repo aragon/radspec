@@ -107,11 +107,11 @@ const helperCases = [
   }, 'helper hi hi '],
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT',
-    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054595780000000000'), false: bool(false) } // TODO: make false a special identifier
+    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054595780000000000')}
   }, 'Balance: 647413.05459 ANT'],
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT (non-checksummed)',
-    bindings: { token: address('0x960b236a07cf122663c4303350609a66a7b288c0'), balance: int('647413054595780000000000'), false: bool(false) } // TODO: make false a special identifier
+    bindings: { token: address('0x960b236a07cf122663c4303350609a66a7b288c0'), balance: int('647413054595780000000000')}
   }, 'Balance: 647413.05459 ANT (non-checksummed)'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
@@ -206,6 +206,11 @@ const cases = [
       b: int(1)
     }
   }, 'This will default to 1: 1'],
+
+  [{
+    source: 'True is not `false ? true : false`',
+    bindings: {},
+  }, 'True is not false'],
 
   // External calls
   [{
