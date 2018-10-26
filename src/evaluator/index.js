@@ -28,11 +28,10 @@ class TypedValue {
     }
 
     if (this.type === 'address') {
-      const isChecksum = /[A-F]/.test(this.value)
-
-      if (isChecksum && !Web3Utils.checkAddressChecksum(this.value)) {
-        throw new Error(`Checksum failed for address "${this.value}"`)
+      if (!Web3Utils.isAddress(this.value)) {
+        throw new Error(`Invalid address "${this.value}"`)
       }
+      this.value = Web3Utils.toChecksumAddress(this.value)
     }
   }
 

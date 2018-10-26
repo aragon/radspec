@@ -110,6 +110,10 @@ const helperCases = [
     bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054595780000000000'), false: bool(false) } // TODO: make false a special identifier
   }, 'Balance: 647413.05459 ANT'],
   [{
+    source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT (non-checksummed)',
+    bindings: { token: address('0x960b236a07cf122663c4303350609a66a7b288c0'), balance: int('647413054595780000000000'), false: bool(false) } // TODO: make false a special identifier
+  }, 'Balance: 647413.05459 ANT (non-checksummed)'],
+  [{
     source: 'Balance: `@tokenAmount(token, balance)`',
     bindings: { token: address(ETH), balance: int('647413054595780000000000') }
   }, 'Balance: 647413.05 ETH'],
@@ -208,6 +212,10 @@ const cases = [
     source: 'Allocate `amount token.symbol(): string`.',
     bindings: { amount: int(100), token: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
   }, 'Allocate 100 ANT.'],
+  [{
+    source: 'Allocate `amount token.symbol(): string` (non-checksummed).',
+    bindings: { amount: int(100), token: address('0x960b236a07cf122663c4303350609a66a7b288c0') }
+  }, 'Allocate 100 ANT (non-checksummed).'],
   [{
     source: 'Burns the `token.symbol(): string` balance of `person` (balance is `token.balanceOf(person): uint256 / 1000000000000000000`)',
     bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), person: address('0x0000000000000000000000000000000000000001') }
