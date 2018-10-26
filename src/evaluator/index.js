@@ -114,6 +114,10 @@ class Evaluator {
       return new TypedValue(`bytes${length}`, node.value)
     }
 
+    if (node.type === 'BoolLiteral') {
+      return new TypedValue('bool', node.value === 'true')
+    }
+
     if (node.type === 'BinaryExpression') {
       const left = await this.evaluateNode(node.left)
       const right = await this.evaluateNode(node.right)
