@@ -98,7 +98,7 @@ class Evaluator {
     }
 
     if (node.type === 'StringLiteral') {
-      return new TypedValue('string', node.value)
+      return new TypedValue('string', node.value || '')
     }
 
     if (node.type === 'NumberLiteral') {

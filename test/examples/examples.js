@@ -166,6 +166,10 @@ const cases = [
     source: 'a is `a`, b is `b` and "c d" is `c d`',
     bindings: { a: int(1), b: int(2), c: int(3), d: int(4) }
   }, 'a is 1, b is 2 and "c d" is 3 4'],
+  [{
+    source: 'An empty string`\'\'`',
+    bindings: { }
+  }, 'An empty string'],
 
   // Maths
   [{
