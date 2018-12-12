@@ -22,7 +22,7 @@
     "compiler",
     "ethereum"
   ],
-  "author": "Aragon Institution MTU <contact@aragon.one>",
+  "author": "Aragon Association <legal@aragon.org>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/aragon/radspec/issues"
