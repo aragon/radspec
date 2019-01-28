@@ -1,12 +1,27 @@
 const ETH = '0x0000000000000000000000000000000000000000'
 
 /* eslint-disable key-spacing, quotes */
+const ERC20_SYMBOL_BYTES32_ABI = [
+  {
+    "constant":true,
+    "inputs":[],
+    "name":"symbol",
+    "outputs":[
+      {
+        "name":"",
+        "type":"bytes32"
+      }
+    ],
+    "payable":false,
+    "stateMutability":"view",
+    "type":"function"
+  }
+]
+
 const ERC20_SYMBOL_DECIMALS_ABI = [
   {
     "constant":true,
-    "inputs":[
-
-    ],
+    "inputs":[],
     "name":"decimals",
     "outputs":[
       {
@@ -20,9 +35,7 @@ const ERC20_SYMBOL_DECIMALS_ABI = [
   },
   {
     "constant":true,
-    "inputs":[
-
-    ],
+    "inputs":[],
     "name":"symbol",
     "outputs":[
       {
@@ -38,6 +51,7 @@ const ERC20_SYMBOL_DECIMALS_ABI = [
 /* eslint-enable key-spacing, quotes */
 
 module.exports = {
+  ERC20_SYMBOL_BYTES32_ABI,
   ERC20_SYMBOL_DECIMALS_ABI,
   ETH
 }

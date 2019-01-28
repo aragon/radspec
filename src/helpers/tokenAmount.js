@@ -1,5 +1,6 @@
 const BN = require('bn.js')
-const { ERC20_SYMBOL_DECIMALS_ABI, ETH } = require('./lib/token')
+const { toUtf8 } = require('web3-utils')
+const { ERC20_SYMBOL_BYTES32_ABI, ERC20_SYMBOL_DECIMALS_ABI, ETH } = require('./lib/token')
 const { formatBN, tenPow } = require('./lib/formatBN')
 
 module.exports = (eth) =>
@@ -24,11 +25,18 @@ module.exports = (eth) =>
         symbol = 'ETH'
       }
     } else {
-      const token = new eth.Contract(ERC20_SYMBOL_DECIMALS_ABI, tokenAddress)
+      let token = new eth.Contract(ERC20_SYMBOL_DECIMALS_ABI, tokenAddress)
 
       decimals = new BN(await token.methods.decimals().call())
       if (showSymbol) {
-        symbol = await token.methods.symbol().call()
+        try {
+          symbol = await token.methods.symbol().call() || ''
+        } catch (err) {
+          // Some tokens (e.g. DS-Token) use bytes32 for their symbol()
+          token = new eth.Contract(ERC20_SYMBOL_BYTES32_ABI, tokenAddress)
+          symbol = await token.methods.symbol().call() || ''
+          symbol = symbol && toUtf8(symbol)
+        }
       }
     }
 
