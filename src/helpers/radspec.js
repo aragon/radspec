@@ -1,6 +1,4 @@
 const ABI = require('web3-eth-abi')
-const scanner = require('../scanner')
-const parser = require('../parser')
 const { keccak256 } = require('web3-utils')
 
 const getSig = (fn) =>
