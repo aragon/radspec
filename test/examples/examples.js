@@ -177,6 +177,13 @@ const dataDecodeCases = [
       data: bytes('0x13af40350000000000000000000000000000000000000000000000000000000000000002')
     }
   }, 'Perform action: Set 0x0000000000000000000000000000000000000002 as the new owner'],
+  [{
+    source: 'Perform action: `@radspec(addr, data)`',
+    bindings: {
+      addr: address('0x0000000000000000000000000000000000000001'),
+      data: bytes('0x12345678')
+    }
+  }, 'Perform action: Unknown (0x12345678)'],
 ]
 
 const cases = [

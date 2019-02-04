@@ -4,6 +4,9 @@ const { keccak256 } = require('web3-utils')
 const getSig = (fn) =>
   keccak256(fn).substr(0, 10)
 
+// Convert from the knownFunctions data format into the needed format
+// Input: { "signature(type1,type2)": "Its radspec string", ... }
+// Output: { "0xabcdef12": { "sig": "signature(type1,type2)", "source": "Its radspec string" }, ...}
 const processFunctions = (functions) => (
   Object.keys(functions).reduce(
     (acc, key) => (
