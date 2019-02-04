@@ -29,6 +29,11 @@ const bytes32 = (value) => ({
   value
 })
 
+const bytes = (value) => ({
+  type: 'bytes',
+  value
+})
+
 const comparisonCases = [
   [{
     source: '`a > 2`',
@@ -164,6 +169,16 @@ const helperCases = [
   }, 'Change required support to 40.4%']
 ]
 
+const dataDecodeCases = [
+  [{
+    source: 'Perform action: `@radspec(addr, data)`',
+    bindings: {
+      addr: address('0x0000000000000000000000000000000000000001'),
+      data: bytes('0x13af40350000000000000000000000000000000000000000000000000000000000000002')
+    }
+  }, 'Perform action: Set 0x0000000000000000000000000000000000000002 as the new owner'],
+]
+
 const cases = [
   // Bindings
   [{
@@ -261,7 +276,8 @@ const cases = [
   }, 'hello'],
 
   ...comparisonCases,
-  ...helperCases
+  ...helperCases,
+  ...dataDecodeCases,
 ]
 
 cases.forEach(([input, expected], index) => {
