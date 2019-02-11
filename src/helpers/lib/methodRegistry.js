@@ -36,7 +36,7 @@ class MethodRegistry {
     this.network = opts.network || '1'
   }
 
-  // THIS FUNCTION CAN MUTATE THIS.ETH!
+  // !!! This function can mutate `this.eth`
   async initRegistry () {
     if (await this.eth.net.getId() !== '1') {
       this.eth = new Eth(DEFAULT_ETH_NODE)
@@ -60,7 +60,7 @@ class MethodRegistry {
   }
 
   parse (signature) {
-    // TODO: Throw if there are unknown types in the signature or there is any data after the closing parenthesis
+    // TODO: Throw if there are unknown types in the signature or there if is any chars after the closing parenthesis
     let name = signature.match(/^.+(?=\()/)[0]
     name = name.charAt(0).toUpperCase() + name.slice(1)
       .split(/(?=[A-Z])/).join(' ')
