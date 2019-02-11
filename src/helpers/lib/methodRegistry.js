@@ -1,0 +1,77 @@
+// From: https://github.com/danfinlay/eth-method-registry
+
+const Eth = require('web3-eth')
+const { DEFAULT_ETH_NODE } = require('../../defaults')
+
+/* eslint-disable key-spacing, quotes */
+const REGISTRY_LOOKUP_ABI = [
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "name": "entries",
+    "outputs":
+    [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "type": "function"
+  }
+]
+
+const REGISTRY_MAP = {
+  1: '0x44691B39d1a75dC4E0A0346CBB15E310e6ED1E86'
+}
+
+class MethodRegistry {
+  constructor (opts = {}) {
+    this.eth = opts.eth || new Eth(DEFAULT_ETH_NODE)
+    this.network = opts.network || '1'
+  }
+
+  // THIS FUNCTION CAN MUTATE THIS.ETH!
+  async initRegistry () {
+    if (await this.eth.net.getId() !== '1') {
+      this.eth = new Eth(DEFAULT_ETH_NODE)
+    }
+
+    const address = REGISTRY_MAP[this.network]
+
+    if (!address) {
+      throw new Error('No method registry found on the requested network.')
+    }
+
+    this.registry = new this.eth.Contract(REGISTRY_LOOKUP_ABI, address)
+  }
+
+  async lookup (sigBytes) {
+    if (!this.registry) {
+      await this.initRegistry()
+    }
+
+    return this.registry.methods.entries(sigBytes).call()
+  }
+
+  parse (signature) {
+    // TODO: Throw if there are unknown types in the signature or there is any data after the closing parenthesis
+    let name = signature.match(/^.+(?=\()/)[0]
+    name = name.charAt(0).toUpperCase() + name.slice(1)
+      .split(/(?=[A-Z])/).join(' ')
+
+    const args = signature.match(/\(.+\)/)[0].slice(1, -1).split(',')
+
+    return {
+      name,
+      args: args.map((arg) => { return { type: arg } })
+    }
+  }
+}
+
+module.exports = MethodRegistry
