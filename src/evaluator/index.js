@@ -61,7 +61,7 @@ class Evaluator {
   constructor (ast, bindings, { ethNode, to, eth } = {}) {
     this.ast = ast
     this.bindings = bindings
-    this.eth = eth || new Eth(ethNode || 'https://mainnet.infura.io')
+    this.eth = eth || new Eth(ethNode || 'https://mainnet.infura.io')
     this.to = to && new TypedValue('address', to)
     this.helpers = new Helpers(this.eth)
   }

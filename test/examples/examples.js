@@ -9,7 +9,7 @@ const int = (value) => ({
   value
 })
 
-const address = (value) => ({
+const address = (value = '0x0000000000000000000000000000000000000001') => ({
   type: 'address',
   value
 })
@@ -108,7 +108,7 @@ const comparisonCases = [
 const helperCases = [
   [{
     source: 'helper `@echo(@echo(\'hi \'), 1 + 100000 ^ 0)`',
-    bindings: { }
+    bindings: {}
   }, 'helper hi hi '],
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT',
@@ -153,11 +153,11 @@ const helperCases = [
   }, 'Period duration is 1 month'],
   [{
     source: '3600 seconds is `@transformTime(3600)`',
-    bindings: { }
+    bindings: {}
   }, '3600 seconds is 1 hour'],
   [{
     source: '10k minutes is `@transformTime(10 ^ 4, \'second\', \'minute\')`',
-    bindings: { }
+    bindings: {}
   }, '10k minutes is 600000 seconds'],
   [{
     source: 'Change required support to `@formatPct(support)`%',
@@ -173,17 +173,24 @@ const dataDecodeCases = [
   [{
     source: 'Perform action: `@radspec(addr, data)`',
     bindings: {
-      addr: address('0x0000000000000000000000000000000000000001'),
-      data: bytes('0x13af40350000000000000000000000000000000000000000000000000000000000000002')
+      addr: address(),
+      data: bytes('0x13af40350000000000000000000000000000000000000000000000000000000000000002') // setOwner(address)
     }
   }, 'Perform action: Set 0x0000000000000000000000000000000000000002 as the new owner'],
   [{
+    source: '`@radspec(addr, data)`!',
+    bindings: {
+      addr: address(),
+      data: bytes('0x6881385b') // payday()
+    }
+  }, 'Get owed Payroll allowance!'],
+  [{
     source: 'Perform action: `@radspec(addr, data)`',
     bindings: {
-      addr: address('0x0000000000000000000000000000000000000001'),
-      data: bytes('0x12345678')
+      addr: address(),
+      data: bytes('0x12345678') // random signature
     }
-  }, 'Perform action: Unknown (0x12345678)'],
+  }, 'Perform action: Unknown (0x12345678)']
 ]
 
 const cases = [
@@ -194,7 +201,7 @@ const cases = [
   }, 'a is 1, b is 2 and "c d" is 3 4'],
   [{
     source: 'An empty string`\'\'`',
-    bindings: { }
+    bindings: {}
   }, 'An empty string'],
 
   // Maths
@@ -284,7 +291,7 @@ const cases = [
 
   ...comparisonCases,
   ...helperCases,
-  ...dataDecodeCases,
+  ...dataDecodeCases
 ]
 
 cases.forEach(([input, expected], index) => {

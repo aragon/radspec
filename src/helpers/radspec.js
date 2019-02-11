@@ -6,7 +6,7 @@ const getSig = (fn) =>
 
 // Convert from the knownFunctions data format into the needed format
 // Input: { "signature(type1,type2)": "Its radspec string", ... }
-// Output: { "0xabcdef12": { "sig": "signature(type1,type2)", "source": "Its radspec string" }, ...}
+// Output: { "0xabcdef12": { "sig": "signature(type1,type2)", "source": "Its radspec string" }, ...}
 const processFunctions = (functions) => (
   Object.keys(functions).reduce(
     (acc, key) => (
@@ -14,7 +14,7 @@ const processFunctions = (functions) => (
         [getSig(key)]: { source: functions[key], sig: key },
         ...acc
       }
-  ), {})
+    ), {})
 )
 
 module.exports = (eth) =>
@@ -35,7 +35,7 @@ module.exports = (eth) =>
     const fn = functions[methodId]
 
     if (!fn) {
-      return { 
+      return {
         type: 'string',
         value: `Unknown (${methodId})`
       }
@@ -43,20 +43,27 @@ module.exports = (eth) =>
 
     const { source, sig } = fn
 
-    // get the array of input types from the function signature 
-    const inputs = sig.replace(')', '').split('(')[1].split(',')
-    
-    // Decode parameters
-    const parameterValues = ABI.decodeParameters(inputs, '0x' + data.substr(10))
-    const parameters = inputs.reduce((acc, input, i) => (
-      {
-        [`$${i+1}`]: {
-          type: input,
-          value: parameterValues[i]
-        },
-        ...acc
-    }), {})
-    
+    // get the array of input types from the function signature
+    const inputString = sig.replace(')', '').split('(')[1]
+
+    let parameters = []
+
+    // If the function has parameters
+    if (inputString !== '') {
+      const inputs = inputString.split(',')
+
+      // Decode parameters
+      const parameterValues = ABI.decodeParameters(inputs, '0x' + data.substr(10))
+      parameters = inputs.reduce((acc, input, i) => (
+        {
+          [`$${i + 1}`]: {
+            type: input,
+            value: parameterValues[i]
+          },
+          ...acc
+        }), {})
+    }
+
     return {
       type: 'string',
       value: await evaluateRaw(source, parameters, { to: addr, eth })
