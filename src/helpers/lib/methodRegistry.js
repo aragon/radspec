@@ -26,6 +26,7 @@ const REGISTRY_LOOKUP_ABI = [
   }
 ]
 
+// networkId -> registry address
 const REGISTRY_MAP = {
   1: '0x44691B39d1a75dC4E0A0346CBB15E310e6ED1E86'
 }
