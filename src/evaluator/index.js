@@ -8,6 +8,7 @@ const Web3Utils = require('web3-utils')
 const BN = require('bn.js')
 const types = require('../types')
 const { Helpers } = require('../helpers')
+const { DEFAULT_ETH_NODE } = require('../defaults')
 
 /**
  * A value coupled with a type
@@ -61,7 +62,7 @@ class Evaluator {
   constructor (ast, bindings, { ethNode, to, eth } = {}) {
     this.ast = ast
     this.bindings = bindings
-    this.eth = eth || new Eth(ethNode || 'https://mainnet.infura.io')
+    this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE)
     this.to = to && new TypedValue('address', to)
     this.helpers = new Helpers(this.eth)
   }

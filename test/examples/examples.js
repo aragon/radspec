@@ -174,23 +174,30 @@ const dataDecodeCases = [
     source: 'Perform action: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
-      data: bytes('0x13af40350000000000000000000000000000000000000000000000000000000000000002') // setOwner(address)
+      data: bytes('0x13af40350000000000000000000000000000000000000000000000000000000000000002') // setOwner(address), on knownFunctions
     }
   }, 'Perform action: Set 0x0000000000000000000000000000000000000002 as the new owner'],
   [{
     source: '`@radspec(addr, data)`!',
     bindings: {
       addr: address(),
-      data: bytes('0x6881385b') // payday()
+      data: bytes('0x6881385b') // payday(), on knownFunctions
     }
   }, 'Get owed Payroll allowance!'],
+  [{
+    source: 'Cast a `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xdf133bca') // vote(uint256,bool,bool), from on-chain registry
+    }
+  }, 'Cast a Vote'],
   [{
     source: 'Perform action: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
       data: bytes('0x12345678') // random signature
     }
-  }, 'Perform action: Unknown (0x12345678)']
+  }, 'Perform action: Unknown function (0x12345678)']
 ]
 
 const cases = [

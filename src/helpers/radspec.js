@@ -1,5 +1,6 @@
 const ABI = require('web3-eth-abi')
 const { keccak256 } = require('web3-utils')
+const MethodRegistry = require('./lib/methodRegistry')
 
 const getSig = (fn) =>
   keccak256(fn).substr(0, 10)
@@ -19,7 +20,8 @@ const processFunctions = (functions) => (
 
 module.exports = (eth) =>
   /**
-   * Evaluate a known radspec string
+   * Interpret calldata using radspec recursively. If the function signature is not in the package's known
+   * functions, it fallbacks to looking for the function name using github.com/parity-contracts/signature-registry
    *
    * @param {address} addr The target address of the call
    * @param {bytes} data The calldata of the call
@@ -34,13 +36,27 @@ module.exports = (eth) =>
     const methodId = data.substr(0, 10)
     const fn = functions[methodId]
 
+    // If function is not a known function, execute fallback checking Parity's on-chain signature registry
     if (!fn) {
-      return {
-        type: 'string',
-        value: `Unknown (${methodId})`
+      // Even if we pass the ETH object, if it is not on mainnet it will use Aragon's ETH mainnet node
+      // As the registry is the only available on mainnet
+      const registry = new MethodRegistry({ networkId: '1', eth })
+      const result = await registry.lookup(methodId)
+
+      if (result) {
+        const { name } = registry.parse(result)
+        return {
+          type: 'string',
+          value: name // TODO: should we decode and print the arguments as well?
+        }
+      } else {
+        return {
+          type: 'string',
+          value: `Unknown function (${methodId})`
+        }
       }
     }
-
+    // If the function was found in local radspec registry. Decode and evaluate.
     const { source, sig } = fn
 
     // get the array of input types from the function signature
