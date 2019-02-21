@@ -2,6 +2,11 @@ const ABI = require('web3-eth-abi')
 const { keccak256 } = require('web3-utils')
 const MethodRegistry = require('./lib/methodRegistry')
 
+const makeUnknownFunctionNode = (methodId) => ({
+  type: 'string',
+  value: `Unknown function (${methodId})`
+})
+
 const getSig = (fn) =>
   keccak256(fn).substr(0, 10)
 
@@ -32,6 +37,10 @@ module.exports = (eth) =>
     const { evaluateRaw } = require('../index')
     const functions = processFunctions(require('../data/knownFunctions'))
 
+    if (data.length < 10) {
+      return makeUnknownFunctionNode(data)
+    }
+
     // Get method ID
     const methodId = data.substr(0, 10)
     const fn = functions[methodId]
@@ -50,10 +59,7 @@ module.exports = (eth) =>
           value: name // TODO: should we decode and print the arguments as well?
         }
       } else {
-        return {
-          type: 'string',
-          value: `Unknown function (${methodId})`
-        }
+        return makeUnknownFunctionNode(methodId)
       }
     }
     // If the function was found in local radspec registry. Decode and evaluate.

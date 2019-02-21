@@ -197,7 +197,14 @@ const dataDecodeCases = [
       addr: address(),
       data: bytes('0x12345678') // random signature
     }
-  }, 'Perform action: Unknown function (0x12345678)']
+  }, 'Perform action: Unknown function (0x12345678)'],
+  [{
+    source: 'Perform action: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x12') // bad signature
+    }
+  }, 'Perform action: Unknown function (0x12)']
 ]
 
 const cases = [
