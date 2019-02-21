@@ -1,6 +1,8 @@
 const ABI = require('web3-eth-abi')
 const { keccak256 } = require('web3-utils')
 const MethodRegistry = require('./lib/methodRegistry')
+const { evaluateRaw } = require('../lib/')
+const knownFunctions = require('../data/knownFunctions')
 
 const getSig = (fn) =>
   keccak256(fn).substr(0, 10)
@@ -17,8 +19,7 @@ const processFunctions = (functions) => (
       }
     ), {})
 )
-
-module.exports = (eth) =>
+module.exports = (eth, evaluator) =>
   /**
    * Interpret calldata using radspec recursively. If the function signature is not in the package's known
    * functions, it fallbacks to looking for the function name using github.com/parity-contracts/signature-registry
@@ -28,9 +29,7 @@ module.exports = (eth) =>
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
   async (addr, data) => {
-    // lazily import radspec to avoid a dependency cycle
-    const { evaluateRaw } = require('../index')
-    const functions = processFunctions(require('../data/knownFunctions'))
+    const functions = processFunctions(knownFunctions)
 
     // Get method ID
     const methodId = data.substr(0, 10)
@@ -82,6 +81,14 @@ module.exports = (eth) =>
 
     return {
       type: 'string',
-      value: await evaluateRaw(source, parameters, { to: addr, eth })
+      value: await evaluateRaw(
+        source,
+        parameters,
+        {
+          eth,
+          availableHelpers: evaluator.helpers.getHelpers(),
+          to: addr
+        }
+      )
     }
   }

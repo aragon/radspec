@@ -1,6 +1,7 @@
 const test = require('ava')
 const BN = require('bn.js')
-const { evaluateRaw } = require('../../src')
+const { evaluateRaw } = require('../../src/lib')
+const { defaultHelpers } = require('../../src/helpers')
 const { tenPow } = require('../../src/helpers/lib/formatBN')
 const { ETH } = require('../../src/helpers/lib/token')
 
@@ -310,7 +311,14 @@ const cases = [
 
 cases.forEach(([input, expected], index) => {
   test(`${index} - ${input.source}`, async (t) => {
-    const actual = await evaluateRaw(input.source, input.bindings, input.options)
+    const actual = await evaluateRaw(
+      input.source,
+      input.bindings,
+      {
+        ...input.options,
+        availableHelpers: defaultHelpers,
+      }
+    )
     t.is(
       actual,
       expected,

@@ -7,7 +7,7 @@ const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
 const BN = require('bn.js')
 const types = require('../types')
-const { Helpers } = require('../helpers')
+const HelperManager = require('../helpers/HelperManager')
 const { DEFAULT_ETH_NODE } = require('../defaults')
 
 /**
@@ -53,18 +53,20 @@ class TypedValue {
  * @param {radspec/parser/AST} ast The AST to evaluate
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
+ * @param {?Object} options.availablehelpers Available helpers
+ * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?string} options.to The destination address for this expression's transaction
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
  */
 class Evaluator {
-  constructor (ast, bindings, { ethNode, to, eth } = {}) {
+  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, to } = {}) {
     this.ast = ast
     this.bindings = bindings
     this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE)
     this.to = to && new TypedValue('address', to)
-    this.helpers = new Helpers(this.eth)
+    this.helpers = new HelperManager(availableHelpers)
   }
 
   /**
@@ -268,7 +270,14 @@ class Evaluator {
       }
 
       const inputs = await this.evaluateNodes(node.inputs)
-      const result = await this.helpers.execute(helperName, inputs)
+      const result = await this.helpers.execute(
+        helperName,
+        inputs,
+        {
+          eth: this.eth,
+          evaluator: this
+        }
+      )
 
       return new TypedValue(result.type, result.value)
     }
