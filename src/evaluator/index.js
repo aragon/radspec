@@ -222,15 +222,6 @@ class Evaluator {
       return leftFalsey ? this.evaluateNode(node.right) : left
     }
 
-    if (node.type === 'Identifier') {
-      if (!this.bindings.hasOwnProperty(node.value)) {
-        this.panic(`Undefined binding "${node.value}"`)
-      }
-
-      const binding = this.bindings[node.value]
-      return new TypedValue(binding.type, binding.value)
-    }
-
     if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
       let target
@@ -280,6 +271,19 @@ class Evaluator {
       const result = await this.helpers.execute(helperName, inputs)
 
       return new TypedValue(result.type, result.value)
+    }
+
+    if (node.type === 'Identifier') {
+      if (node.value === 'self') {
+        return this.to
+      }
+
+      if (!this.bindings.hasOwnProperty(node.value)) {
+        this.panic(`Undefined binding "${node.value}"`)
+      }
+
+      const binding = this.bindings[node.value]
+      return new TypedValue(binding.type, binding.value)
     }
   }
 

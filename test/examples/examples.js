@@ -178,12 +178,19 @@ const dataDecodeCases = [
     }
   }, 'Perform action: Set 0x0000000000000000000000000000000000000002 as the new owner'],
   [{
-    source: '`@radspec(addr, data)`!',
+    source: 'Payroll: `@radspec(addr, data)`!',
     bindings: {
       addr: address(),
       data: bytes('0x6881385b') // payday(), on knownFunctions
     }
-  }, 'Get owed Payroll allowance!'],
+  }, 'Payroll: Get owed Payroll allowance!'],
+  [{
+    source: 'Transfer: `@radspec(addr, data)`',
+    bindings: {
+      addr: address('0x960b236a07cf122663c4303350609a66a7b288c0'),
+      data: bytes('0xa9059cbb00000000000000000000000031ab1f92344e3277ce9404e4e097dab7514e6d2700000000000000000000000000000000000000000000000821ab0d4414980000') // transfer(), on knownFunctions requiring helpers
+    }
+  }, 'Transfer: Transfer 150 ANT to 0x31AB1f92344e3277ce9404E4e097dab7514E6D27'],
   [{
     source: 'Cast a `@radspec(addr, data)`',
     bindings: {
