@@ -1,4 +1,4 @@
-module.exports = () =>
+export default () =>
   /**
    * Repeats a string (testing helper)
    *

@@ -1,5 +1,5 @@
-const test = require('ava')
-const { scan } = require('../../src/scanner')
+import test from 'ava'
+import { scan } from '../../src/scanner'
 
 test('Scanner: types', async (t) => {
   const cases = [
@@ -7,7 +7,7 @@ test('Scanner: types', async (t) => {
     ['`b`', ['TICK', { type: 'IDENTIFIER', value: 'b' }, 'TICK']],
     ['`test0123`', ['TICK', { type: 'IDENTIFIER', value: 'test0123' }, 'TICK']],
     ['`_hidden`', ['TICK', { type: 'IDENTIFIER', value: '_hidden' }, 'TICK']],
-    ['`$var0`', ['TICK', { type: 'IDENTIFIER', value: '$var0' }, 'TICK']],
+    ['`$var0`', ['TICK', { type: 'IDENTIFIER', value: '$var0' }, 'TICK']]
   ]
   t.plan(cases.length)
 

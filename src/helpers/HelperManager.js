@@ -8,7 +8,7 @@
  * @class HelperManager
  * @param {Object} availableHelpers Defined helpers
  */
-class HelperManager {
+export default class HelperManager {
   constructor (availableHelpers = {}) {
     this.availableHelpers = availableHelpers
   }
@@ -47,5 +47,3 @@ class HelperManager {
     return this.availableHelpers
   }
 }
-
-module.exports = HelperManager

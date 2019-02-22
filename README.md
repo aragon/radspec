@@ -15,7 +15,7 @@ Radspec is a safe alternative to Ethereum's natspec[[?](#aside-why-is-natspec-un
 ## Quick Start
 
 ```js
-const radspec = require('radspec')
+import radspec from 'radspec'
 
 const expression = 'Will multiply `a` by 7 and return `a * 7`.'
 const call = {

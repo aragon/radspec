@@ -1,13 +1,13 @@
-const bool = require('./bool')
-const int = require('./int')
-const uint = require('./uint')
-const address = require('./address')
-const bytes = require('./bytes')
-const string = require('./string')
-const fixed = require('./fixed')
-const ufixed = require('./ufixed')
+import bool from './bool'
+import int from './int'
+import uint from './uint'
+import address from './address'
+import bytes from './bytes'
+import string from './string'
+import fixed from './fixed'
+import ufixed from './ufixed'
 
-module.exports = {
+export default {
   types: {
     bool,
     int,

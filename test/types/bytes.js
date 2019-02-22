@@ -1,5 +1,5 @@
-const test = require('ava')
-const bytes = require('../../src/types/bytes')
+import test from 'ava'
+import bytes from '../../src/types/bytes'
 
 test('Type: bytes', (t) => {
   t.true(bytes.isType('byte'), 'Byte should be an alias for bytes1')

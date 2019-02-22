@@ -50,7 +50,7 @@ const ERC20_SYMBOL_DECIMALS_ABI = [
 ]
 /* eslint-enable key-spacing, quotes */
 
-module.exports = {
+export {
   ERC20_SYMBOL_BYTES32_ABI,
   ERC20_SYMBOL_DECIMALS_ABI,
   ETH

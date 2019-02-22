@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   isType (identifier) {
     if (identifier === 'bytes') {
       return true

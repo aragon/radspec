@@ -22,7 +22,7 @@ const ADD_UNIT_FN = new Map([
 ])
 const DISALLOWED_FROM_UNITS = new Set(['millisecond'])
 
-module.exports = () =>
+export default () =>
   /**
    * Transform between time units.
    *

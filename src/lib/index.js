@@ -1,12 +1,12 @@
-const evaluator = require('../evaluator')
-const parser = require('../parser')
-const scanner = require('../scanner')
+import { evaluate } from '../evaluator'
+import { parse } from '../parser'
+import { scan } from '../scanner'
 
 /**
  * Evaluate a radspec expression with manual bindings.
  *
  * @example
- * const radspec = require('radspec')
+ * import radspec from 'radspec'
  *
  * radspec.evaluateRaw('a is `a`', {
  *   a: { type: 'int256', value: 10 }
@@ -17,11 +17,11 @@ const scanner = require('../scanner')
  * @return {Promise<string>} The result of the evaluation
  */
 function evaluateRaw (source, bindings, evaluatorOptions) {
-  return scanner.scan(source)
-    .then(parser.parse)
-    .then((ast) => evaluator.evaluate(ast, bindings, evaluatorOptions))
+  return scan(source)
+    .then(parse)
+    .then((ast) => evaluate(ast, bindings, evaluatorOptions))
 }
 
-module.exports = {
+export {
   evaluateRaw
 }

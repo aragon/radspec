@@ -1,8 +1,8 @@
-const ABI = require('web3-eth-abi')
-const { keccak256 } = require('web3-utils')
-const MethodRegistry = require('./lib/methodRegistry')
-const { evaluateRaw } = require('../lib/')
-const knownFunctions = require('../data/knownFunctions')
+import ABI from 'web3-eth-abi'
+import { keccak256 } from 'web3-utils'
+import MethodRegistry from './lib/methodRegistry'
+import { evaluateRaw } from '../lib/'
+import knownFunctions from '../data/knownFunctions'
 
 const makeUnknownFunctionNode = (methodId) => ({
   type: 'string',
@@ -24,7 +24,7 @@ const processFunctions = (functions) => (
       }
     ), {})
 )
-module.exports = (eth, evaluator) =>
+export default (eth, evaluator) =>
   /**
    * Interpret calldata using radspec recursively. If the function signature is not in the package's known
    * functions, it fallbacks to looking for the function name using github.com/parity-contracts/signature-registry

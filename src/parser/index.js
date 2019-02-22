@@ -41,7 +41,7 @@ const PARSER_STATE = {
  * @property {Array<Token>} tokens
  * @property {number} cursor
  */
-class Parser {
+export class Parser {
   constructor (tokens) {
     this.state = PARSER_STATE.OK
 
@@ -507,17 +507,13 @@ class Parser {
   }
 }
 
-module.exports = {
-  Parser,
-
-  /**
-   * Walks token list and returns an AST.
-   *
-   * @memberof radspec/parser
-   * @param  {Array<Token>} tokens
-   * @return {AST} The AST
-   */
-  parse (tokens) {
-    return new Parser(tokens).parse()
-  }
+/**
+ * Walks token list and returns an AST.
+ *
+ * @memberof radspec/parser
+ * @param  {Array<Token>} tokens
+ * @return {AST} The AST
+ */
+export function parse (tokens) {
+  return new Parser(tokens).parse()
 }
