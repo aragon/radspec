@@ -1,5 +1,9 @@
 module.exports = {
   isType (identifier) {
+    if (identifier === 'bytes') {
+      return true
+    }
+
     let n = identifier.substr(5)
 
     // `byte` is bytes1
@@ -13,6 +17,10 @@ module.exports = {
   },
 
   size (identifier) {
+    if (identifier === 'bytes') {
+      return Infinity
+    }
+
     // `byte` is bytes1
     if (identifier === 'byte') {
       identifier = 'bytes1'

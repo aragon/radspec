@@ -7,7 +7,8 @@ const Eth = require('web3-eth')
 const Web3Utils = require('web3-utils')
 const BN = require('bn.js')
 const types = require('../types')
-const { Helpers } = require('../helpers')
+const HelperManager = require('../helpers/HelperManager')
+const { DEFAULT_ETH_NODE } = require('../defaults')
 
 /**
  * A value coupled with a type
@@ -52,18 +53,20 @@ class TypedValue {
  * @param {radspec/parser/AST} ast The AST to evaluate
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
+ * @param {?Object} options.availablehelpers Available helpers
+ * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?string} options.to The destination address for this expression's transaction
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
  */
 class Evaluator {
-  constructor (ast, bindings, { ethNode, to } = {}) {
+  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, to } = {}) {
     this.ast = ast
     this.bindings = bindings
-    this.eth = new Eth(ethNode || 'https://mainnet.infura.io')
+    this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE)
     this.to = to && new TypedValue('address', to)
-    this.helpers = new Helpers(this.eth)
+    this.helpers = new HelperManager(availableHelpers)
   }
 
   /**
@@ -221,15 +224,6 @@ class Evaluator {
       return leftFalsey ? this.evaluateNode(node.right) : left
     }
 
-    if (node.type === 'Identifier') {
-      if (!this.bindings.hasOwnProperty(node.value)) {
-        this.panic(`Undefined binding "${node.value}"`)
-      }
-
-      const binding = this.bindings[node.value]
-      return new TypedValue(binding.type, binding.value)
-    }
-
     if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
       let target
@@ -276,9 +270,29 @@ class Evaluator {
       }
 
       const inputs = await this.evaluateNodes(node.inputs)
-      const result = await this.helpers.execute(helperName, inputs)
+      const result = await this.helpers.execute(
+        helperName,
+        inputs,
+        {
+          eth: this.eth,
+          evaluator: this
+        }
+      )
 
       return new TypedValue(result.type, result.value)
+    }
+
+    if (node.type === 'Identifier') {
+      if (node.value === 'self') {
+        return this.to
+      }
+
+      if (!this.bindings.hasOwnProperty(node.value)) {
+        this.panic(`Undefined binding "${node.value}"`)
+      }
+
+      const binding = this.bindings[node.value]
+      return new TypedValue(binding.type, binding.value)
     }
   }
 

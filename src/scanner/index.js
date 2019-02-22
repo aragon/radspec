@@ -159,7 +159,7 @@ class Scanner {
           break
         }
 
-        const IDENTIFIERS = /[_a-z0-9]/i
+        const IDENTIFIERS = /[_$a-z0-9]/i
         if (IDENTIFIERS.test(current)) {
           let identifier = current
           while (IDENTIFIERS.test(this.peek())) {

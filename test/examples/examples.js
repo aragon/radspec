@@ -1,6 +1,7 @@
 const test = require('ava')
 const BN = require('bn.js')
-const { evaluateRaw } = require('../../src')
+const { evaluateRaw } = require('../../src/lib')
+const { defaultHelpers } = require('../../src/helpers')
 const { tenPow } = require('../../src/helpers/lib/formatBN')
 const { ETH } = require('../../src/helpers/lib/token')
 
@@ -9,7 +10,7 @@ const int = (value) => ({
   value
 })
 
-const address = (value) => ({
+const address = (value = '0x0000000000000000000000000000000000000001') => ({
   type: 'address',
   value
 })
@@ -26,6 +27,11 @@ const string = (value) => ({
 
 const bytes32 = (value) => ({
   type: 'bytes32',
+  value
+})
+
+const bytes = (value) => ({
+  type: 'bytes',
   value
 })
 
@@ -103,7 +109,7 @@ const comparisonCases = [
 const helperCases = [
   [{
     source: 'helper `@echo(@echo(\'hi \'), 1 + 100000 ^ 0)`',
-    bindings: { }
+    bindings: {}
   }, 'helper hi hi '],
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT',
@@ -148,11 +154,11 @@ const helperCases = [
   }, 'Period duration is 1 month'],
   [{
     source: '3600 seconds is `@transformTime(3600)`',
-    bindings: { }
+    bindings: {}
   }, '3600 seconds is 1 hour'],
   [{
     source: '10k minutes is `@transformTime(10 ^ 4, \'second\', \'minute\')`',
-    bindings: { }
+    bindings: {}
   }, '10k minutes is 600000 seconds'],
   [{
     source: 'Change required support to `@formatPct(support)`%',
@@ -164,6 +170,51 @@ const helperCases = [
   }, 'Change required support to 40.4%']
 ]
 
+const dataDecodeCases = [
+  [{
+    source: 'Perform action: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x13af40350000000000000000000000000000000000000000000000000000000000000002') // setOwner(address), on knownFunctions
+    }
+  }, 'Perform action: Set 0x0000000000000000000000000000000000000002 as the new owner'],
+  [{
+    source: 'Payroll: `@radspec(addr, data)`!',
+    bindings: {
+      addr: address(),
+      data: bytes('0x6881385b') // payday(), on knownFunctions
+    }
+  }, 'Payroll: Get owed Payroll allowance!'],
+  [{
+    source: 'Transfer: `@radspec(addr, data)`',
+    bindings: {
+      addr: address('0x960b236a07cf122663c4303350609a66a7b288c0'),
+      data: bytes('0xa9059cbb00000000000000000000000031ab1f92344e3277ce9404e4e097dab7514e6d2700000000000000000000000000000000000000000000000821ab0d4414980000') // transfer(), on knownFunctions requiring helpers
+    }
+  }, 'Transfer: Transfer 150 ANT to 0x31AB1f92344e3277ce9404E4e097dab7514E6D27'],
+  [{
+    source: 'Cast a `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xdf133bca') // vote(uint256,bool,bool), from on-chain registry
+    }
+  }, 'Cast a Vote'],
+  [{
+    source: 'Perform action: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x12345678') // random signature
+    }
+  }, 'Perform action: Unknown function (0x12345678)'],
+  [{
+    source: 'Perform action: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x12') // bad signature
+    }
+  }, 'Perform action: Unknown function (0x12)']
+]
+
 const cases = [
   // Bindings
   [{
@@ -172,7 +223,7 @@ const cases = [
   }, 'a is 1, b is 2 and "c d" is 3 4'],
   [{
     source: 'An empty string`\'\'`',
-    bindings: { }
+    bindings: {}
   }, 'An empty string'],
 
   // Maths
@@ -261,12 +312,20 @@ const cases = [
   }, 'hello'],
 
   ...comparisonCases,
-  ...helperCases
+  ...helperCases,
+  ...dataDecodeCases
 ]
 
 cases.forEach(([input, expected], index) => {
   test(`${index} - ${input.source}`, async (t) => {
-    const actual = await evaluateRaw(input.source, input.bindings, input.options)
+    const actual = await evaluateRaw(
+      input.source,
+      input.bindings,
+      {
+        ...input.options,
+        availableHelpers: defaultHelpers,
+      }
+    )
     t.is(
       actual,
       expected,
