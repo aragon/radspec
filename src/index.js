@@ -11,29 +11,10 @@
  * @module radspec
  */
 const ABI = require('web3-eth-abi')
-const scanner = require('./scanner')
+const { defaultHelpers } = require('./helpers')
+const { evaluateRaw } = require('./lib')
 const parser = require('./parser')
-const evaluator = require('./evaluator')
-
-/**
- * Evaluate a radspec expression with manual bindings.
- *
- * @example
- * const radspec = require('radspec')
- *
- * radspec.evaluateRaw('a is `a`', {
- *   a: { type: 'int256', value: 10 }
- * }).then(console.log)
- * @param  {string} source The radspec expression
- * @param  {Bindings} bindings An object of bindings and their values
- * @param {?Object} evaluatorOptions An options object for the evaluator
- * @return {Promise<string>} The result of the evaluation
- */
-function evaluateRaw (source, bindings, evaluatorOptions) {
-  return scanner.scan(source)
-    .then(parser.parse)
-    .then((ast) => evaluator.evaluate(ast, bindings, evaluatorOptions))
-}
+const scanner = require('./scanner')
 
 /**
  * Evaluate a radspec expression (`source`) for a transaction (`call`)
@@ -71,10 +52,12 @@ function evaluateRaw (source, bindings, evaluatorOptions) {
  * @param {string} call.transaction.to The destination address for this transaction
  * @param {string} call.transaction.data The transaction data
  * @param {?Object} options An options object
+ * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
  * @param {?string} options.ethNode The URL to an Ethereum node
+ * @param {?Object} options.userHelpers User defined helpers
  * @return {Promise<string>} The result of the evaluation
  */
-function evaluate (source, call, options = {}) {
+function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   // Get method ID
   const methodId = call.transaction.data.substr(0, 10)
 
@@ -98,9 +81,18 @@ function evaluate (source, call, options = {}) {
       }
     ), {})
 
-  // Evaluate expression with bindings from
-  // the transaction data
-  return evaluateRaw(source, parameters, { ...options, to: call.transaction.to })
+  const availableHelpers = { ...defaultHelpers, ...userHelpers }
+
+  // Evaluate expression with bindings from the transaction data
+  return evaluateRaw(
+    source,
+    parameters,
+    {
+      ...options,
+      availableHelpers,
+      to: call.transaction.to
+    }
+  )
 }
 
 module.exports = {
