@@ -24,5 +24,5 @@ module.exports = {
   formatPct,
   radspec,
   transformTime,
-  tokenAmount,
+  tokenAmount
 }

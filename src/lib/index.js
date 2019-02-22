@@ -23,5 +23,5 @@ function evaluateRaw (source, bindings, evaluatorOptions) {
 }
 
 module.exports = {
-  evaluateRaw,
+  evaluateRaw
 }
