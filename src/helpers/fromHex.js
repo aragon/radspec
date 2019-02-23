@@ -7,9 +7,8 @@ export default () =>
    * @param {string} [to='utf8'] The type to convert the hex from (supported types: 'utf8', 'number', 'decimal')
    * @return {radspec/evaluator/TypedValue}
    */
-  (hex, to = 'utf8') => {
-    return {
+  (hex, to = 'utf8') =>
+    ({
       type: 'string',
       value: to === 'number' ? toDecimal(hex) : to === 'ascii' ? toAscii(hex) : toUtf8(hex)
-    }
-  }
+    })
