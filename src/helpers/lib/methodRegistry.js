@@ -1,7 +1,7 @@
 // From: https://github.com/danfinlay/eth-method-registry
 
-const Eth = require('web3-eth')
-const { DEFAULT_ETH_NODE } = require('../../defaults')
+import Eth from 'web3-eth'
+import { DEFAULT_ETH_NODE } from '../../defaults'
 
 /* eslint-disable key-spacing, quotes */
 const REGISTRY_LOOKUP_ABI = [
@@ -31,7 +31,7 @@ const REGISTRY_MAP = {
   1: '0x44691B39d1a75dC4E0A0346CBB15E310e6ED1E86'
 }
 
-class MethodRegistry {
+export default class MethodRegistry {
   constructor (opts = {}) {
     this.eth = opts.eth || new Eth(DEFAULT_ETH_NODE)
     this.network = opts.network || '1'
@@ -74,5 +74,3 @@ class MethodRegistry {
     }
   }
 }
-
-module.exports = MethodRegistry

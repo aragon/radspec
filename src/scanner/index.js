@@ -1,7 +1,7 @@
 /**
  * @module radspec/scanner
  */
-const types = require('../types')
+import types from '../types'
 
 /**
  * Enum for scanner state.
@@ -24,7 +24,7 @@ const SCANNER_STATE = {
  * @property {number} cursor
  * @property {Array<Token>} tokens The currently identified tokens
  */
-class Scanner {
+export class Scanner {
   constructor (source) {
     this.state = SCANNER_STATE.OK
     this.isInExpression = false
@@ -286,17 +286,13 @@ class Scanner {
   }
 }
 
-module.exports = {
-  Scanner,
-
-  /**
-   * Scans source and returns a list of tokens.
-   *
-   * @memberof radspec/scanner
-   * @param  {string} source
-   * @return {Array<Token>}
-   */
-  scan (source) {
-    return new Scanner(source).scan()
-  }
+/**
+ * Scans source and returns a list of tokens.
+ *
+ * @memberof radspec/scanner
+ * @param  {string} source
+ * @return {Array<Token>}
+ */
+export function scan (source) {
+  return new Scanner(source).scan()
 }

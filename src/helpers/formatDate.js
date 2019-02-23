@@ -1,6 +1,6 @@
 import formatDate from 'date-fns/format'
 
-module.exports = () =>
+export default () =>
   /**
    * Format a timestamp as a string
    *

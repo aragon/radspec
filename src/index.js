@@ -10,17 +10,15 @@
 /**
  * @module radspec
  */
-const ABI = require('web3-eth-abi')
-const { defaultHelpers } = require('./helpers')
-const { evaluateRaw } = require('./lib')
-const parser = require('./parser')
-const scanner = require('./scanner')
+import ABI from 'web3-eth-abi'
+import { defaultHelpers } from './helpers'
+import { evaluateRaw } from './lib'
 
 /**
  * Evaluate a radspec expression (`source`) for a transaction (`call`)
  *
  * @example
- * const radspec = require('radspec')
+ * import radspec from 'radspec'
  *
  * const expression = 'Will multiply `a` by 7 and return `a * 7`.'
  * const call = {
@@ -95,10 +93,8 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   )
 }
 
-module.exports = {
-  scan: scanner.scan,
-  parse: parser.parse,
+export { evaluate, evaluateRaw }
 
-  evaluateRaw,
-  evaluate
-}
+// Re-export some commonly used inner functionality
+export { parse } from './parser'
+export { scan } from './scanner'

@@ -1,4 +1,4 @@
-const radspec = require('../../src')
+import radspec from '../../src'
 
 const expressions = [
   {

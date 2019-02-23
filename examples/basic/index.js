@@ -1,4 +1,4 @@
-const radspec = require('../../src')
+import radspec from '../../src'
 
 const expression = 'Will multiply `a` by 7 and return `a * 7`.'
 const call = {

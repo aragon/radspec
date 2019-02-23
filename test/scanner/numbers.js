@@ -1,5 +1,5 @@
-const test = require('ava')
-const { scan } = require('../../src/scanner')
+import test from 'ava'
+import { scan } from '../../src/scanner'
 
 test('Scanner: Numbers', async (t) => {
   t.plan(2)

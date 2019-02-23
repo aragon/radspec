@@ -36,7 +36,7 @@ Evaluate a radspec expression with manual bindings.
 **Examples**
 
 ```javascript
-const radspec = require('radspec')
+import radspec from 'radspec'
 
 radspec.evaluateRaw('a is `a`', {
   a: { type: 'int256', value: 10 }
@@ -63,7 +63,7 @@ Evaluate a radspec expression (`source`) for a transaction (`call`)
 **Examples**
 
 ```javascript
-const radspec = require('radspec')
+import radspec from 'radspec'
 
 const expression = 'Will multiply `a` by 7 and return `a * 7`.'
 const call = {

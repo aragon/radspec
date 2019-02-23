@@ -1,9 +1,9 @@
-const BN = require('bn.js')
-const { toUtf8 } = require('web3-utils')
-const { ERC20_SYMBOL_BYTES32_ABI, ERC20_SYMBOL_DECIMALS_ABI, ETH } = require('./lib/token')
-const { formatBN, tenPow } = require('./lib/formatBN')
+import BN from 'bn.js'
+import { toUtf8 } from 'web3-utils'
+import { ERC20_SYMBOL_BYTES32_ABI, ERC20_SYMBOL_DECIMALS_ABI, ETH } from './lib/token'
+import { formatBN, tenPow } from './lib/formatBN'
 
-module.exports = (eth) =>
+export default (eth) =>
   /**
    * Format token amounts taking decimals into account
    *

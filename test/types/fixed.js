@@ -1,5 +1,5 @@
-const test = require('ava')
-const fixed = require('../../src/types/fixed')
+import test from 'ava'
+import fixed from '../../src/types/fixed'
 
 test('Type: fixed', (t) => {
   t.true(fixed.isType('fixed8x11'))

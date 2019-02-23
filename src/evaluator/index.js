@@ -2,13 +2,13 @@
  * @module radspec/evaluator
  */
 
-const ABI = require('web3-eth-abi')
-const Eth = require('web3-eth')
-const Web3Utils = require('web3-utils')
-const BN = require('bn.js')
-const types = require('../types')
-const HelperManager = require('../helpers/HelperManager')
-const { DEFAULT_ETH_NODE } = require('../defaults')
+import ABI from 'web3-eth-abi'
+import Eth from 'web3-eth'
+import Web3Utils from 'web3-utils'
+import BN from 'bn.js'
+import types from '../types'
+import HelperManager from '../helpers/HelperManager'
+import { DEFAULT_ETH_NODE } from '../defaults'
 
 /**
  * A value coupled with a type
@@ -60,7 +60,7 @@ class TypedValue {
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
  */
-class Evaluator {
+export class Evaluator {
   constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, to } = {}) {
     this.ast = ast
     this.bindings = bindings
@@ -319,21 +319,17 @@ class Evaluator {
   }
 }
 
-module.exports = {
-  Evaluator,
-
-  /**
-   * Evaluates an AST
-   *
-   * @memberof radspec/evaluator
-   * @param {radspec/parser/AST} ast The AST to evaluate
-   * @param {radspec/Bindings} bindings An object of bindings and their values
-   * @param {?Object} options An options object
-   * @param {?string} options.ethNode The URL to an Ethereum node
-   * @param {?string} options.to The destination address for this expression's transaction
-   * @return {string}
-   */
-  evaluate (ast, bindings, options) {
-    return new Evaluator(ast, bindings, options).evaluate()
-  }
+/**
+ * Evaluates an AST
+ *
+ * @memberof radspec/evaluator
+ * @param {radspec/parser/AST} ast The AST to evaluate
+ * @param {radspec/Bindings} bindings An object of bindings and their values
+ * @param {?Object} options An options object
+ * @param {?string} options.ethNode The URL to an Ethereum node
+ * @param {?string} options.to The destination address for this expression's transaction
+ * @return {string}
+ */
+export function evaluate (ast, bindings, options) {
+  return new Evaluator(ast, bindings, options).evaluate()
 }

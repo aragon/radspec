@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   isType (identifier) {
     let mXn = identifier.substr(6)
 
