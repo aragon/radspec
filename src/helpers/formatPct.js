@@ -1,7 +1,7 @@
-const BN = require('bn.js')
-const { formatBN, tenPow } = require('./lib/formatBN')
+import BN from 'bn.js'
+import { formatBN, tenPow } from './lib/formatBN'
 
-module.exports = () =>
+export default () =>
   /**
    * Format a percentage amount
    *

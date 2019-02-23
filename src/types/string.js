@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   isType (identifier) {
     return identifier === 'string'
   }

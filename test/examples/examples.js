@@ -1,9 +1,9 @@
-const test = require('ava')
-const BN = require('bn.js')
-const { evaluateRaw } = require('../../src/lib')
-const { defaultHelpers } = require('../../src/helpers')
-const { tenPow } = require('../../src/helpers/lib/formatBN')
-const { ETH } = require('../../src/helpers/lib/token')
+import test from 'ava'
+import BN from 'bn.js'
+import { evaluateRaw } from '../../src/lib'
+import { defaultHelpers } from '../../src/helpers'
+import { tenPow } from '../../src/helpers/lib/formatBN'
+import { ETH } from '../../src/helpers/lib/token'
 
 const int = (value) => ({
   type: 'int256',

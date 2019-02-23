@@ -1,10 +1,10 @@
-const BN = require('bn.js')
+import BN from 'bn.js'
 
-exports.tenPow = x => (
+export const tenPow = x => (
   (new BN(10)).pow(new BN(x))
 )
 
-exports.formatBN = (amount, base, precision) => {
+export const formatBN = (amount, base, precision) => {
   // Inspired by: https://github.com/ethjs/ethjs-unit/blob/35d870eae1c32c652da88837a71e252a63a83ebb/src/index.js#L83
   const baseLength = base.toString().length
 
