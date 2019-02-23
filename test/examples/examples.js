@@ -161,9 +161,9 @@ const helperCases = [
     bindings: {}
   }, '10k minutes is 600000 seconds'],
   [{
-    source: 'Hello `@fromHex(name)`, `@fromHex(n, "number")` `@fromHex("0x69", "ascii")`s the definitive response.',
-    bindings: { name: bytes32('0x446f75676c6173'), n: bytes('0x2a') }
-  }, 'Hello Douglas, 42 is the definitive response.'],
+    source: 'Hello `@fromHex(firstName)` `@fromHex(lastName, "utf8")`, `@fromHex(n, "number")` `@fromHex("0x69", "ascii")`s the definitive response.',
+    bindings: { firstName: bytes32('0x446f75676c6173'), lastName: bytes32('0x4164616d73'), n: bytes('0x2a') }
+  }, 'Hello Douglas Adams, 42 is the definitive response.'],
   [{
     source: 'Change required support to `@formatPct(support)`%',
     bindings: { support: int((new BN(50)).mul(tenPow(16))) } // 50 * 10^16
