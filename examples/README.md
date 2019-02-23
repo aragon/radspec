@@ -3,4 +3,5 @@
 This is a list of examples using radspec.
 
 - [Basic](basic): Perform some basic math in a radspec expression and evaluate it with a transaction.
+- [User Helpers](user-helpers): Use custom functions in randspec expressions.
 - [Web3 Calls](web3-calls): Showcasing radspec's support for calls to external contracts
