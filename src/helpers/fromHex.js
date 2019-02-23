@@ -10,5 +10,10 @@ export default () =>
   (hex, to = 'utf8') =>
     ({
       type: 'string',
-      value: to === 'number' ? toDecimal(hex) : to === 'ascii' ? toAscii(hex) : toUtf8(hex)
+      value:
+        to === 'utf8'
+          ? toUtf8(hex)
+          : to === 'ascii'
+            ? toAscii(hex)
+            : toDecimal(hex)
     })
