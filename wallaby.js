@@ -1,4 +1,4 @@
-export default function (wallaby) {
+module.exports = function (wallaby) {
   return {
     files: [
       'src/**/*.js'
