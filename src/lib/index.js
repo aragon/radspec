@@ -16,12 +16,8 @@ import { scan } from '../scanner'
  * @param {?Object} evaluatorOptions An options object for the evaluator (see Evaluator)
  * @return {Promise<string>} The result of the evaluation
  */
-function evaluateRaw (source, bindings, evaluatorOptions) {
+export function evaluateRaw (source, bindings, evaluatorOptions) {
   return scan(source)
     .then(parse)
     .then((ast) => evaluate(ast, bindings, evaluatorOptions))
-}
-
-export {
-  evaluateRaw
 }

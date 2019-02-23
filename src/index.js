@@ -13,8 +13,6 @@
 import ABI from 'web3-eth-abi'
 import { defaultHelpers } from './helpers'
 import { evaluateRaw } from './lib'
-import { parse } from './parser'
-import { scan } from './scanner'
 
 /**
  * Evaluate a radspec expression (`source`) for a transaction (`call`)
@@ -95,10 +93,8 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   )
 }
 
-export default {
-  scan,
-  parse,
+export { evaluate, evaluateRaw }
 
-  evaluateRaw,
-  evaluate
-}
+// Re-export some commonly used inner functionality
+export { parse } from './parser'
+export { scan } from './scanner'

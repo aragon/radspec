@@ -1,7 +1,7 @@
-const ETH = '0x0000000000000000000000000000000000000000'
+export const ETH = '0x0000000000000000000000000000000000000000'
 
 /* eslint-disable key-spacing, quotes */
-const ERC20_SYMBOL_BYTES32_ABI = [
+export const ERC20_SYMBOL_BYTES32_ABI = [
   {
     "constant":true,
     "inputs":[],
@@ -18,7 +18,7 @@ const ERC20_SYMBOL_BYTES32_ABI = [
   }
 ]
 
-const ERC20_SYMBOL_DECIMALS_ABI = [
+export const ERC20_SYMBOL_DECIMALS_ABI = [
   {
     "constant":true,
     "inputs":[],
@@ -49,9 +49,3 @@ const ERC20_SYMBOL_DECIMALS_ABI = [
   }
 ]
 /* eslint-enable key-spacing, quotes */
-
-export {
-  ERC20_SYMBOL_BYTES32_ABI,
-  ERC20_SYMBOL_DECIMALS_ABI,
-  ETH
-}
