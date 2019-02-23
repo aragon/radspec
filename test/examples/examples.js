@@ -167,7 +167,17 @@ const helperCases = [
   [{
     source: 'Change required support to `@formatPct(support, 10 ^ 18, 1)`%',
     bindings: { support: int((new BN(40)).mul(tenPow(16)).add((new BN(43)).mul(tenPow(14)))) } // 40 * 10^16 + 43 * 10^14
-  }, 'Change required support to 40.4%']
+  }, 'Change required support to 40.4%'],
+  [{
+    source: 'The genesis block is #`@getBlock(n)`',
+    bindings: { n: int(0) },
+    options: { userHelpers: { getBlock: (eth) => async (n) => ({ type: 'string', value: (await eth.getBlock(n)).number }) } }
+  }, 'The genesis block is #0'],
+  [{
+    source: 'Bar `@bar(shift)` foo `@foo(n)`',
+    bindings: { shift: bool(true), n: int(7) },
+    options: { userHelpers: { bar: () => shift => ({ type: 'string', value: shift ? 'BAR' : 'bar' }), foo: () => n => ({ type: 'number', value: n * 7 }) } }
+  }, 'Bar BAR foo 49']
 ]
 
 const dataDecodeCases = [
@@ -318,12 +328,13 @@ const cases = [
 
 cases.forEach(([input, expected], index) => {
   test(`${index} - ${input.source}`, async (t) => {
+    const { userHelpers } = input.options || {}
     const actual = await evaluateRaw(
       input.source,
       input.bindings,
       {
         ...input.options,
-        availableHelpers: defaultHelpers,
+        availableHelpers: { ...defaultHelpers, ...userHelpers }
       }
     )
     t.is(
