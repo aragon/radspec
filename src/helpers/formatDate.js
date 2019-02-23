@@ -9,9 +9,8 @@ export default () =>
    *                                      Uses unicode TR35 symbols; see https://date-fns.org/v2.0.0-alpha.22/docs/format
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
-  async (timestamp, format = 'MMM. do y') => {
-    return {
+  async (timestamp, format = 'MMM. do y') =>
+    ({
       type: 'string',
       value: formatDate(new Date(Number(timestamp) * 1000), format)
-    }
-  }
+    })

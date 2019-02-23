@@ -1,9 +1,10 @@
 import HelperManager from './HelperManager'
-import formatDate from './formatDate'
 import echo from './echo'
+import formatDate from './formatDate'
+import fromHex from './fromHex'
+import formatPct from './formatPct'
 import tokenAmount from './tokenAmount'
 import transformTime from './transformTime'
-import formatPct from './formatPct'
 import radspec from './radspec'
 
 const defaultHelpers = {
@@ -11,6 +12,7 @@ const defaultHelpers = {
   transformTime,
   tokenAmount,
   formatPct,
+  fromHex,
   radspec,
   echo
 }
@@ -22,6 +24,7 @@ export {
   echo,
   formatDate,
   formatPct,
+  fromHex,
   radspec,
   transformTime,
   tokenAmount
