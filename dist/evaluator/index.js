@@ -85,13 +85,15 @@ class Evaluator {
     availableHelpers = {},
     eth,
     ethNode,
-    to
+    to,
+    returnType = "string"
   } = {}) {
     this.ast = ast;
     this.bindings = bindings;
     this.eth = eth || new _web3Eth.default(ethNode || _defaults.DEFAULT_ETH_NODE);
     this.to = to && new TypedValue("address", to);
     this.helpers = new _HelperManager.default(availableHelpers);
+    this.returnType = returnType;
   }
   /**
    * Evaluate an array of AST nodes.
@@ -313,16 +315,18 @@ class Evaluator {
   /**
    * Evaluate the entire AST.
    *
-   * @return {string}
+   * @return {*}
    */
 
 
   async evaluate() {
-    return this.evaluateObj().then(evaluatedNodes => evaluatedNodes.join(""));
-  }
+    const evaluatedNodes = await this.evaluateNodes(this.ast.body);
 
-  async evaluateObj() {
-    return this.evaluateNodes(this.ast.body);
+    if (this.returnType === "object") {
+      return evaluatedNodes;
+    }
+
+    return evaluatedNodes.join("");
   }
   /**
    * Report an error and abort evaluation.
