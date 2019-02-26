@@ -324,10 +324,6 @@ export class Evaluator {
     return evaluatedNodes.join("");
   }
 
-  async evaluateObj() {
-    return this.evaluateNodes(this.ast.body);
-  }
-
   /**
    * Report an error and abort evaluation.
    *
