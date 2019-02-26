@@ -18,7 +18,7 @@ import { evaluateRaw } from './lib'
  * Evaluate a radspec expression (`source`) for a transaction (`call`)
  *
  * @example
- * import radspec from 'radspec'
+ * import * as radspec from 'radspec'
  *
  * const expression = 'Will multiply `a` by 7 and return `a * 7`.'
  * const call = {
@@ -93,6 +93,7 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   )
 }
 
+export default evaluate
 export { evaluate, evaluateRaw }
 
 // Re-export some commonly used inner functionality
