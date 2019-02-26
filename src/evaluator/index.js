@@ -24,6 +24,8 @@ class TypedValue {
     this.type = type;
     this.value = value;
     this.objValue = objValue;
+
+    this.castValue(type);
   }
 
   castValue(type) {
