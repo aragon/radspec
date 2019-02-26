@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/defaults.js"],"names":["DEFAULT_ETH_NODE"],"mappings":";;;;;;AAAO,MAAMA,gBAAgB,GAAG,qCAAzB","sourcesContent":["export const DEFAULT_ETH_NODE = 'wss://mainnet.eth.aragon.network/ws'\n"],"file":"defaults.js"}

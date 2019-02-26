@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/types/bool.js"],"names":["isType","identifier"],"mappings":";;;;;;eAAe;AACbA,EAAAA,MAAM,CAAEC,UAAF,EAAc;AAClB,WAAOA,UAAU,KAAK,MAAtB;AACD;;AAHY,C","sourcesContent":["export default {\n  isType (identifier) {\n    return identifier === 'bool'\n  }\n}\n"],"file":"bool.js"}
