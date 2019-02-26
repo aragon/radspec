@@ -61,12 +61,17 @@ class TypedValue {
  * @property {radspec/Bindings} bindings
  */
 export class Evaluator {
-  constructor(ast, bindings, { availableHelpers = {}, eth, ethNode, to } = {}) {
+  constructor(
+    ast,
+    bindings,
+    { availableHelpers = {}, eth, ethNode, to, returnType = "string" } = {}
+  ) {
     this.ast = ast;
     this.bindings = bindings;
     this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE);
     this.to = to && new TypedValue("address", to);
     this.helpers = new HelperManager(availableHelpers);
+    this.returnType = returnType;
   }
 
   /**
@@ -307,10 +312,16 @@ export class Evaluator {
   /**
    * Evaluate the entire AST.
    *
-   * @return {string}
+   * @return {*}
    */
   async evaluate() {
-    return this.evaluateObj().then(evaluatedNodes => evaluatedNodes.join(""));
+    const evaluatedNodes = await this.evaluateNodes(this.ast.body);
+
+    if (this.returnType === "object") {
+      return evaluatedNodes;
+    }
+
+    return evaluatedNodes.join("");
   }
 
   async evaluateObj() {
