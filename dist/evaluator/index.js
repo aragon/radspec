@@ -36,20 +36,34 @@ var _defaults = require("../defaults");
  * @property {*} value
  */
 class TypedValue {
-  constructor(type, value) {
+  constructor(type, value, objValue = null) {
     this.type = type;
     this.value = value;
+    this.objValue = objValue;
+  }
 
-    if (_types.default.isInteger(this.type) && !_bn.default.isBN(this.value)) {
+  castValue(type) {
+    if (_types.default.isInteger(type) && !_bn.default.isBN(this.value)) {
       this.value = new _bn.default(this.value);
+      this.objValue = {
+        hex: `0x${this.value.toString(16)}`
+      };
     }
 
-    if (this.type === "address") {
+    if (type === "address") {
       if (!_web3Utils.default.isAddress(this.value)) {
         throw new Error(`Invalid address "${this.value}"`);
       }
 
       this.value = _web3Utils.default.toChecksumAddress(this.value);
+    }
+
+    if (type === "string") {
+      this.value = `${this.value}`;
+    }
+
+    if (type === "number") {
+      this.value = Number(this.value);
     }
   }
   /**
@@ -110,17 +124,23 @@ class Evaluator {
    * Evaluate a single node.
    *
    * @param  {radspec/parser/Node} node
-   * @return {Promise<string>}
+   * @return {Promise<TypedValue>}
    */
 
 
   async evaluateNode(node) {
     if (node.type === "ExpressionStatement") {
-      return (await this.evaluateNodes(node.body)).join(" ");
+      return await this.evaluateNodes(node.body);
     }
 
     if (node.type === "GroupedExpression") {
-      return this.evaluateNode(node.body);
+      const evaluatedNode = await this.evaluateNode(node.body);
+
+      if (node.castType) {
+        evaluatedNode.castValue(node.castType);
+      }
+
+      return evaluatedNode;
     }
 
     if (node.type === "MonologueStatement") {
@@ -296,7 +316,7 @@ class Evaluator {
         eth: this.eth,
         evaluator: this
       });
-      return new TypedValue(result.type, result.value);
+      return new TypedValue(result.type, result.value, result.objValue);
     }
 
     if (node.type === "Identifier") {
@@ -323,7 +343,13 @@ class Evaluator {
     const evaluatedNodes = await this.evaluateNodes(this.ast.body);
 
     if (this.returnType === "object") {
-      return evaluatedNodes;
+      return evaluatedNodes.map(evaluatedNode => {
+        evaluatedNode = Array.isArray(evaluatedNode) ? evaluatedNode[0] : evaluatedNode;
+        return {
+          value: evaluatedNode.objValue || evaluatedNode.value,
+          type: evaluatedNode.type
+        };
+      });
     }
 
     return evaluatedNodes.join("");

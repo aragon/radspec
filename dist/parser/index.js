@@ -37,19 +37,18 @@ exports.Parser = void 0;
  * @enum {string}
  */
 const PARSER_STATE = {
-  OK: 'OK',
-  ERROR: 'ERROR'
-  /**
-   * Parses a token list into an AST.
-   *
-   * @class Parser
-   * @param {Array<Token>} tokens
-   * @property {string} state The state of the parser (`OK` or `ERROR`)
-   * @property {Array<Token>} tokens
-   * @property {number} cursor
-   */
-
+  OK: "OK",
+  ERROR: "ERROR"
 };
+/**
+ * Parses a token list into an AST.
+ *
+ * @class Parser
+ * @param {Array<Token>} tokens
+ * @property {string} state The state of the parser (`OK` or `ERROR`)
+ * @property {Array<Token>} tokens
+ * @property {number} cursor
+ */
 
 class Parser {
   constructor(tokens) {
@@ -121,36 +120,36 @@ class Parser {
   comparison(astBody) {
     let node = this.addition(astBody);
 
-    while (this.matches('GREATER', 'GREATER_EQUAL', 'LESS', 'LESS_EQUAL', 'EQUAL_EQUAL', 'BANG_EQUAL')) {
+    while (this.matches("GREATER", "GREATER_EQUAL", "LESS", "LESS_EQUAL", "EQUAL_EQUAL", "BANG_EQUAL")) {
       let operator = this.previous().type;
       let right = this.addition(astBody);
       node = {
-        type: 'ComparisonExpression',
+        type: "ComparisonExpression",
         operator,
         left: node,
         right
       };
     }
 
-    if (this.matches('QUESTION_MARK')) {
+    if (this.matches("QUESTION_MARK")) {
       node = {
-        type: 'TernaryExpression',
+        type: "TernaryExpression",
         predicate: node,
         left: this.comparison(astBody)
       };
 
-      if (!this.matches('COLON')) {
-        this.report('Half-baked ternary (expected colon)');
+      if (!this.matches("COLON")) {
+        this.report("Half-baked ternary (expected colon)");
       }
 
       node.right = this.comparison(astBody);
     }
 
-    if (this.matches('DOUBLE_VERTICAL_BAR')) {
+    if (this.matches("DOUBLE_VERTICAL_BAR")) {
       node = {
         left: node,
         right: this.comparison(),
-        type: 'DefaultExpression'
+        type: "DefaultExpression"
       };
     }
 
@@ -167,11 +166,11 @@ class Parser {
   addition(astBody) {
     let node = this.multiplication(astBody);
 
-    while (this.matches('MINUS', 'PLUS')) {
+    while (this.matches("MINUS", "PLUS")) {
       let operator = this.previous().type;
       let right = this.multiplication(astBody);
       node = {
-        type: 'BinaryExpression',
+        type: "BinaryExpression",
         operator,
         left: node,
         right
@@ -191,11 +190,11 @@ class Parser {
   multiplication(astBody) {
     let node = this.power(astBody);
 
-    while (this.matches('SLASH', 'STAR', 'MODULO')) {
+    while (this.matches("SLASH", "STAR", "MODULO")) {
       let operator = this.previous().type;
       let right = this.power(astBody);
       node = {
-        type: 'BinaryExpression',
+        type: "BinaryExpression",
         operator,
         left: node,
         right
@@ -215,11 +214,11 @@ class Parser {
   power(astBody) {
     let node = this.unary(astBody);
 
-    while (this.matches('POWER')) {
+    while (this.matches("POWER")) {
       let operator = this.previous().type;
       let right = this.unary(astBody);
       node = {
-        type: 'BinaryExpression',
+        type: "BinaryExpression",
         operator,
         left: node,
         right
@@ -237,11 +236,11 @@ class Parser {
 
 
   unary(astBody) {
-    if (this.matches('BANG', 'MINUS')) {
+    if (this.matches("BANG", "MINUS")) {
       let operator = this.previous().type;
       let right = this.unary(astBody);
       return {
-        type: 'UnaryExpression',
+        type: "UnaryExpression",
         operator,
         right: right
       };
@@ -260,9 +259,9 @@ class Parser {
   identifier(astBody) {
     let node;
 
-    if (this.matches('IDENTIFIER')) {
+    if (this.matches("IDENTIFIER")) {
       node = {
-        type: 'Identifier',
+        type: "Identifier",
         value: this.previous().value
       };
     }
@@ -270,7 +269,7 @@ class Parser {
     if (!node) {
       const previousNode = astBody.length && astBody[astBody.length - 1];
 
-      if (previousNode && (previousNode.type === 'Identifier' || previousNode.type === 'GroupedExpression' || previousNode.type === 'CallExpression')) {
+      if (previousNode && (previousNode.type === "Identifier" || previousNode.type === "GroupedExpression" || previousNode.type === "CallExpression")) {
         node = previousNode; // Consume the last node as part of this node
 
         astBody.pop();
@@ -278,18 +277,18 @@ class Parser {
     }
 
     if (node) {
-      while (this.matches('DOT')) {
+      while (this.matches("DOT")) {
         let property = this.consume().value;
         node = {
-          type: 'PropertyAccessExpression',
+          type: "PropertyAccessExpression",
           target: node,
           property
         };
       }
 
-      if (this.matches('LEFT_PAREN')) {
+      if (this.matches("LEFT_PAREN")) {
         node = {
-          type: 'CallExpression',
+          type: "CallExpression",
           target: node.target,
           callee: node.property,
           inputs: this.functionInputs(astBody),
@@ -298,7 +297,7 @@ class Parser {
 
         if (this.eof()) {
           // TODO Better error
-          this.report('Unterminated call expression');
+          this.report("Unterminated call expression");
         }
 
         node.outputs.push({
@@ -320,20 +319,20 @@ class Parser {
 
 
   helper(astBody) {
-    if (this.matches('AT')) {
+    if (this.matches("AT")) {
       const identifier = this.consume();
       const name = identifier.value;
 
-      if (identifier.type !== 'IDENTIFIER') {
+      if (identifier.type !== "IDENTIFIER") {
         this.report(`Invalid helper function name '${name}' provided after @`);
       }
 
       const node = {
-        type: 'HelperFunction',
+        type: "HelperFunction",
         name: name
       };
 
-      if (this.matches('LEFT_PAREN')) {
+      if (this.matches("LEFT_PAREN")) {
         node.inputs = this.functionInputs(astBody);
       } else {// There is actually no good reason not to allow calling a helper without ()
         // this.report(`Expected '(' for executing helper function`)
@@ -353,12 +352,12 @@ class Parser {
 
 
   primary(astBody) {
-    if (this.matches('NUMBER', 'STRING', 'HEXADECIMAL', 'BOOLEAN')) {
+    if (this.matches("NUMBER", "STRING", "HEXADECIMAL", "BOOLEAN")) {
       let type = {
-        NUMBER: 'NumberLiteral',
-        STRING: 'StringLiteral',
-        HEXADECIMAL: 'BytesLiteral',
-        BOOLEAN: 'BoolLiteral'
+        NUMBER: "NumberLiteral",
+        STRING: "StringLiteral",
+        HEXADECIMAL: "BytesLiteral",
+        BOOLEAN: "BoolLiteral"
       }[this.previous().type];
       return {
         type,
@@ -366,20 +365,20 @@ class Parser {
       };
     }
 
-    if (this.matches('LEFT_PAREN')) {
+    if (this.matches("LEFT_PAREN")) {
       let expression;
 
       do {
         // Keep munching expressions in the context of the current expression
         expression = this.comparison(expression ? [expression] : []);
-      } while (!this.eof() && !this.matches('RIGHT_PAREN'));
+      } while (!this.eof() && !this.matches("RIGHT_PAREN"));
 
       if (this.eof()) {
-        this.report('Unterminated grouping');
+        this.report("Unterminated grouping");
       }
 
       return {
-        type: 'GroupedExpression',
+        type: "GroupedExpression",
         body: expression
       };
     }
@@ -394,7 +393,7 @@ class Parser {
 
 
   type() {
-    if (!this.matches('COLON') && this.peek().type !== 'TYPE') {
+    if (!this.matches("COLON") && this.peek().type !== "TYPE") {
       // TODO Better error
       this.report(`Expected a type, got "${this.peek().type}"`);
     }
@@ -412,20 +411,20 @@ class Parser {
   functionInputs(astBody) {
     const inputs = [];
 
-    while (!this.eof() && !this.matches('RIGHT_PAREN')) {
+    while (!this.eof() && !this.matches("RIGHT_PAREN")) {
       const input = this.comparison(astBody);
 
       if (!input.type) {
         input.type = this.type();
-      } else if (this.matches('COLON')) {
-        this.report(`Unexpected type (already inferred type of parameter)`);
+      } else if (this.matches("COLON")) {
+        input.castType = this.consume().value;
       }
 
       inputs.push(input); // Break if the next character is not a comma or a right parenthesis
       // If this is true, then we are specifying more parameters without
       // delimiting them using comma.
 
-      if (!this.matches('COMMA') && this.peek().type !== 'RIGHT_PAREN') break;
+      if (!this.matches("COMMA") && this.peek().type !== "RIGHT_PAREN") break;
     }
 
     return inputs;
@@ -442,29 +441,29 @@ class Parser {
   walk(astBody) {
     let token = this.peek();
 
-    if (token.type === 'MONOLOGUE') {
+    if (token.type === "MONOLOGUE") {
       return {
-        type: 'MonologueStatement',
+        type: "MonologueStatement",
         value: this.consume().value
       };
     }
 
-    if (token.type === 'TICK') {
+    if (token.type === "TICK") {
       let node = {
-        type: 'ExpressionStatement',
+        type: "ExpressionStatement",
         body: []
       };
-      this.matches('TICK');
+      this.matches("TICK");
 
-      while (!this.eof() && this.peek().type !== 'TICK') {
+      while (!this.eof() && this.peek().type !== "TICK") {
         node.body.push(this.walk(node.body));
       }
 
       if (this.eof()) {
-        this.report('Unterminated expression');
+        this.report("Unterminated expression");
       }
 
-      this.matches('TICK');
+      this.matches("TICK");
       return node;
     }
 
@@ -479,7 +478,7 @@ class Parser {
 
   async parse() {
     let ast = {
-      type: 'Program',
+      type: "Program",
       body: []
     };
 

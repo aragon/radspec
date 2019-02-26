@@ -20,19 +20,32 @@ import { DEFAULT_ETH_NODE } from "../defaults";
  * @property {*} value
  */
 class TypedValue {
-  constructor(type, value) {
+  constructor(type, value, objValue = null) {
     this.type = type;
     this.value = value;
+    this.objValue = objValue;
+  }
 
-    if (types.isInteger(this.type) && !BN.isBN(this.value)) {
+  castValue(type) {
+    if (types.isInteger(type) && !BN.isBN(this.value)) {
       this.value = new BN(this.value);
+      this.objValue = { hex: `0x${this.value.toString(16)}` };
     }
 
-    if (this.type === "address") {
+    if (type === "address") {
       if (!Web3Utils.isAddress(this.value)) {
         throw new Error(`Invalid address "${this.value}"`);
       }
+
       this.value = Web3Utils.toChecksumAddress(this.value);
+    }
+
+    if (type === "string") {
+      this.value = `${this.value}`;
+    }
+
+    if (type === "number") {
+      this.value = Number(this.value);
     }
   }
 
@@ -88,15 +101,21 @@ export class Evaluator {
    * Evaluate a single node.
    *
    * @param  {radspec/parser/Node} node
-   * @return {Promise<string>}
+   * @return {Promise<TypedValue>}
    */
   async evaluateNode(node) {
     if (node.type === "ExpressionStatement") {
-      return (await this.evaluateNodes(node.body)).join(" ");
+      return await this.evaluateNodes(node.body);
     }
 
     if (node.type === "GroupedExpression") {
-      return this.evaluateNode(node.body);
+      const evaluatedNode = await this.evaluateNode(node.body);
+
+      if (node.castType) {
+        evaluatedNode.castValue(node.castType);
+      }
+
+      return evaluatedNode;
     }
 
     if (node.type === "MonologueStatement") {
@@ -292,7 +311,7 @@ export class Evaluator {
         evaluator: this
       });
 
-      return new TypedValue(result.type, result.value);
+      return new TypedValue(result.type, result.value, result.objValue);
     }
 
     if (node.type === "Identifier") {
@@ -318,7 +337,16 @@ export class Evaluator {
     const evaluatedNodes = await this.evaluateNodes(this.ast.body);
 
     if (this.returnType === "object") {
-      return evaluatedNodes;
+      return evaluatedNodes.map(evaluatedNode => {
+        evaluatedNode = Array.isArray(evaluatedNode)
+          ? evaluatedNode[0]
+          : evaluatedNode;
+
+        return {
+          value: evaluatedNode.objValue || evaluatedNode.value,
+          type: evaluatedNode.type
+        };
+      });
     }
 
     return evaluatedNodes.join("");
