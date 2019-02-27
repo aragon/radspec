@@ -1,4 +1,4 @@
-import radspec from '../../src'
+import * as radspec from '../../src'
 
 const expressions = [
   {
