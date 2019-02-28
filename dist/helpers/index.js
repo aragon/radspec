@@ -35,12 +35,6 @@ Object.defineProperty(exports, "formatPct", {
     return _formatPct.default;
   }
 });
-Object.defineProperty(exports, "tokenAmount", {
-  enumerable: true,
-  get: function get() {
-    return _tokenAmount.default;
-  }
-});
 Object.defineProperty(exports, "transformTime", {
   enumerable: true,
   get: function get() {
@@ -51,6 +45,12 @@ Object.defineProperty(exports, "radspec", {
   enumerable: true,
   get: function get() {
     return _radspec.default;
+  }
+});
+Object.defineProperty(exports, "tokenAmount", {
+  enumerable: true,
+  get: function get() {
+    return _tokenAmount.default;
   }
 });
 exports.defaultHelpers = void 0;
@@ -65,20 +65,21 @@ var _fromHex = _interopRequireDefault(require("./fromHex"));
 
 var _formatPct = _interopRequireDefault(require("./formatPct"));
 
-var _tokenAmount = _interopRequireDefault(require("./tokenAmount"));
-
 var _transformTime = _interopRequireDefault(require("./transformTime"));
 
 var _radspec = _interopRequireDefault(require("./radspec"));
 
+var _tokenAmount = _interopRequireDefault(require("./tokenAmount"));
+
 const defaultHelpers = {
   formatDate: _formatDate.default,
   transformTime: _transformTime.default,
-  tokenAmount: _tokenAmount.default,
+  // tokenAmount,
   formatPct: _formatPct.default,
   fromHex: _fromHex.default,
   radspec: _radspec.default,
-  echo: _echo.default
+  echo: _echo.default,
+  tokenAmount: _tokenAmount.default
 };
 exports.defaultHelpers = defaultHelpers;
 //# sourceMappingURL=index.js.map

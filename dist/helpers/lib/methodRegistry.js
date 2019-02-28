@@ -1,13 +1,11 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
 
-var _web3Eth = _interopRequireDefault(require("web3-eth"));
+var _ethers = require("ethers");
 
 var _defaults = require("../../defaults");
 
@@ -15,18 +13,18 @@ var _defaults = require("../../defaults");
 
 /* eslint-disable key-spacing, quotes */
 const REGISTRY_LOOKUP_ABI = [{
-  "constant": true,
-  "inputs": [{
-    "name": "",
-    "type": "bytes4"
+  constant: true,
+  inputs: [{
+    name: '',
+    type: 'bytes4'
   }],
-  "name": "entries",
-  "outputs": [{
-    "name": "",
-    "type": "string"
+  name: 'entries',
+  outputs: [{
+    name: '',
+    type: 'string'
   }],
-  "payable": false,
-  "type": "function"
+  payable: false,
+  type: 'function'
 }]; // networkId -> registry address
 
 const REGISTRY_MAP = {
@@ -34,24 +32,26 @@ const REGISTRY_MAP = {
 };
 
 class MethodRegistry {
-  constructor(opts = {}) {
-    this.eth = opts.eth || new _web3Eth.default(_defaults.DEFAULT_ETH_NODE);
-    this.network = opts.network || '1';
-  } // !!! This function can mutate `this.eth`
-
+  constructor({
+    provider,
+    networkId
+  } = {}) {
+    this.networkId = networkId || 1;
+    this.provider = provider || new _ethers.ethers.providers.JsonRpcProvider(_defaults.DEFAULT_ETH_NODE, this.networkId);
+  }
 
   async initRegistry() {
-    if ((await this.eth.net.getId()) !== '1') {
-      this.eth = new _web3Eth.default(_defaults.DEFAULT_ETH_NODE);
+    if ((await this.provider.getNetwork()).chainId !== 1) {
+      this.provider = new _ethers.ethers.providers.JsonRpcProvider(_defaults.DEFAULT_ETH_NODE, 1);
     }
 
-    const address = REGISTRY_MAP[this.network];
+    const address = REGISTRY_MAP[this.networkId];
 
     if (!address) {
       throw new Error('No method registry found on the requested network.');
     }
 
-    this.registry = new this.eth.Contract(REGISTRY_LOOKUP_ABI, address);
+    this.registry = new _ethers.ethers.Contract(address, REGISTRY_LOOKUP_ABI, this.provider);
   }
 
   async lookup(sigBytes) {
@@ -59,7 +59,7 @@ class MethodRegistry {
       await this.initRegistry();
     }
 
-    return this.registry.methods.entries(sigBytes).call();
+    return this.registry.functions.entries(sigBytes);
   }
 
   parse(signature) {

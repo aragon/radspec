@@ -30,25 +30,14 @@ class HelperManager {
   exists(helper) {
     return !!this.availableHelpers[helper];
   }
-  /**
-   * Execute a helper with some inputs
-   *
-   * @param  {string} helper Helper name
-   * @param  {Array<radspec/evaluator/TypedValue>} inputs
-   * @param  {Object} config Configuration for running helper
-   * @param  {Web3}                        config.eth Web3 instance
-   * @param  {radspec/evaluator/Evaluator} config.evaluator Current evaluator
-   * @return {Promise<radspec/evaluator/TypedValue>}
-   */
-
 
   execute(helper, inputs, {
-    eth,
+    provider,
     evaluator
   }) {
     inputs = inputs.map(input => input.value); // pass values directly
 
-    return this.availableHelpers[helper](eth, evaluator)(...inputs);
+    return this.availableHelpers[helper](provider, evaluator)(...inputs);
   }
   /**
    * Get all registered helpers as a key-value mapping

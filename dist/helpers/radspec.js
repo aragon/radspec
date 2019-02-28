@@ -9,9 +9,7 @@ exports.default = void 0;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
-var _web3EthAbi = _interopRequireDefault(require("web3-eth-abi"));
-
-var _web3Utils = require("web3-utils");
+var _ethers = require("ethers");
 
 var _methodRegistry = _interopRequireDefault(require("./lib/methodRegistry"));
 
@@ -19,12 +17,14 @@ var _lib = require("../lib/");
 
 var _knownFunctions = _interopRequireDefault(require("../data/knownFunctions"));
 
+var _defaults = require("../defaults");
+
 const makeUnknownFunctionNode = methodId => ({
   type: 'string',
   value: `Unknown function (${methodId})`
 });
 
-const getSig = fn => (0, _web3Utils.keccak256)(fn).substr(0, 10); // Convert from the knownFunctions data format into the needed format
+const getSig = fnStr => _ethers.ethers.utils.keccak256(_ethers.ethers.utils.toUtf8Bytes(fnStr)).substr(0, 10); // Convert from the knownFunctions data format into the needed format
 // Input: { "signature(type1,type2)": "Its radspec string", ... }
 // Output: { "0xabcdef12": { "sig": "signature(type1,type2)", "source": "Its radspec string" }, ...}
 
@@ -36,7 +36,7 @@ const processFunctions = functions => Object.keys(functions).reduce((acc, key) =
   }
 }, acc), {});
 
-var _default = (eth, evaluator) =>
+var _default = (provider, evaluator) =>
 /**
  * Interpret calldata using radspec recursively. If the function signature is not in the package's known
  * functions, it fallbacks to looking for the function name using github.com/parity-contracts/signature-registry
@@ -61,7 +61,7 @@ async (addr, data) => {
     // As the registry is the only available on mainnet
     const registry = new _methodRegistry.default({
       networkId: '1',
-      eth
+      provider
     });
     const result = await registry.lookup(methodId);
 
@@ -91,7 +91,7 @@ async (addr, data) => {
   if (inputString !== '') {
     const inputs = inputString.split(','); // Decode parameters
 
-    const parameterValues = _web3EthAbi.default.decodeParameters(inputs, '0x' + data.substr(10));
+    const parameterValues = _defaults.abiCoder.decodeParameters(inputs, '0x' + data.substr(10));
 
     parameters = inputs.reduce((acc, input, i) => (0, _objectSpread2.default)({
       [`$${i + 1}`]: {
@@ -104,8 +104,8 @@ async (addr, data) => {
   return {
     type: 'string',
     value: await (0, _lib.evaluateRaw)(source, parameters, {
-      eth,
       availableHelpers: evaluator.helpers.getHelpers(),
+      provider,
       to: addr
     })
   };

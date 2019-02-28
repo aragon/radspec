@@ -8,12 +8,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.evaluate = evaluate;
 exports.Evaluator = void 0;
 
-var _web3EthAbi = _interopRequireDefault(require("web3-eth-abi"));
-
-var _web3Eth = _interopRequireDefault(require("web3-eth"));
-
-var _web3Utils = _interopRequireDefault(require("web3-utils"));
-
 var _bn = _interopRequireDefault(require("bn.js"));
 
 var _types = _interopRequireDefault(require("../types"));
@@ -21,6 +15,8 @@ var _types = _interopRequireDefault(require("../types"));
 var _HelperManager = _interopRequireDefault(require("../helpers/HelperManager"));
 
 var _defaults = require("../defaults");
+
+var _ethers = require("ethers");
 
 /**
  * @module radspec/evaluator
@@ -51,19 +47,15 @@ class TypedValue {
       };
     }
 
-    if (type === "address") {
-      if (!_web3Utils.default.isAddress(this.value)) {
-        throw new Error(`Invalid address "${this.value}"`);
-      }
-
-      this.value = _web3Utils.default.toChecksumAddress(this.value);
+    if (type === 'address') {
+      this.value = _ethers.ethers.utils.getAddress(this.value);
     }
 
-    if (type === "string") {
+    if (type === 'string') {
       this.value = `${this.value}`;
     }
 
-    if (type === "number") {
+    if (type === 'number') {
       this.value = Number(this.value);
     }
   }
@@ -98,15 +90,15 @@ class TypedValue {
 class Evaluator {
   constructor(ast, bindings, {
     availableHelpers = {},
-    eth,
-    ethNode,
+    provider,
+    providerHost,
     to,
-    returnType = "string"
+    returnType = 'string'
   } = {}) {
+    this.provider = provider || new _ethers.ethers.providers.JsonRpcProvider(providerHost || _defaults.DEFAULT_ETH_NODE);
     this.ast = ast;
     this.bindings = bindings;
-    this.eth = eth || new _web3Eth.default(ethNode || _defaults.DEFAULT_ETH_NODE);
-    this.to = to && new TypedValue("address", to);
+    this.to = to && new TypedValue('address', to);
     this.helpers = new _HelperManager.default(availableHelpers);
     this.returnType = returnType;
   }
@@ -130,11 +122,12 @@ class Evaluator {
 
 
   async evaluateNode(node) {
-    if (node.type === "ExpressionStatement") {
-      return await this.evaluateNodes(node.body);
+    if (node.type === 'ExpressionStatement') {
+      const evaluatedNodes = await this.evaluateNodes(node.body);
+      return evaluatedNodes.join(' ');
     }
 
-    if (node.type === "GroupedExpression") {
+    if (node.type === 'GroupedExpression') {
       const evaluatedNode = await this.evaluateNode(node.body);
 
       if (node.castType) {
@@ -144,38 +137,38 @@ class Evaluator {
       return evaluatedNode;
     }
 
-    if (node.type === "MonologueStatement") {
-      return new TypedValue("string", node.value);
+    if (node.type === 'MonologueStatement') {
+      return new TypedValue('string', node.value);
     }
 
-    if (node.type === "StringLiteral") {
-      return new TypedValue("string", node.value || "");
+    if (node.type === 'StringLiteral') {
+      return new TypedValue('string', node.value || '');
     }
 
-    if (node.type === "NumberLiteral") {
-      return new TypedValue("int256", node.value);
+    if (node.type === 'NumberLiteral') {
+      return new TypedValue('int256', node.value);
     }
 
-    if (node.type === "BytesLiteral") {
+    if (node.type === 'BytesLiteral') {
       const length = Math.ceil((node.value.length - 2) / 2);
 
       if (length > 32) {
-        this.panic("Byte literal represents more than 32 bytes");
+        this.panic('Byte literal represents more than 32 bytes');
       }
 
       return new TypedValue(`bytes${length}`, node.value);
     }
 
-    if (node.type === "BoolLiteral") {
-      return new TypedValue("bool", node.value === "true");
+    if (node.type === 'BoolLiteral') {
+      return new TypedValue('bool', node.value === 'true');
     }
 
-    if (node.type === "BinaryExpression") {
+    if (node.type === 'BinaryExpression') {
       const left = await this.evaluateNode(node.left);
       const right = await this.evaluateNode(node.right); // String concatenation
 
-      if ((left.type === "string" || right.type === "string") && node.operator === "PLUS") {
-        return new TypedValue("string", left.value.toString() + right.value.toString());
+      if ((left.type === 'string' || right.type === 'string') && node.operator === 'PLUS') {
+        return new TypedValue('string', left.value.toString() + right.value.toString());
       } // TODO Additionally check that the type is signed if subtracting
 
 
@@ -184,30 +177,30 @@ class Evaluator {
       }
 
       switch (node.operator) {
-        case "PLUS":
-          return new TypedValue("int256", left.value.add(right.value));
+        case 'PLUS':
+          return new TypedValue('int256', left.value.add(right.value));
 
-        case "MINUS":
-          return new TypedValue("int256", left.value.sub(right.value));
+        case 'MINUS':
+          return new TypedValue('int256', left.value.sub(right.value));
 
-        case "STAR":
-          return new TypedValue("int256", left.value.mul(right.value));
+        case 'STAR':
+          return new TypedValue('int256', left.value.mul(right.value));
 
-        case "POWER":
-          return new TypedValue("int256", left.value.pow(right.value));
+        case 'POWER':
+          return new TypedValue('int256', left.value.pow(right.value));
 
-        case "SLASH":
-          return new TypedValue("int256", left.value.div(right.value));
+        case 'SLASH':
+          return new TypedValue('int256', left.value.div(right.value));
 
-        case "MODULO":
-          return new TypedValue("int256", left.value.mod(right.value));
+        case 'MODULO':
+          return new TypedValue('int256', left.value.mod(right.value));
 
         default:
           this.panic(`Undefined binary operator "${node.operator}"`);
       }
     }
 
-    if (node.type === "ComparisonExpression") {
+    if (node.type === 'ComparisonExpression') {
       const left = await this.evaluateNode(node.left);
       const right = await this.evaluateNode(node.right);
       let leftValue = left.value;
@@ -222,34 +215,34 @@ class Evaluator {
 
 
       if (bothTypesAddress(left, right) || bothTypesBytes(left, right)) {
-        leftValue = _web3Utils.default.toBN(leftValue);
-        rightValue = _web3Utils.default.toBN(rightValue);
+        leftValue = _ethers.ethers.utils.bigNumberify(leftValue);
+        rightValue = _ethers.ethers.utils.bigNumberify(rightValue);
       } else if (!_types.default.isInteger(left.type) || !_types.default.isInteger(right.type)) {
         this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer or fixed-size bytes types "${left.type}" and "${right.type}"`);
       }
 
       switch (node.operator) {
-        case "GREATER":
-          return new TypedValue("bool", leftValue.gt(rightValue));
+        case 'GREATER':
+          return new TypedValue('bool', leftValue.gt(rightValue));
 
-        case "GREATER_EQUAL":
-          return new TypedValue("bool", leftValue.gte(rightValue));
+        case 'GREATER_EQUAL':
+          return new TypedValue('bool', leftValue.gte(rightValue));
 
-        case "LESS":
-          return new TypedValue("bool", leftValue.lt(rightValue));
+        case 'LESS':
+          return new TypedValue('bool', leftValue.lt(rightValue));
 
-        case "LESS_EQUAL":
-          return new TypedValue("bool", leftValue.lte(rightValue));
+        case 'LESS_EQUAL':
+          return new TypedValue('bool', leftValue.lte(rightValue));
 
-        case "EQUAL_EQUAL":
-          return new TypedValue("bool", leftValue.eq(rightValue));
+        case 'EQUAL_EQUAL':
+          return new TypedValue('bool', leftValue.eq(rightValue));
 
-        case "BANG_EQUAL":
-          return new TypedValue("bool", !leftValue.eq(rightValue));
+        case 'BANG_EQUAL':
+          return new TypedValue('bool', !leftValue.eq(rightValue));
       }
     }
 
-    if (node.type === "TernaryExpression") {
+    if (node.type === 'TernaryExpression') {
       if ((await this.evaluateNode(node.predicate)).value) {
         return this.evaluateNode(node.left);
       }
@@ -257,13 +250,13 @@ class Evaluator {
       return this.evaluateNode(node.right);
     }
 
-    if (node.type === "DefaultExpression") {
+    if (node.type === 'DefaultExpression') {
       const left = await this.evaluateNode(node.left);
       let leftFalsey;
 
       if (_types.default.isInteger(left.type)) {
         leftFalsey = left.value.isZero();
-      } else if (left.type === "address" || left.type.startsWith("bytes")) {
+      } else if (left.type === 'address' || left.type.startsWith('bytes')) {
         leftFalsey = /^0x[0]*$/.test(left.value);
       } else {
         leftFalsey = !left.value;
@@ -272,40 +265,46 @@ class Evaluator {
       return leftFalsey ? this.evaluateNode(node.right) : left;
     }
 
-    if (node.type === "CallExpression") {
+    if (node.type === 'CallExpression') {
       // TODO Add a check for number of return values (can only be 1 for now)
       let target; // Inject self
 
-      if (node.target.type === "Identifier" && node.target.value === "self") {
+      if (node.target.type === 'Identifier' && node.target.value === 'self') {
         target = this.to;
       } else {
         target = await this.evaluateNode(node.target);
       }
 
-      if (target.type !== "bytes20" && target.type !== "address") {
-        this.panic("Target of call expression was not an address");
-      } else if (!_web3Utils.default.checkAddressChecksum(target.value)) {
+      if (target.type !== 'bytes20' && target.type !== 'address') {
+        this.panic('Target of call expression was not an address');
+      } else if (!_ethers.ethers.utils.getAddress(target.value)) {
         this.panic(`Checksum failed for address "${target.value}"`);
       }
 
       const inputs = await this.evaluateNodes(node.inputs);
       const outputs = node.outputs;
 
-      const call = _web3EthAbi.default.encodeFunctionCall({
+      const call = _defaults.abiCoder.encodeFunctionCall({
         name: node.callee,
-        type: "function",
-        inputs,
-        outputs
+        type: 'function',
+        outputs,
+        inputs: inputs.map(({
+          type
+        }) => ({
+          type,
+          name: type
+        }))
       }, inputs.map(input => input.value));
 
       const returnType = outputs[0].type;
-      return this.eth.call({
+      const data = await this.provider.call({
         to: target.value,
         data: call
-      }).then(data => new TypedValue(returnType, _web3EthAbi.default.decodeParameter(returnType, data)));
+      });
+      return new TypedValue(returnType, _defaults.abiCoder.decodeParameter(returnType, data));
     }
 
-    if (node.type === "HelperFunction") {
+    if (node.type === 'HelperFunction') {
       const helperName = node.name;
 
       if (!this.helpers.exists(helperName)) {
@@ -314,14 +313,14 @@ class Evaluator {
 
       const inputs = await this.evaluateNodes(node.inputs);
       const result = await this.helpers.execute(helperName, inputs, {
-        eth: this.eth,
+        provider: this.provider,
         evaluator: this
       });
       return new TypedValue(result.type, result.value, result.objValue);
     }
 
-    if (node.type === "Identifier") {
-      if (node.value === "self") {
+    if (node.type === 'Identifier') {
+      if (node.value === 'self') {
         return this.to;
       }
 
@@ -343,7 +342,7 @@ class Evaluator {
   async evaluate() {
     const evaluatedNodes = await this.evaluateNodes(this.ast.body);
 
-    if (this.returnType === "object") {
+    if (this.returnType === 'object') {
       return evaluatedNodes.map(evaluatedNode => {
         evaluatedNode = Array.isArray(evaluatedNode) ? evaluatedNode[0] : evaluatedNode;
         return {
@@ -353,7 +352,7 @@ class Evaluator {
       });
     }
 
-    return evaluatedNodes.join("");
+    return evaluatedNodes.join('');
   }
   /**
    * Report an error and abort evaluation.

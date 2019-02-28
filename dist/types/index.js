@@ -38,7 +38,7 @@ var _default = {
   isType(identifier) {
     const typeNames = Object.keys(this.types);
 
-    for (let typeName of typeNames) {
+    for (const typeName of typeNames) {
       if (this.types[typeName].isType(identifier)) {
         return true;
       }

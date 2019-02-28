@@ -23,18 +23,17 @@ var _types = _interopRequireDefault(require("../types"));
 const SCANNER_STATE = {
   OK: 'OK',
   ERROR: 'ERROR'
-  /**
-   * A scanner that identifies tokens in a source string.
-   *
-   * @class Scanner
-   * @param {string} source The source code
-   * @property {string} state The state of the parser (`OK` or `ERROR`)
-   * @property {string} source The source code
-   * @property {number} cursor
-   * @property {Array<Token>} tokens The currently identified tokens
-   */
-
 };
+/**
+ * A scanner that identifies tokens in a source string.
+ *
+ * @class Scanner
+ * @param {string} source The source code
+ * @property {string} state The state of the parser (`OK` or `ERROR`)
+ * @property {string} source The source code
+ * @property {number} cursor
+ * @property {Array<Token>} tokens The currently identified tokens
+ */
 
 class Scanner {
   constructor(source) {
@@ -234,7 +233,7 @@ class Scanner {
 
 
   emitToken(type, value) {
-    let token = {
+    const token = {
       type
     };
     if (value) token.value = value;

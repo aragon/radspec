@@ -24,16 +24,17 @@ Object.defineProperty(exports, "scan", {
     return _scanner.scan;
   }
 });
+exports.default = void 0;
 
 var _objectSpread2 = _interopRequireDefault(require("@babel/runtime/helpers/objectSpread"));
 
 var _objectWithoutProperties2 = _interopRequireDefault(require("@babel/runtime/helpers/objectWithoutProperties"));
 
-var _web3EthAbi = _interopRequireDefault(require("web3-eth-abi"));
-
 var _helpers = require("./helpers");
 
 var _lib = require("./lib");
+
+var _defaults = require("./defaults");
 
 var _parser = require("./parser");
 
@@ -57,7 +58,7 @@ var _scanner = require("./scanner");
  * Evaluate a radspec expression (`source`) for a transaction (`call`)
  *
  * @example
- * import radspec from 'radspec'
+ * import * as radspec from 'radspec'
  *
  * const expression = 'Will multiply `a` by 7 and return `a * 7`.'
  * const call = {
@@ -89,7 +90,6 @@ var _scanner = require("./scanner");
  * @param {string} call.transaction.to The destination address for this transaction
  * @param {string} call.transaction.data The transaction data
  * @param {?Object} options An options object
- * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?Object} options.userHelpers User defined helpers
  * @return {Promise<string>} The result of the evaluation
@@ -102,9 +102,9 @@ function evaluate(source, call, _ref = {}) {
   // Get method ID
   const methodId = call.transaction.data.substr(0, 10); // Find method ABI
 
-  const method = call.abi.find(abi => abi.type === 'function' && methodId === _web3EthAbi.default.encodeFunctionSignature(abi)); // Decode parameters
+  const method = call.abi.find(abi => abi.type === 'function' && methodId === _defaults.abiCoder.encodeFunctionSignature(abi)); // Decode parameters
 
-  const parameterValues = _web3EthAbi.default.decodeParameters(method.inputs, '0x' + call.transaction.data.substr(10));
+  const parameterValues = _defaults.abiCoder.decodeParameters(method.inputs, '0x' + call.transaction.data.substr(10));
 
   const parameters = method.inputs.reduce((parameters, input) => Object.assign(parameters, {
     [input.name]: {
@@ -119,4 +119,7 @@ function evaluate(source, call, _ref = {}) {
     to: call.transaction.to
   }));
 }
+
+var _default = evaluate;
+exports.default = _default;
 //# sourceMappingURL=index.js.map

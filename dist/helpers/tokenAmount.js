@@ -9,13 +9,13 @@ exports.default = void 0;
 
 var _bn = _interopRequireDefault(require("bn.js"));
 
-var _web3Utils = require("web3-utils");
+var _ethers = require("ethers");
 
 var _token = require("./lib/token");
 
 var _formatBN = require("./lib/formatBN");
 
-var _default = eth =>
+var _default = provider =>
 /**
  * Format token amounts taking decimals into account
  *
@@ -37,17 +37,17 @@ async (tokenAddress, amount, showSymbol = true, precision = 2) => {
       symbol = 'ETH';
     }
   } else {
-    let token = new eth.Contract(_token.ERC20_SYMBOL_DECIMALS_ABI, tokenAddress);
-    decimals = new _bn.default((await token.methods.decimals().call()));
+    let token = new _ethers.ethers.Contract(tokenAddress, _token.ERC20_SYMBOL_DECIMALS_ABI, provider);
+    decimals = new _bn.default((await token.functions.decimals()));
 
     if (showSymbol) {
       try {
-        symbol = (await token.methods.symbol().call()) || '';
+        symbol = (await token.functions.symbol()) || '';
       } catch (err) {
         // Some tokens (e.g. DS-Token) use bytes32 for their symbol()
-        token = new eth.Contract(_token.ERC20_SYMBOL_BYTES32_ABI, tokenAddress);
-        symbol = (await token.methods.symbol().call()) || '';
-        symbol = symbol && (0, _web3Utils.toUtf8)(symbol);
+        token = new _ethers.ethers.Contract(tokenAddress, _token.ERC20_SYMBOL_BYTES32_ABI, provider);
+        symbol = (await token.functions.symbol()) || '';
+        symbol = symbol && _ethers.ethers.utils.toUtf8String(symbol);
       }
     }
   }
