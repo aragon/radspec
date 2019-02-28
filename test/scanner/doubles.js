@@ -1,7 +1,7 @@
-import test from 'ava'
-import { scan } from '../../src/scanner'
+import test from 'ava';
+import { scan } from '../../src/scanner';
 
-test('Scanner: One or two character tokens', async (t) => {
+test('Scanner: One or two character tokens', async t => {
   const cases = [
     ['`!`', ['TICK', 'BANG', 'TICK']],
     ['`!=`', ['TICK', 'BANG_EQUAL', 'TICK']],
@@ -11,16 +11,18 @@ test('Scanner: One or two character tokens', async (t) => {
     ['`<=`', ['TICK', 'LESS_EQUAL', 'TICK']],
     ['`>`', ['TICK', 'GREATER', 'TICK']],
     ['`>=`', ['TICK', 'GREATER_EQUAL', 'TICK']],
-    ['`||`', ['TICK', 'DOUBLE_VERTICAL_BAR', 'TICK']]
-  ]
-  t.plan(cases.length)
+    ['`||`', ['TICK', 'DOUBLE_VERTICAL_BAR', 'TICK']],
+  ];
+  t.plan(cases.length);
 
-  for (let [input, expected] of cases) {
-    const actual = await scan(input)
+  for (const [input, expected] of cases) {
+    const actual = await scan(input);
     t.deepEqual(
-      actual.map((token) => token.type),
-      expected,
-      `Expected "${input}" to give a "${expected[1]}" token, got a "${actual[1].type}" token`
-    )
+        actual.map(token => token.type),
+        expected,
+        `Expected "${input}" to give a "${expected[1]}" token, got a "${
+          actual[1].type
+        }" token`
+    );
   }
-})
+});

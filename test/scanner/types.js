@@ -1,7 +1,7 @@
-import test from 'ava'
-import { scan } from '../../src/scanner'
+import test from 'ava';
+import { scan } from '../../src/scanner';
 
-test('Scanner: types', async (t) => {
+test('Scanner: types', async t => {
   const cases = [
     ['`bool`', ['TICK', { type: 'TYPE', value: 'bool' }, 'TICK']],
     ['`int`', ['TICK', { type: 'TYPE', value: 'int' }, 'TICK']],
@@ -12,22 +12,24 @@ test('Scanner: types', async (t) => {
     ['`bytes32`', ['TICK', { type: 'TYPE', value: 'bytes32' }, 'TICK']],
     ['`string`', ['TICK', { type: 'TYPE', value: 'string' }, 'TICK']],
     ['`fixed`', ['TICK', { type: 'TYPE', value: 'fixed' }, 'TICK']],
-    ['`ufixed`', ['TICK', { type: 'TYPE', value: 'ufixed' }, 'TICK']]
-  ]
-  t.plan(cases.length)
+    ['`ufixed`', ['TICK', { type: 'TYPE', value: 'ufixed' }, 'TICK']],
+  ];
+  t.plan(cases.length);
 
-  for (let [input, expected] of cases) {
-    const actual = await scan(input)
+  for (const [input, expected] of cases) {
+    const actual = await scan(input);
     t.deepEqual(
-      actual.map((token) => {
+        actual.map(token => {
         // Strip out details from non-type tokens
-        if (token.type !== 'TYPE') {
-          return token.type
-        }
-        return token
-      }),
-      expected,
-      `Expected "${input}" to give a "${expected[1]}" token, got a "${actual[1].type}" token`
-    )
+          if (token.type !== 'TYPE') {
+            return token.type;
+          }
+          return token;
+        }),
+        expected,
+        `Expected "${input}" to give a "${expected[1]}" token, got a "${
+          actual[1].type
+        }" token`
+    );
   }
-})
+});

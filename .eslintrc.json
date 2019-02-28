@@ -1,0 +1,11 @@
+{
+    "extends": "google",
+    "parser": "babel-eslint",
+    "rules": {
+        "require-jsdoc": "off",
+        "arrow-parens": "off",
+        "object-curly-spacing": "off",
+        "max-len": "off",
+        "no-undef": "error"
+    }
+}

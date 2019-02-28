@@ -1,5 +1,5 @@
-import BN from 'bn.js'
-import { formatBN, tenPow } from './lib/formatBN'
+import BN from 'bn.js';
+import { formatBN, tenPow } from './lib/formatBN';
 
 export default () =>
   /**
@@ -11,14 +11,18 @@ export default () =>
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
   async (value, base = tenPow(18), precision = 2) => {
-    const valueBn = new BN(value)
-    const baseBn = new BN(base)
+    const valueBn = new BN(value);
+    const baseBn = new BN(base);
 
-    const oneHundred = tenPow(2)
-    const formattedAmount = formatBN(valueBn.mul(oneHundred), baseBn, Number(precision))
+    const oneHundred = tenPow(2);
+    const formattedAmount = formatBN(
+        valueBn.mul(oneHundred),
+        baseBn,
+        Number(precision)
+    );
 
     return {
       type: 'string',
-      value: `${formattedAmount}`
-    }
-  }
+      value: `${formattedAmount}`,
+    };
+  };

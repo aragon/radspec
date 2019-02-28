@@ -1,5 +1,5 @@
 export default {
-  isType (identifier) {
-    return identifier === 'bool'
-  }
-}
+  isType(identifier) {
+    return identifier === 'bool';
+  },
+};

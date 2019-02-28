@@ -1,6 +1,6 @@
-import { evaluate } from '../evaluator'
-import { parse } from '../parser'
-import { scan } from '../scanner'
+import { evaluate } from '../evaluator';
+import { parse } from '../parser';
+import { scan } from '../scanner';
 
 /**
  * Evaluate a radspec expression with manual bindings.
@@ -16,8 +16,8 @@ import { scan } from '../scanner'
  * @param {?Object} evaluatorOptions An options object for the evaluator (see Evaluator)
  * @return {Promise<string>} The result of the evaluation
  */
-export function evaluateRaw (source, bindings, evaluatorOptions) {
+export function evaluateRaw(source, bindings, evaluatorOptions) {
   return scan(source)
-    .then(parse)
-    .then((ast) => evaluate(ast, bindings, evaluatorOptions))
+      .then(parse)
+      .then(ast => evaluate(ast, bindings, evaluatorOptions));
 }

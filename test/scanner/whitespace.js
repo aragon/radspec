@@ -1,22 +1,22 @@
-import test from 'ava'
-import { scan } from '../../src/scanner'
+import test from 'ava';
+import { scan } from '../../src/scanner';
 
-test('Scanner: Whitespace', async (t) => {
+test('Scanner: Whitespace', async t => {
   const cases = [
     ['` `', ['TICK', 'TICK']],
     ['`\r`', ['TICK', 'TICK']],
     ['`\t`', ['TICK', 'TICK']],
     ['`\n`', ['TICK', 'TICK']],
-    [' \r\t\n', ['MONOLOGUE']]
-  ]
-  t.plan(cases.length)
+    [' \r\t\n', ['MONOLOGUE']],
+  ];
+  t.plan(cases.length);
 
-  for (let [input, expected] of cases) {
-    const actual = await scan(input)
+  for (const [input, expected] of cases) {
+    const actual = await scan(input);
     t.deepEqual(
-      actual.map((token) => token.type),
-      expected,
-      `Expected whitespace to be ignored except in monologues`
-    )
+        actual.map(token => token.type),
+        expected,
+        `Expected whitespace to be ignored except in monologues`
+    );
   }
-})
+});

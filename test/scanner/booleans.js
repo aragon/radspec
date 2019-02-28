@@ -1,24 +1,18 @@
-import test from 'ava'
-import { scan } from '../../src/scanner'
+import test from 'ava';
+import { scan } from '../../src/scanner';
 
-test('Scanner: Booleans', async (t) => {
-  t.plan(2)
+test('Scanner: Booleans', async t => {
+  t.plan(2);
 
-  t.deepEqual(
-    await scan('`true`'),
-    [
-      { type: 'TICK' },
-      { type: 'BOOLEAN', value: 'true' },
-      { type: 'TICK' }
-    ]
-  )
+  t.deepEqual(await scan('`true`'), [
+    { type: 'TICK' },
+    { type: 'BOOLEAN', value: 'true' },
+    { type: 'TICK' },
+  ]);
 
-  t.deepEqual(
-    await scan('`false`'),
-    [
-      { type: 'TICK' },
-      { type: 'BOOLEAN', value: 'false' },
-      { type: 'TICK' }
-    ]
-  )
-})
+  t.deepEqual(await scan('`false`'), [
+    { type: 'TICK' },
+    { type: 'BOOLEAN', value: 'false' },
+    { type: 'TICK' },
+  ]);
+});

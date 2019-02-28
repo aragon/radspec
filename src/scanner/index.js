@@ -1,7 +1,7 @@
 /**
  * @module radspec/scanner
  */
-import types from '../types'
+import types from '../types';
 
 /**
  * Enum for scanner state.
@@ -11,8 +11,8 @@ import types from '../types'
  */
 const SCANNER_STATE = {
   OK: 'OK',
-  ERROR: 'ERROR'
-}
+  ERROR: 'ERROR',
+};
 
 /**
  * A scanner that identifies tokens in a source string.
@@ -25,14 +25,14 @@ const SCANNER_STATE = {
  * @property {Array<Token>} tokens The currently identified tokens
  */
 export class Scanner {
-  constructor (source) {
-    this.state = SCANNER_STATE.OK
-    this.isInExpression = false
+  constructor(source) {
+    this.state = SCANNER_STATE.OK;
+    this.isInExpression = false;
 
-    this.source = source
-    this.cursor = 0
+    this.source = source;
+    this.cursor = 0;
 
-    this.tokens = []
+    this.tokens = [];
   }
 
   /**
@@ -40,155 +40,154 @@ export class Scanner {
    *
    * @return {void}
    */
-  scanToken () {
-    const current = this.consume()
+  scanToken() {
+    const current = this.consume();
 
     if (current === '`') {
-      this.isInExpression = !this.isInExpression
-      this.emitToken('TICK')
-      return
+      this.isInExpression = !this.isInExpression;
+      this.emitToken('TICK');
+      return;
     }
 
     // We haven't hit a tick yet, so we're not in an expression
     if (!this.isInExpression) {
       // Scan until tick
-      let monologue = current
+      let monologue = current;
       while (this.peek() !== '`' && !this.eof()) {
-        monologue += this.consume()
+        monologue += this.consume();
       }
-      this.emitToken('MONOLOGUE', monologue)
-      return
+      this.emitToken('MONOLOGUE', monologue);
+      return;
     }
 
     switch (current) {
       // Single character tokens
       case '(':
-        this.emitToken('LEFT_PAREN')
-        break
+        this.emitToken('LEFT_PAREN');
+        break;
       case ')':
-        this.emitToken('RIGHT_PAREN')
-        break
+        this.emitToken('RIGHT_PAREN');
+        break;
       case ',':
-        this.emitToken('COMMA')
-        break
+        this.emitToken('COMMA');
+        break;
       case '.':
-        this.emitToken('DOT')
-        break
+        this.emitToken('DOT');
+        break;
       case ':':
-        this.emitToken('COLON')
-        break
+        this.emitToken('COLON');
+        break;
       case '-':
-        this.emitToken('MINUS')
-        break
+        this.emitToken('MINUS');
+        break;
       case '+':
-        this.emitToken('PLUS')
-        break
+        this.emitToken('PLUS');
+        break;
       case '^':
-        this.emitToken('POWER')
-        break
+        this.emitToken('POWER');
+        break;
       case '*':
-        this.emitToken('STAR')
-        break
+        this.emitToken('STAR');
+        break;
       case '/':
-        this.emitToken('SLASH')
-        break
+        this.emitToken('SLASH');
+        break;
       case '%':
-        this.emitToken('MODULO')
-        break
+        this.emitToken('MODULO');
+        break;
       case '?':
-        this.emitToken('QUESTION_MARK')
-        break
+        this.emitToken('QUESTION_MARK');
+        break;
       case '@':
-        this.emitToken('AT')
-        break
+        this.emitToken('AT');
+        break;
 
       // One or two character tokens
       case '!':
-        this.emitToken(this.matches('=') ? 'BANG_EQUAL' : 'BANG')
-        break
+        this.emitToken(this.matches('=') ? 'BANG_EQUAL' : 'BANG');
+        break;
       case '=':
-        this.emitToken(this.matches('=') ? 'EQUAL_EQUAL' : 'EQUAL')
-        break
+        this.emitToken(this.matches('=') ? 'EQUAL_EQUAL' : 'EQUAL');
+        break;
       case '<':
-        this.emitToken(this.matches('=') ? 'LESS_EQUAL' : 'LESS')
-        break
+        this.emitToken(this.matches('=') ? 'LESS_EQUAL' : 'LESS');
+        break;
       case '>':
-        this.emitToken(this.matches('=') ? 'GREATER_EQUAL' : 'GREATER')
-        break
+        this.emitToken(this.matches('=') ? 'GREATER_EQUAL' : 'GREATER');
+        break;
 
       // Two character tokens
       case '|':
         if (this.matches('|')) {
-          this.emitToken('DOUBLE_VERTICAL_BAR')
+          this.emitToken('DOUBLE_VERTICAL_BAR');
         } else {
-          this.report(`Unexpected single "|" (expecting two)`)
+          this.report(`Unexpected single "|" (expecting two)`);
         }
-        break
+        break;
 
       // Whitespace
       case ' ':
       case '\r':
       case '\n':
       case '\t':
-        break
+        break;
 
       // Multi-character tokens
       default:
-        const NUMBERS = /[0-9]/
-        const HEX = /[0-9a-f]/i
+        const NUMBERS = /[0-9]/;
+        const HEX = /[0-9a-f]/i;
         if (NUMBERS.test(current)) {
-          let number = current
-          let type = 'NUMBER'
+          let number = current;
+          let type = 'NUMBER';
 
           // Detect hexadecimals
-          if (current === '0' &&
-            this.peek() === 'x') {
-            type = 'HEXADECIMAL'
-            number += this.consume()
+          if (current === '0' && this.peek() === 'x') {
+            type = 'HEXADECIMAL';
+            number += this.consume();
 
             while (HEX.test(this.peek())) {
-              number += this.consume()
+              number += this.consume();
             }
           } else {
             while (NUMBERS.test(this.peek())) {
-              number += this.consume()
+              number += this.consume();
             }
           }
 
-          this.emitToken(type, number)
-          break
+          this.emitToken(type, number);
+          break;
         }
 
-        const IDENTIFIERS = /[_$a-z0-9]/i
+        const IDENTIFIERS = /[_$a-z0-9]/i;
         if (IDENTIFIERS.test(current)) {
-          let identifier = current
+          let identifier = current;
           while (IDENTIFIERS.test(this.peek())) {
-            identifier += this.consume()
+            identifier += this.consume();
           }
 
           if (identifier === 'true' || identifier === 'false') {
-            this.emitToken('BOOLEAN', identifier)
-            break
+            this.emitToken('BOOLEAN', identifier);
+            break;
           }
 
           if (types.isType(identifier)) {
-            this.emitToken('TYPE', identifier)
+            this.emitToken('TYPE', identifier);
           } else {
-            this.emitToken('IDENTIFIER', identifier)
+            this.emitToken('IDENTIFIER', identifier);
           }
-          break
+          break;
         }
 
         if (current === `'` || current === `"`) {
-          let string = ''
+          let string = '';
           while (!this.matches(`'`) && !this.matches(`"`)) {
-            string += this.consume()
+            string += this.consume();
           }
-          this.emitToken('STRING', string)
-          break
+          this.emitToken('STRING', string);
+          break;
         }
 
-        this.report(`Unexpected character "${current}"`)
+        this.report(`Unexpected character "${current}"`);
     }
   }
 
@@ -199,11 +198,11 @@ export class Scanner {
    * @param {string?} value The token value
    * @return {void}
    */
-  emitToken (type, value) {
-    let token = { type }
-    if (value) token.value = value
+  emitToken(type, value) {
+    const token = { type };
+    if (value) token.value = value;
 
-    this.tokens.push(token)
+    this.tokens.push(token);
   }
 
   /**
@@ -211,10 +210,10 @@ export class Scanner {
    *
    * @return {string}
    */
-  consume () {
-    this.cursor++
+  consume() {
+    this.cursor++;
 
-    return this.source[this.cursor - 1]
+    return this.source[this.cursor - 1];
   }
 
   /**
@@ -222,8 +221,8 @@ export class Scanner {
    *
    * @return {string}
    */
-  peek () {
-    return this.source[this.cursor]
+  peek() {
+    return this.source[this.cursor];
   }
 
   /**
@@ -234,14 +233,14 @@ export class Scanner {
    * @param {string} expected The character to expect
    * @return {boolean} True if the next character matches, otherise false
    */
-  matches (expected) {
-    if (this.eof()) return false
+  matches(expected) {
+    if (this.eof()) return false;
     if (this.peek() !== expected) {
-      return false
+      return false;
     }
 
-    this.cursor++
-    return true
+    this.cursor++;
+    return true;
   }
 
   /**
@@ -249,17 +248,17 @@ export class Scanner {
    *
    * @return {Array<Token>}
    */
-  async scan () {
+  async scan() {
     while (!this.eof()) {
-      this.scanToken()
+      this.scanToken();
     }
 
     if (this.state === SCANNER_STATE.ERROR) {
-      console.error(`Errors encountered while scanning source`)
-      return
+      console.error(`Errors encountered while scanning source`);
+      return;
     }
 
-    return this.tokens
+    return this.tokens;
   }
 
   /**
@@ -267,8 +266,8 @@ export class Scanner {
    *
    * @return {boolean}
    */
-  eof () {
-    return this.cursor >= this.source.length
+  eof() {
+    return this.cursor >= this.source.length;
   }
 
   /**
@@ -278,11 +277,9 @@ export class Scanner {
    * @param {string} error
    * @return {void}
    */
-  report (error) {
-    this.state = SCANNER_STATE.ERROR
-    console.error(
-      `Error (${this.cursor}): ${error}`
-    )
+  report(error) {
+    this.state = SCANNER_STATE.ERROR;
+    console.error(`Error (${this.cursor}): ${error}`);
   }
 }
 
@@ -293,6 +290,6 @@ export class Scanner {
  * @param  {string} source
  * @return {Array<Token>}
  */
-export function scan (source) {
-  return new Scanner(source).scan()
+export function scan(source) {
+  return new Scanner(source).scan();
 }

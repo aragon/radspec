@@ -10,9 +10,9 @@
 /**
  * @module radspec
  */
-import ABI from 'web3-eth-abi'
-import { defaultHelpers } from './helpers'
-import { evaluateRaw } from './lib'
+import ABI from 'web3-eth-abi';
+import { defaultHelpers } from './helpers';
+import { evaluateRaw } from './lib';
 
 /**
  * Evaluate a radspec expression (`source`) for a transaction (`call`)
@@ -50,52 +50,49 @@ import { evaluateRaw } from './lib'
  * @param {string} call.transaction.to The destination address for this transaction
  * @param {string} call.transaction.data The transaction data
  * @param {?Object} options An options object
- * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?Object} options.userHelpers User defined helpers
  * @return {Promise<string>} The result of the evaluation
  */
-function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
+function evaluate(source, call, { userHelpers = {}, ...options } = {}) {
   // Get method ID
-  const methodId = call.transaction.data.substr(0, 10)
+  const methodId = call.transaction.data.substr(0, 10);
 
   // Find method ABI
-  const method = call.abi.find((abi) =>
-    abi.type === 'function' &&
-    methodId === ABI.encodeFunctionSignature(abi))
+  const method = call.abi.find(
+      abi =>
+        abi.type === 'function' && methodId === ABI.encodeFunctionSignature(abi)
+  );
 
   // Decode parameters
   const parameterValues = ABI.decodeParameters(
-    method.inputs,
-    '0x' + call.transaction.data.substr(10)
-  )
-  const parameters = method.inputs.reduce((parameters, input) =>
-    Object.assign(
-      parameters, {
-        [input.name]: {
-          type: input.type,
-          value: parameterValues[input.name]
-        }
-      }
-    ), {})
+      method.inputs,
+      '0x' + call.transaction.data.substr(10)
+  );
+  const parameters = method.inputs.reduce(
+      (parameters, input) =>
+        Object.assign(parameters, {
+          [input.name]: {
+            type: input.type,
+            value: parameterValues[input.name],
+          },
+        }),
+      {}
+  );
 
-  const availableHelpers = { ...defaultHelpers, ...userHelpers }
+  const availableHelpers = { ...defaultHelpers, ...userHelpers };
 
   // Evaluate expression with bindings from the transaction data
-  return evaluateRaw(
-    source,
-    parameters,
-    {
-      ...options,
-      availableHelpers,
-      to: call.transaction.to
-    }
-  )
+  return evaluateRaw(source, parameters, {
+    ...options,
+    availableHelpers,
+    to: call.transaction.to,
+  });
 }
 
-export default evaluate
-export { evaluate, evaluateRaw }
+export default evaluate;
+export { evaluate, evaluateRaw };
 
 // Re-export some commonly used inner functionality
-export { parse } from './parser'
-export { scan } from './scanner'
+export { parse } from './parser';
+export { scan } from './scanner';

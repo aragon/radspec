@@ -1,5 +1,5 @@
 export default {
-  isType (identifier) {
-    return identifier === 'string'
-  }
-}
+  isType(identifier) {
+    return identifier === 'string';
+  },
+};

@@ -1,31 +1,30 @@
 export default {
-  isType (identifier) {
+  isType(identifier) {
     if (identifier === 'bytes') {
-      return true
+      return true;
     }
 
-    let n = identifier.substr(5)
+    let n = identifier.substr(5);
 
     // `byte` is bytes1
     if (!n && identifier === 'byte') {
-      identifier = 'bytes1'
-      n = 1
+      identifier = 'bytes1';
+      n = 1;
     }
 
-    return identifier.startsWith('bytes') &&
-      n <= 32
+    return identifier.startsWith('bytes') && n <= 32;
   },
 
-  size (identifier) {
+  size(identifier) {
     if (identifier === 'bytes') {
-      return Infinity
+      return Infinity;
     }
 
     // `byte` is bytes1
     if (identifier === 'byte') {
-      identifier = 'bytes1'
+      identifier = 'bytes1';
     }
 
-    return identifier.substr(5)
-  }
-}
+    return identifier.substr(5);
+  },
+};
