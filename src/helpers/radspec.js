@@ -1,8 +1,8 @@
-import ABI from 'web3-eth-abi';
 import { ethers } from 'ethers';
 import MethodRegistry from './lib/methodRegistry';
 import { evaluateRaw } from '../lib/';
 import knownFunctions from '../data/knownFunctions';
+import { abiCoder } from '../defaults';
 
 const makeUnknownFunctionNode = methodId => ({
   type: 'string',
@@ -73,10 +73,11 @@ export default (provider, evaluator) =>
       const inputs = inputString.split(',');
 
       // Decode parameters
-      const parameterValues = ABI.decodeParameters(
+      const parameterValues = abiCoder.decodeParameters(
           inputs,
           '0x' + data.substr(10)
       );
+
       parameters = inputs.reduce(
           (acc, input, i) => ({
             [`$${i + 1}`]: {

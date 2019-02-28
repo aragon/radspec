@@ -9,7 +9,7 @@
   "scripts": {
     "docs": "documentation build src/index.js -f md -o docs/API.md --shallow",
     "lint": "standard \"src/**/*.js\" && documentation lint \"src/**/*.js\"",
-    "test": "nyc ava",
+    "test": "nyc ava --verbose",
     "build": "babel src -d dist -s",
     "prepublishOnly": "env NODE_ENV=production npm run build"
   },
@@ -50,7 +50,7 @@
     "bn.js": "4.11.6",
     "date-fns": "2.0.0-alpha.22",
     "ethers": "^4.0.26",
-    "web3-eth-abi": "1.0.0-beta.33"
+    "web3-eth-abi": "1.0.0-beta.46"
   },
   "ava": {
     "require": [

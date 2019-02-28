@@ -2,11 +2,10 @@
  * @module radspec/evaluator
  */
 
-import ABI from 'web3-eth-abi';
 import BN from 'bn.js';
 import types from '../types';
 import HelperManager from '../helpers/HelperManager';
-import { DEFAULT_ETH_NODE } from '../defaults';
+import { DEFAULT_ETH_NODE, abiCoder } from '../defaults';
 import { ethers } from 'ethers';
 
 /**
@@ -283,13 +282,15 @@ export class Evaluator {
       const inputs = await this.evaluateNodes(node.inputs);
       const outputs = node.outputs;
 
-      const call = ABI.encodeFunctionCall(
+      const call = abiCoder.encodeFunctionCall(
           {
             name: node.callee,
             type: 'function',
-
-            inputs,
             outputs,
+            inputs: inputs.map(({ type }) => ({
+              type,
+              name: type,
+            })),
           },
           inputs.map(input => input.value)
       );
@@ -301,7 +302,10 @@ export class Evaluator {
         data: call,
       });
 
-      return new TypedValue(returnType, ABI.decodeParameter(returnType, data));
+      return new TypedValue(
+          returnType,
+          abiCoder.decodeParameter(returnType, data)
+      );
     }
 
     if (node.type === 'HelperFunction') {

@@ -10,9 +10,9 @@
 /**
  * @module radspec
  */
-import ABI from 'web3-eth-abi';
 import { defaultHelpers } from './helpers';
 import { evaluateRaw } from './lib';
+import { abiCoder } from './defaults';
 
 /**
  * Evaluate a radspec expression (`source`) for a transaction (`call`)
@@ -61,11 +61,12 @@ function evaluate(source, call, { userHelpers = {}, ...options } = {}) {
   // Find method ABI
   const method = call.abi.find(
       abi =>
-        abi.type === 'function' && methodId === ABI.encodeFunctionSignature(abi)
+        abi.type === 'function' &&
+      methodId === abiCoder.encodeFunctionSignature(abi)
   );
 
   // Decode parameters
-  const parameterValues = ABI.decodeParameters(
+  const parameterValues = abiCoder.decodeParameters(
       method.inputs,
       '0x' + call.transaction.data.substr(10)
   );
