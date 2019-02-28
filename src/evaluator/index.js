@@ -111,7 +111,9 @@ export class Evaluator {
    */
   async evaluateNode(node) {
     if (node.type === 'ExpressionStatement') {
-      return await this.evaluateNodes(node.body);
+      const evaluatedNodes = await this.evaluateNodes(node.body);
+
+      return evaluatedNodes.join(' ');
     }
 
     if (node.type === 'GroupedExpression') {

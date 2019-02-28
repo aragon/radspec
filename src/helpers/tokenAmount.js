@@ -35,10 +35,10 @@ export default provider =>
           provider
       );
 
-      decimals = new BN(await token.methods.decimals().call());
+      decimals = new BN(await token.functions.decimals());
       if (showSymbol) {
         try {
-          symbol = (await token.methods.symbol().call()) || '';
+          symbol = (await token.functions.symbol()) || '';
         } catch (err) {
           // Some tokens (e.g. DS-Token) use bytes32 for their symbol()
           token = new ethers.Contract(
@@ -47,7 +47,7 @@ export default provider =>
               provider
           );
 
-          symbol = (await token.methods.symbol().call()) || '';
+          symbol = (await token.functions.symbol()) || '';
           symbol = symbol && ethers.utils.toUtf8String(symbol);
         }
       }

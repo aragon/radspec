@@ -9,7 +9,8 @@ const makeUnknownFunctionNode = methodId => ({
   value: `Unknown function (${methodId})`,
 });
 
-const getSig = fn => ethers.utils.keccak256(fn).substr(0, 10);
+const getSig = fnStr =>
+  ethers.utils.keccak256(ethers.utils.toUtf8Bytes(fnStr)).substr(0, 10);
 
 // Convert from the knownFunctions data format into the needed format
 // Input: { "signature(type1,type2)": "Its radspec string", ... }

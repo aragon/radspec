@@ -247,10 +247,12 @@ const helperCases = [
       bindings: { n: int(0) },
       options: {
         userHelpers: {
-          getBlock: eth => async n => ({
-            type: 'string',
-            value: (await eth.getBlock(n)).number,
-          }),
+          getBlock: provider => async n => {
+            return {
+              type: 'string',
+              value: (await provider.getBlock(n.toNumber())).number,
+            };
+          },
         },
       },
     },
