@@ -1,7 +1,7 @@
 import test from 'ava';
 import { evaluate } from '../src';
 
-test('radspec#evaluate', async t => {
+test.only('radspec#evaluate', async t => {
   const expression = 'Will multiply `a` by 7 and return `a * 7`.';
   const call = {
     abi: [

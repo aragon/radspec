@@ -1,5 +1,5 @@
 import ABI from 'web3-eth-abi';
-import { keccak256 } from 'web3-utils';
+import { ethers } from 'ethers';
 import MethodRegistry from './lib/methodRegistry';
 import { evaluateRaw } from '../lib/';
 import knownFunctions from '../data/knownFunctions';
@@ -9,7 +9,7 @@ const makeUnknownFunctionNode = methodId => ({
   value: `Unknown function (${methodId})`,
 });
 
-const getSig = fn => keccak256(fn).substr(0, 10);
+const getSig = fn => ethers.utils.keccak256(fn).substr(0, 10);
 
 // Convert from the knownFunctions data format into the needed format
 // Input: { "signature(type1,type2)": "Its radspec string", ... }

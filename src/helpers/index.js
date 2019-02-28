@@ -5,6 +5,7 @@ import fromHex from './fromHex';
 import formatPct from './formatPct';
 import transformTime from './transformTime';
 import radspec from './radspec';
+import tokenAmount from './tokenAmount';
 
 const defaultHelpers = {
   formatDate,
@@ -14,6 +15,7 @@ const defaultHelpers = {
   fromHex,
   radspec,
   echo,
+  tokenAmount,
 };
 
 export {
@@ -25,4 +27,5 @@ export {
   fromHex,
   radspec,
   transformTime,
+  tokenAmount,
 };

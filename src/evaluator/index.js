@@ -3,7 +3,6 @@
  */
 
 import ABI from 'web3-eth-abi';
-import Web3Utils from 'web3-utils';
 import BN from 'bn.js';
 import types from '../types';
 import HelperManager from '../helpers/HelperManager';
@@ -35,11 +34,7 @@ class TypedValue {
     }
 
     if (type === 'address') {
-      if (!Web3Utils.isAddress(this.value)) {
-        throw new Error(`Invalid address "${this.value}"`);
-      }
-
-      this.value = Web3Utils.toChecksumAddress(this.value);
+      this.value = ethers.utils.getAddress(this.value);
     }
 
     if (type === 'string') {
@@ -215,8 +210,8 @@ export class Evaluator {
       // - Both types are addresses or bytes of any size (can be different sizes)
       // - If one of the types is an address and the other bytes with size less than 20
       if (bothTypesAddress(left, right) || bothTypesBytes(left, right)) {
-        leftValue = Web3Utils.toBN(leftValue);
-        rightValue = Web3Utils.toBN(rightValue);
+        leftValue = ethers.utils.bigNumberify(leftValue);
+        rightValue = ethers.utils.bigNumberify(rightValue);
       } else if (!types.isInteger(left.type) || !types.isInteger(right.type)) {
         this.panic(
             `Cannot evaluate binary expression "${
@@ -279,7 +274,7 @@ export class Evaluator {
 
       if (target.type !== 'bytes20' && target.type !== 'address') {
         this.panic('Target of call expression was not an address');
-      } else if (!Web3Utils.checkAddressChecksum(target.value)) {
+      } else if (!ethers.utils.getAddress(target.value)) {
         this.panic(`Checksum failed for address "${target.value}"`);
       }
 
