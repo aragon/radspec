@@ -3,43 +3,89 @@
 [![Travis branch](https://img.shields.io/travis/aragon/radspec/master.svg?style=flat-square)](https://travis-ci.org/aragon/radspec)
 [![Coveralls github branch](https://img.shields.io/coveralls/github/aragon/radspec/master.svg?style=flat-square)](https://coveralls.io/github/aragon/radspec)
 
-Radspec is a safe alternative to Ethereum's natspec[[?](#aside-why-is-natspec-unsafe)].
+Radspec is a language specification and interpreter for dynamic expressions in Ethereum's NatSpec.
+
+This allows smart contact developers to show improved function documentation to end users.
+
+![Screen Shot 2019-04-04 at 10 44 19 AM](https://user-images.githubusercontent.com/382183/55565167-5cfbd780-56c7-11e9-8ca8-24c727e54ab5.png)
 
 ## Features
 
-- **External calls**: Radspec can perform calls to external contracts
-- **Safe**: Radspec has no DOM access at all.
-- **Simple**: Even though radspec requires you to inline types for external calls, the syntax is very familiar and readable (it looks like Flow).
-- **Compatible**: Most natspec comments that already exist are also compatible ith Radspec.
+- **Expressive**: Show relevant details to Smart contract end-users at the time they make transactions.
+- **External calls**: Radspec can query other contracts.
+- **Safe**: Radspec has no access to DOM.
+- **Compatible**: Most existing NatSpec dynamic expressions are compatible with Radspec.
 
-## Quick Start
+## Introduction & quick start
+
+Radspec supports any contract programming language, such as Solidity or Vyper because radspec works on the compiled JSON ABI. Here is an example using Solidity.
+
+```solidity
+pragma solidity ^0.5.0;
+
+contract Tree {
+    /// @notice Set the tree age to `numYears` years
+    function setAge(uint256 numYears) external {
+        // set the age into storage
+    }
+}
+```
+
+Notice the *dynamic expression* documentation for the `age` function. When presented to the end user, this will render based on the inputs provided by the user. For example, if the end user is calling the contract with an input of 10 years, this is specified to render as:
+
+> Set the tree age to 10 years
+
+Use the Solitidy compiler to generate user documentation and ABI with:
+
+```sh
+solc --userdoc --abi tree.sol
+```
+
+This produces the outputs:
+
+```json
+{
+  "methods" : 
+  {
+    "setAge(uint256)" : 
+    {
+      "notice" : "Set the tree age to `numYears` years"
+    }
+  }
+}
+
+```
+
+and
+
+```json
+[{
+  "constant":false,
+  "inputs":[{"name":"numYears","type":"uint256"}],
+  "name":"setAge",
+  "outputs":[],
+  "payable":false,
+  "stateMutability":"nonpayable",
+  "type":"function"
+}]
+```
+
+Write a simple tool using radspec to interpret this.
 
 ```js
 import radspec from 'radspec'
 
-const expression = 'Will multiply `a` by 7 and return `a * 7`.'
+// Set userDoc and ABI from above
+const expression = userDoc.methods["setAge(uint256)"].notice
 const call = {
-  abi: [{
-    name: 'multiply',
-    constant: false,
-    type: 'function',
-    inputs: [{
-      name: 'a',
-      type: 'uint256'
-    }],
-    outputs: [{
-      name: 'd',
-      type: 'uint256'
-    }]
-  }],
+  abi: abi,
   transaction: {
     to: '0x8521742d3f456bd237e312d6e30724960f72517a',
     data: '0xc6888fa1000000000000000000000000000000000000000000000000000000000000007a'
   }
 }
-
 radspec.evaluate(expression, call)
-  .then(console.log) // => "Will multiply 122 by 7 and return 854."
+  .then(console.log) // => "Set the tree age to 10 years"
 ```
 
 See more examples [here](examples).
@@ -58,16 +104,7 @@ Documentation about radspec and the internals of radspec can be found [here](doc
 
 ## Contributing
 
-TBD.
-
-## Aside: Why is natspec unsafe?
-
-Natspec accepts any valid JavaScript. There are multiple reasons this is a bad idea:
-
-1. You either need to write your own JavaScript VM or use `eval` (unsafe!) from inside JavaScript
-2. A fully-featured language with classes, functions and much more is absolutely overkill for something that could be solved with a simple DSL.
-
-As dapps become increasingly complex, it is paramount that tools are written in a way that makes phishing near impossible. Evaluating JavaScript directly makes opens your dapp up to cross-site scripting attacks by users merely submitting a transaction(!).
+TBD
 
 ## License
 
