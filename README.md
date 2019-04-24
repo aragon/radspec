@@ -42,7 +42,9 @@ radspec.evaluate(expression, call)
   .then(console.log) // => "Will multiply 122 by 7 and return 854."
 ```
 
-See more examples [here](examples).
+See more examples of what you can do [here](examples) and in the [tests](test/examples/examples.js).
+
+Please let us know if there's anything else you'd like Radspec to be able to evaluate by filing an [issue](https://github.com/aragon/radspec/issues/new)!
 
 ## Installation
 
