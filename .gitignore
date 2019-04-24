@@ -1,3 +1,11 @@
+# Builds
 dist
+
+# Dependencies
 /node_modules
+
+# Coverage
 /.nyc_output
+
+# Lock files
+package-lock.json
