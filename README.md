@@ -35,7 +35,7 @@ Notice the *dynamic expression* documentation for the `setAge` function. When pr
 
 > Set the tree age to 10 years
 
-Use the Solitidy compiler to generate user documentation and ABI with:
+Use the Solidity compiler to generate user documentation and ABI with:
 
 ```sh
 solc --userdoc --abi tree.sol
