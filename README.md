@@ -31,7 +31,7 @@ contract Tree {
 }
 ```
 
-Notice the *dynamic expression* documentation for the `age` function. When presented to the end user, this will render based on the inputs provided by the user. For example, if the end user is calling the contract with an input of 10 years, this is specified to render as:
+Notice the *dynamic expression* documentation for the `setAge` function. When presented to the end user, this will render based on the inputs provided by the user. For example, if the end user is calling the contract with an input of 10 years, this is specified to render as:
 
 > Set the tree age to 10 years
 
