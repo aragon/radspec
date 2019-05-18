@@ -3,14 +3,14 @@
 [![Travis branch](https://img.shields.io/travis/aragon/radspec/master.svg?style=flat-square)](https://travis-ci.org/aragon/radspec)
 [![Coveralls github branch](https://img.shields.io/coveralls/github/aragon/radspec/master.svg?style=flat-square)](https://coveralls.io/github/aragon/radspec)
 
-Radspec is a safe alternative to Ethereum's natspec[[?](#aside-why-is-natspec-unsafe)].
+Radspec is a safe alternative to Ethereum's NatSpec[[?](#aside-why-is-natspec-unsafe)].
 
 ## Features
 
 - **External calls**: Radspec can perform calls to external contracts
 - **Safe**: Radspec has no DOM access at all.
 - **Simple**: Even though radspec requires you to inline types for external calls, the syntax is very familiar and readable (it looks like Flow).
-- **Compatible**: Most natspec comments that already exist are also compatible ith Radspec.
+- **Compatible**: Most NatSpec comments that already exist are also compatible ith Radspec.
 
 ## Quick Start
 
@@ -62,9 +62,9 @@ Documentation about radspec and the internals of radspec can be found [here](doc
 
 TBD.
 
-## Aside: Why is natspec unsafe?
+## Aside: Why is NatSpec unsafe?
 
-Natspec accepts any valid JavaScript. There are multiple reasons this is a bad idea:
+NatSpec accepts any valid JavaScript. There are multiple reasons this is a bad idea:
 
 1. You either need to write your own JavaScript VM or use `eval` (unsafe!) from inside JavaScript
 2. A fully-featured language with classes, functions and much more is absolutely overkill for something that could be solved with a simple DSL.
