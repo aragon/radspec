@@ -3,17 +3,17 @@
 [![Travis branch](https://img.shields.io/travis/aragon/radspec/master.svg?style=flat-square)](https://travis-ci.org/aragon/radspec)
 [![Coveralls github branch](https://img.shields.io/coveralls/github/aragon/radspec/master.svg?style=flat-square)](https://coveralls.io/github/aragon/radspec)
 
-Radspec is a language specification and interpreter for dynamic expressions in Ethereum's NatSpec.
+Radspec is a safe interpreter for dynamic expressions in Ethereum's [NatSpec](https://github.com/ethereum/wiki/wiki/Ethereum-Natural-Specification-Format).
 
-This allows smart contact developers to show improved function documentation to end users.
+This allows smart contact developers to show improved function documentation to end users, without the [security pitfalls of natspec.js](#aside-why-is-natspec-unsafe). Radspec defines its own syntax structure and parses its own AST rather than directly evaluating untrusted JavaScript.
 
-![Screen Shot 2019-04-04 at 10 44 19 AM](https://user-images.githubusercontent.com/382183/55565167-5cfbd780-56c7-11e9-8ca8-24c727e54ab5.png)
+<img height="150" src=".github/assets/metamask_example.png" />
 
 ## Features
 
-- **Expressive**: Show relevant details to Smart contract end-users at the time they make transactions.
+- **Expressive**: Show relevant details to smart contract end-users at the time they make transactions.
 - **External calls**: Radspec can query other contracts.
-- **Safe**: Radspec has no access to DOM.
+- **Safe**: Radspec requires no DOM access or untrusted JavaScript evaluation.
 - **Compatible**: Most existing NatSpec dynamic expressions are compatible with Radspec.
 
 ## Introduction & quick start
@@ -31,7 +31,7 @@ contract Tree {
 }
 ```
 
-Notice the *dynamic expression* documentation for the `setAge` function. When presented to the end user, this will render based on the inputs provided by the user. For example, if the end user is calling the contract with an input of 10 years, this is specified to render as:
+Notice the *dynamic expression* documentation for the `setAge` function. When presented to the end user, this will render based on the inputs provided by the user. For example, if the end user is calling the contract with an input of 10 years, this will be rendered by radspec as:
 
 > Set the tree age to 10 years
 
@@ -45,9 +45,9 @@ This produces the outputs:
 
 ```json
 {
-  "methods" : 
+  "methods" :
   {
-    "setAge(uint256)" : 
+    "setAge(uint256)" :
     {
       "notice" : "Set the tree age to `numYears` years"
     }
@@ -70,7 +70,7 @@ and
 }]
 ```
 
-Write a simple tool using radspec to interpret this.
+Write a simple tool using radspec to interpret this:
 
 ```js
 import radspec from 'radspec'
@@ -81,14 +81,16 @@ const call = {
   abi: abi,
   transaction: {
     to: '0x8521742d3f456bd237e312d6e30724960f72517a',
-    data: '0xc6888fa1000000000000000000000000000000000000000000000000000000000000007a'
+    data: '0xd5dcf127000000000000000000000000000000000000000000000000000000000000000a'
   }
 }
 radspec.evaluate(expression, call)
   .then(console.log) // => "Set the tree age to 10 years"
 ```
 
-See more examples [here](examples).
+See more examples [here](examples) and in the [tests](test/examples/examples.js).
+
+Please let us know if there's anything else you'd like Radspec to be able to evaluate by filing an [issue](https://github.com/aragon/radspec/issues/new)!
 
 ## Installation
 
@@ -105,6 +107,15 @@ Documentation about radspec and the internals of radspec can be found [here](doc
 ## Contributing
 
 TBD
+
+## Aside: Why is natspec.js unsafe?
+
+[natspec.js](https://github.com/ethereum/natspec.js) accepts any valid JavaScript. There are multiple reasons this is a bad idea:
+
+1. You either need to write your own JavaScript VM or use `eval` (unsafe!) from inside JavaScript
+2. A fully-featured language with classes, functions and much more is absolutely overkill for something that could be solved with a simple DSL.
+
+As dapps become increasingly complex, it is paramount that tools are written in a way that makes phishing near impossible. Evaluating JavaScript directly makes opens your dapp up to cross-site scripting attacks by users merely submitting a transaction(!).
 
 ## License
 
