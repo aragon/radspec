@@ -108,7 +108,7 @@ const comparisonCases = [
 
 const helperCases = [
   [{
-    source: 'helper `@echo(@echo(\'hi \'), 1 + 100000 ^ 0)`',
+    source: "helper `@echo(@echo('hi '), 1 + 100000 ^ 0)`",
     bindings: {}
   }, 'helper hi hi '],
   [{
@@ -141,15 +141,15 @@ const helperCases = [
     bindings: { date: int('1438269793') }
   }, 'Ethereum launched Jul. 30th 2015'],
   [{
-    source: 'Ethereum launched on a `@formatDate(date, \'EEEE\')` in `@formatDate(date, \'MMMM yyyy\')`',
+    source: "Ethereum launched on a `@formatDate(date, 'EEEE')` in `@formatDate(date, 'MMMM yyyy')`",
     bindings: { date: int('1438269793') }
   }, 'Ethereum launched on a Thursday in July 2015'],
   [{
-    source: 'Period duration is `@transformTime(time, \'day\')`',
+    source: "Period duration is `@transformTime(time, 'day')`",
     bindings: { time: int(3600 * 24 * 2 + 50) }
   }, 'Period duration is 2 days'],
   [{
-    source: 'Period duration is `@transformTime(time, \'best\')`',
+    source: "Period duration is `@transformTime(time, 'best')`",
     bindings: { time: int(3600 * 24 * 30) }
   }, 'Period duration is 1 month'],
   [{
@@ -157,7 +157,7 @@ const helperCases = [
     bindings: {}
   }, '3600 seconds is 1 hour'],
   [{
-    source: '10k minutes is `@transformTime(10 ^ 4, \'second\', \'minute\')`',
+    source: "10k minutes is `@transformTime(10 ^ 4, 'second', 'minute')`",
     bindings: {}
   }, '10k minutes is 600000 seconds'],
   [{
@@ -236,7 +236,7 @@ const cases = [
     bindings: { a: int(1), b: int(2), c: int(3), d: int(4) }
   }, 'a is 1, b is 2 and "c d" is 3 4'],
   [{
-    source: 'An empty string`\'\'`',
+    source: "An empty string`''`",
     bindings: {}
   }, 'An empty string'],
 
@@ -261,9 +261,9 @@ const cases = [
     source: 'First case is `(11 - 1) % 3`, second case is `3 * 2 % 5`'
   }, 'First case is 1, second case is 1'],
   [{
-    source: 'Basic arithmetic: `a` + `b` is `a + b`, - `c` that\'s `a + b - c`, quick mafs',
+    source: "Basic arithmetic: `a` + `b` is `a + b`, - `c` that's `a + b - c`, quick mafs",
     bindings: { a: int(2), b: int(2), c: int(1) }
-  }, 'Basic arithmetic: 2 + 2 is 4, - 1 that\'s 3, quick mafs'],
+  }, "Basic arithmetic: 2 + 2 is 4, - 1 that's 3, quick mafs"],
   [{
     source: 'This will default to `b`: `a || b`',
     bindings: { a: int(0), b: int(1) }
@@ -309,11 +309,11 @@ const cases = [
     options: { to: '0x960b236A07cf122663c4303350609A66A7B288C0' }
   }, 'Send ETH to the sale at block 3723000 from 0x0000000000000000000000000000000000000001'],
   [{
-    source: 'Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? \'s\' : \' \'`',
+    source: "Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? 's' : ' '`",
     bindings: { _periodDuration: int(86400 * 2), _vault: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
   }, 'Initialize Finance app for Vault at 0x960b236A07cf122663c4303350609A66A7B288C0 with period length of 2 days'],
   [{
-    source: 'Vote `_supports ? \'yay\' : \'nay\'`',
+    source: "Vote `_supports ? 'yay' : 'nay'`",
     bindings: { _supports: bool(false) }
   }, 'Vote nay'],
   [{
@@ -321,7 +321,7 @@ const cases = [
     bindings: { _amount: int(new BN(10).mul(new BN(10).pow(new BN(18)))) }
   }, 'Token 10'],
   [{
-    source: '`_bool ? \'h\' + _var + \'o\' : \'damn\'`',
+    source: "`_bool ? 'h' + _var + 'o' : 'bye'`",
     bindings: { _bool: bool(true), _var: string('ell') }
   }, 'hello'],
 
