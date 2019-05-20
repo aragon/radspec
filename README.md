@@ -5,7 +5,7 @@
 
 Radspec is a safe interpreter for dynamic expressions in Ethereum's [NatSpec](https://github.com/ethereum/wiki/wiki/Ethereum-Natural-Specification-Format).
 
-This allows smart contact developers to show improved function documentation to end users, without the [security pitfalls of natspec.js](#aside-why-is-natspec-unsafe). Radspec defines its own syntax structure and parses its own AST rather than directly evaluating untrusted JavaScript.
+This allows smart contact developers to show improved function documentation to end users, without the [security pitfalls of natspec.js](#aside-why-is-natspecjs-unsafe). Radspec defines its own syntax structure and parses its own AST rather than directly evaluating untrusted JavaScript.
 
 <img height="250" src=".github/assets/metamask_example.png" />
 
