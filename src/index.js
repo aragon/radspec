@@ -11,6 +11,7 @@
  * @module radspec
  */
 import ABI from 'web3-eth-abi'
+import MetadataDAO from 'metadata-dao'
 import { defaultHelpers } from './helpers'
 import { evaluateRaw } from './lib'
 
@@ -93,9 +94,60 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   )
 }
 
+async function evaluateWithRegistry (call, { userHelpers = {}, ...options } = {}) {
+  const metadataDAO = new MetadataDAO()
+
+  // Get method ID
+  const { to, data } = call.transaction
+  const methodId = data.substr(0, 10)
+
+  const fn = await metadataDAO.query('radspec', 'sig', methodId)
+
+  if (!fn) {
+    return null
+  }
+
+  // If the function was found in local radspec registry. Decode and evaluate.
+  const { notice: source, signature: sig } = fn
+
+  // get the array of input types from the function signature
+  const inputString = sig.replace(')', '').split('(')[1]
+
+  let parameters = []
+
+  // If the function has parameters
+  if (inputString !== '') {
+    const inputs = inputString.split(',')
+
+    // Decode parameters
+    const parameterValues = ABI.decodeParameters(inputs, '0x' + data.substr(10))
+    parameters = inputs.reduce((acc, input, i) => (
+      {
+        [`$${i + 1}`]: {
+          type: input,
+          value: parameterValues[i]
+        },
+        ...acc
+      }), {})
+  }
+
+  const availableHelpers = { ...defaultHelpers, ...userHelpers }
+
+  return await evaluateRaw(
+    source,
+    parameters,
+    {
+      ...options,
+      availableHelpers,
+      to: call.transaction.to
+    }
+  )
+}
+
 export default evaluate
-export { evaluate, evaluateRaw }
+export { evaluate, evaluateRaw, evaluateWithRegistry }
 
 // Re-export some commonly used inner functionality
 export { parse } from './parser'
 export { scan } from './scanner'
+
