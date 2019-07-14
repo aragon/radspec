@@ -89,10 +89,6 @@ const comparisonCases = [
     bindings: { a: address('0x0000000000000000000000000000000000000002') }
   }, 'true'],
   [{
-    source: '`a == 0x0`',
-    bindings: { a: address('0x0000000000000000000000000000000000000000') }
-  }, 'true'],
-  [{
     source: '`a != 0x01`',
     bindings: { a: address('0x0000000000000000000000000000000000000002') }
   }, 'true'],
@@ -280,10 +276,19 @@ const cases = [
     }
   }, 'This will default to 1: 1'],
 
+  // Conditionals
   [{
     source: 'True is not `false ? true : false`',
     bindings: {}
   }, 'True is not false'],
+  [{
+    source: "`a == 0x0 ? 'concat ' + a : 'else'`",
+    bindings: { a: address('0x0000000000000000000000000000000000000000') }
+  }, 'concat 0x0000000000000000000000000000000000000000'],
+  [{
+    source: "`a == 0x0 ? 'concat ' + a : 'else'`",
+    bindings: { a: address('0x0000000000000000000000000000000000000001') }
+  }, 'else'],
 
   // External calls
   [{
