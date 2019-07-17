@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const yargs = require('yargs')
+const fs = require('fs')
+const path = require('path')
+const Eth = require('web3-eth')
+
+const { evaluateWithRegistry } = require('../dist')
+
+const NETWORKS = {
+  rinkeby: 'https://rinkeby.eth.aragon.network',
+  mainnet: 'https://mainnet.eth.aragon.network',
+}
+
+const exec = async (argv) => {
+  const { network } = argv
+  const [ txHash ] = argv._
+
+  const rpc = NETWORKS[network]
+
+  if (!rpc) {
+    throw new Error(`Unsupported network '${network}'`)
+  }
+
+  const eth = new Eth(rpc)
+
+  console.log(`Fetching ${network} for ${txHash}`)
+  const {
+    to,
+    from,
+    blockNumber,
+    input: data
+  } = await eth.getTransaction(txHash)
+
+  const description = await evaluateWithRegistry({ transaction: { to, data }})
+
+  console.log(`Transaction from ${from} to ${to} in block ${blockNumber}:\n`)
+  console.log(description ? `🔥 ${description} 🔥` : 'Unknown 😢')
+}
+
+exec(
+  yargs
+    .usage('Usage: $0 [txid]')
+    .option('network', {
+      alias: 'n',
+      default: 'mainnet',
+      describe: 'Output path to radspec db file',
+      type: 'string',
+    })
+    .argv
+  )
+  .catch(err => {
+    console.error(err)
+    process.exit(1)
+  })
