@@ -249,7 +249,11 @@ export class Evaluator {
         name: node.callee,
         type: 'function',
 
-        inputs,
+        inputs: inputs.map(({ type }) => ({
+          type,
+          // web3.js requires the inputs to have names, otherwise it assumes the type is a tuple
+          name: 'nonEmptyName'
+        })),
         outputs
       }, inputs.map((input) => input.value))
 
