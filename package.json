@@ -47,9 +47,9 @@
     "@babel/runtime": "^7.1.2",
     "bn.js": "4.11.6",
     "date-fns": "2.0.0-alpha.22",
-    "web3-eth": "1.2.1",
-    "web3-eth-abi": "1.2.1",
-    "web3-utils": "1.2.1"
+    "web3-eth": "^1.2.1",
+    "web3-eth-abi": "^1.2.1",
+    "web3-utils": "^1.2.1"
   },
   "ava": {
     "require": [
