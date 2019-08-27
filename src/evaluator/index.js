@@ -249,7 +249,14 @@ export class Evaluator {
         name: node.callee,
         type: 'function',
 
-        inputs,
+        inputs: inputs.map(({ type }) => ({
+          type,
+          // web3.js 1.x requires the inputs to have names, otherwise it assumes the type is a tuple
+          // We can remove this if web3.js 1.x fixes this, or we upgrade to a newer major version
+          // For reference: this is the problematic bit in web3.js:
+          // https://github.com/ethereum/web3.js/blob/7d1b0eab31ff6b52c170dedc172decebea0a0217/packages/web3-eth-abi/src/index.js#L110
+          name: 'nonEmptyName'
+        })),
         outputs
       }, inputs.map((input) => input.value))
 
