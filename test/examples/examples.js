@@ -136,7 +136,7 @@ const helperCases = [
     bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1') }
   }, 'Balance: 0.000000000000000001 DAI'],
   [{
-    source: 'Balance: `@tokenAmount(token, balance, false, 3)`',
+    source: 'Balance: `@tokenAmount(token, balance, true, 3)`',
     bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000001') }
   }, 'Balance: ~1.000 DAI'],
   [{
