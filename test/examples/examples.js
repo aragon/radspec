@@ -110,15 +110,15 @@ const helperCases = [
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT',
     bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054595780000000000') }
-  }, 'Balance: 647413.05459 ANT'],
+  }, 'Balance: ~647413.05459 ANT'],
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT (non-checksummed)',
     bindings: { token: address('0x960b236a07cf122663c4303350609a66a7b288c0'), balance: int('647413054595780000000000') }
-  }, 'Balance: 647413.05459 ANT (non-checksummed)'],
+  }, 'Balance: ~647413.05459 ANT (non-checksummed)'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
     bindings: { token: address(ETH), balance: int('647413054595780000000000') }
-  }, 'Balance: 647413.05 ETH'],
+  }, 'Balance: 647413.05459578 ETH'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
     bindings: { token: address('0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7'), balance: int('10') }
@@ -127,6 +127,22 @@ const helperCases = [
     source: 'Balance: `@tokenAmount(token, balance)`',
     bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('10000000000000000000') }
   }, 'Balance: 10 DAI'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance)`',
+    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000') }
+  }, 'Balance: 0.001 DAI'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance)`',
+    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1') }
+  }, 'Balance: 0.000000000000000001 DAI'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance, false, 3)`',
+    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000001') }
+  }, 'Balance: ~1.000 DAI'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance)`',
+    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000001') }
+  }, 'Balance: 1.000000000000000001 DAI'],
   [{
     source: 'Balance: `@tokenAmount(self.token(): address, balance)`',
     bindings: { balance: int('10000000000000000000') },
