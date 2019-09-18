@@ -10,11 +10,12 @@ export default (eth) =>
    * @param {string} tokenAddress The address of the token
    * @param {*} amount The absolute amount for the token quantity (wei)
    * @param {bool} showSymbol Whether the token symbol will be printed after the amount
-   * @param {*} [precision=2] The number of decimal places to format to
+   * @param {*} precision The number of decimal places to format to. If set, the precision is always enforced.
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
-  async (tokenAddress, amount, showSymbol = true, precision = 2) => {
+  async (tokenAddress, amount, showSymbol = true, precision) => {
     const amountBn = new BN(amount)
+    const fixed = !!precision
 
     let decimals
     let symbol
@@ -40,7 +41,9 @@ export default (eth) =>
       }
     }
 
-    const formattedAmount = formatBN(amountBn, tenPow(decimals), Number(precision))
+    precision = precision || decimals
+
+    const formattedAmount = formatBN(amountBn, tenPow(decimals), Number(precision), fixed)
 
     return {
       type: 'string',
