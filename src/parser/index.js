@@ -289,9 +289,7 @@ export class Parser {
           this.report('Unterminated call expression')
         }
 
-        node.outputs.push({
-          type: this.type()
-        })
+        node.outputs = this.typeList()
       }
 
       return node
@@ -388,6 +386,50 @@ export class Parser {
     }
 
     return this.consume().value
+  }
+
+  /**
+   * Try to parse a type list.
+   *
+   * @return {Array<string>} The list of types
+   */
+  typeList () {
+    if (!this.matches('COLON') &&
+      (this.peek().type !== 'TYPE' || this.peek().type !== 'LEFT_PAREN')) {
+      // TODO Better error
+      this.report(`Expected a type or a list of types, got "${this.peek().type}"`)
+    }
+
+    // We just have a single type
+    if (!this.matches('LEFT_PAREN')) {
+      return [{
+        type: this.consume().value
+      }]
+    }
+
+    let typeList = []
+    while (!this.eof() && !this.matches('RIGHT_PAREN')) {
+      if (!this.matches('TYPE')) {
+        this.report(`Unexpected identifier in type list, expected type, got "${this.peek().type}"`)
+      }
+
+      typeList.push({
+        type: this.consume().value
+      })
+
+      // Break if the next character is not a comma or a right parenthesis
+      // If this is true, then we are specifying more types without
+      // delimiting them using comma.
+      if (!this.matches('COMMA') &&
+        this.peek().type !== 'RIGHT_PAREN') break
+    }
+
+    if (this.eof()) {
+      // TODO Better error
+      this.report(`Unclosed type list`)
+    }
+
+    return typeList
   }
 
   /**
