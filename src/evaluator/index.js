@@ -260,12 +260,15 @@ export class Evaluator {
         outputs
       }, inputs.map((input) => input.value))
 
-      const returnType = outputs[0].type
+      const selectedReturnValueIndex = outputs.findIndex((output) => output.selected)
+      const returnType = outputs[selectedReturnValueIndex].type
       return this.eth.call({
         to: target.value,
         data: call
       }).then(
-        (data) => new TypedValue(returnType, ABI.decodeParameter(returnType, data))
+        (data) => ABI.decodeParameters(outputs.map((item) => item.type), data)
+      ).then(
+        (returnData) => new TypedValue(returnType, returnData[selectedReturnValueIndex])
       )
     }
 
