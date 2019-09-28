@@ -403,18 +403,29 @@ export class Parser {
     // We just have a single type
     if (!this.matches('LEFT_PAREN')) {
       return [{
-        type: this.consume().value
+        type: this.consume().value,
+        selected: true
       }]
     }
 
     let typeList = []
     while (!this.eof() && !this.matches('RIGHT_PAREN')) {
+      // Check if the type is preceded by a bracket to denote
+      // that this is the type of the return value we want.
+      let selected = this.matches('LEFT_BRACKET')
       if (!this.matches('TYPE')) {
         this.report(`Unexpected identifier in type list, expected type, got "${this.peek().type}"`)
       }
 
+      // If the type was preceded by a left bracket, then it
+      // should be followed by a right bracket.
+      if (selected && !this.matches('RIGHT_BRACKET')) {
+        this.report(`Unclosed selected type`)
+      }
+
       typeList.push({
-        type: this.consume().value
+        type: this.consume().value,
+        selected
       })
 
       // Break if the next character is not a comma or a right parenthesis
@@ -427,6 +438,19 @@ export class Parser {
     if (this.eof()) {
       // TODO Better error
       this.report(`Unclosed type list`)
+    }
+
+    // Verify that at least one type in the type list has been selected
+    // as the type of the return value.
+    //
+    // If no type has been selected, and the number of types in the type
+    // list is exactly 1, then we assume that that type should be
+    // marked as selected.
+    const hasSelectedTypeInList = !!typeList.find((item) => item.selected)
+    if (!hasSelectedTypeInList && typeList.length === 1) {
+      typeList[0].selected = true
+    } else if (!hasSelectedTypeInList) {
+      this.report(`Type list has no selected type`)
     }
 
     return typeList
