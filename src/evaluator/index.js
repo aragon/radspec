@@ -256,9 +256,8 @@ export class Evaluator {
           // For reference: this is the problematic bit in web3.js:
           // https://github.com/ethereum/web3.js/blob/7d1b0eab31ff6b52c170dedc172decebea0a0217/packages/web3-eth-abi/src/index.js#L110
           name: 'nonEmptyName'
-        })),
-        outputs
-      }, inputs.map((input) => input.value))
+        }))
+      }, inputs.map((input) => input.value.toString()))
 
       const selectedReturnValueIndex = outputs.findIndex((output) => output.selected)
       const returnType = outputs[selectedReturnValueIndex].type

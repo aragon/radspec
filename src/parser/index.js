@@ -413,20 +413,20 @@ export class Parser {
       // Check if the type is preceded by a bracket to denote
       // that this is the type of the return value we want.
       let selected = this.matches('LEFT_BRACKET')
-      if (!this.matches('TYPE')) {
+      if (!this.peek().type === 'TYPE') {
         this.report(`Unexpected identifier in type list, expected type, got "${this.peek().type}"`)
-      }
-
-      // If the type was preceded by a left bracket, then it
-      // should be followed by a right bracket.
-      if (selected && !this.matches('RIGHT_BRACKET')) {
-        this.report(`Unclosed selected type`)
       }
 
       typeList.push({
         type: this.consume().value,
         selected
       })
+
+      // If the type was preceded by a left bracket, then it
+      // should be followed by a right bracket.
+      if (selected && !this.matches('RIGHT_BRACKET')) {
+        this.report(`Unclosed selected type`)
+      }
 
       // Break if the next character is not a comma or a right parenthesis
       // If this is true, then we are specifying more types without

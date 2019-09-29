@@ -330,6 +330,11 @@ const cases = [
     options: { to: '0x960b236A07cf122663c4303350609A66A7B288C0' }
   }, 'Send ETH to the sale at block 3723000 from 0x0000000000000000000000000000000000000001'],
   [{
+    source: "Transaction with ID `txId` was sent to `self.getTransaction(txId): (uint64, uint256, uint256, uint64, address, [address], bool, uint64)`",
+    bindings: { txId: { type: 'uint256', value: 1 } },
+    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' },
+  }, 'Transaction with ID 1 was sent to 0x52EC80600642CeddE9De1F570335481C348BE74C'],
+  [{
     source: "Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? 's' : ' '`",
     bindings: { _periodDuration: int(86400 * 2), _vault: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
   }, 'Initialize Finance app for Vault at 0x960b236A07cf122663c4303350609A66A7B288C0 with period length of 2 days'],
