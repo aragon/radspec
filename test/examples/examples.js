@@ -109,12 +109,20 @@ const helperCases = [
   }, 'helper hi hi '],
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT',
-    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054595780000000000') }
-  }, 'Balance: ~647413.05459 ANT'],
+    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054590000000000000') }
+  }, 'Balance: 647413.05459 ANT'],
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT (non-checksummed)',
-    bindings: { token: address('0x960b236a07cf122663c4303350609a66a7b288c0'), balance: int('647413054595780000000000') }
-  }, 'Balance: ~647413.05459 ANT (non-checksummed)'],
+    bindings: { token: address('0x960b236a07cf122663c4303350609a66a7b288c0'), balance: int('647413054590000000000000') }
+  }, 'Balance: 647413.05459 ANT (non-checksummed)'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance, false, 7)` ANT (trailing zeros)',
+    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054590000000000000') }
+  }, 'Balance: 647413.0545900 ANT (trailing zeros)'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT (non-precise)',
+    bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054595780000000000') }
+  }, 'Balance: ~647413.05459 ANT (non-precise)'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
     bindings: { token: address(ETH), balance: int('647413054595780000000000') }
@@ -135,6 +143,10 @@ const helperCases = [
     source: 'Balance: `@tokenAmount(token, balance)`',
     bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1') }
   }, 'Balance: 0.000000000000000001 DAI'],
+  [{
+    source: 'Balance: `@tokenAmount(token, balance, true, 3)`',
+    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1') }
+  }, 'Balance: ~0.000 DAI'],
   [{
     source: 'Balance: `@tokenAmount(token, balance, true, 3)`',
     bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000001') }
@@ -183,7 +195,7 @@ const helperCases = [
   [{
     source: 'Change required support to `@formatPct(support, 10 ^ 18, 1)`%',
     bindings: { support: int((new BN(40)).mul(tenPow(16)).add((new BN(43)).mul(tenPow(14)))) } // 40 * 10^16 + 43 * 10^14
-  }, 'Change required support to 40.4%'],
+  }, 'Change required support to ~40.4%'],
   [{
     source: 'The genesis block is #`@getBlock(n)`',
     bindings: { n: int(0) },
