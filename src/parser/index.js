@@ -410,9 +410,9 @@ export class Parser {
 
     let typeList = []
     while (!this.eof() && !this.matches('RIGHT_PAREN')) {
-      // Check if the type is preceded by a bracket to denote
+      // Check if the type is preceded by a < to denote
       // that this is the type of the return value we want.
-      let selected = this.matches('LEFT_BRACKET')
+      let selected = this.matches('LESS')
       if (!this.peek().type === 'TYPE') {
         this.report(`Unexpected identifier in type list, expected type, got "${this.peek().type}"`)
       }
@@ -422,9 +422,9 @@ export class Parser {
         selected
       })
 
-      // If the type was preceded by a left bracket, then it
-      // should be followed by a right bracket.
-      if (selected && !this.matches('RIGHT_BRACKET')) {
+      // If the type was preceded by a <, then it
+      // should be followed by a >.
+      if (selected && !this.matches('GREATER')) {
         this.report(`Unclosed selected type`)
       }
 
