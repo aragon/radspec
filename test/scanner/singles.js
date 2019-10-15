@@ -5,8 +5,6 @@ test('Scanner: Single character tokens', async (t) => {
   const cases = [
     ['`(`', ['TICK', 'LEFT_PAREN', 'TICK']],
     ['`)`', ['TICK', 'RIGHT_PAREN', 'TICK']],
-    ['`[`', ['TICK', 'LEFT_BRACKET', 'TICK']],
-    ['`]`', ['TICK', 'RIGHT_BRACKET', 'TICK']],
     ['`,`', ['TICK', 'COMMA', 'TICK']],
     ['`.`', ['TICK', 'DOT', 'TICK']],
     ['`:`', ['TICK', 'COLON', 'TICK']],
