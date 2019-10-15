@@ -68,12 +68,6 @@ export class Scanner {
       case ')':
         this.emitToken('RIGHT_PAREN')
         break
-      case '[':
-        this.emitToken('LEFT_BRACKET')
-        break
-      case ']':
-        this.emitToken('RIGHT_BRACKET')
-        break
       case ',':
         this.emitToken('COMMA')
         break
