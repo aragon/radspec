@@ -225,7 +225,6 @@ export class Evaluator {
     }
 
     if (node.type === 'CallExpression') {
-      // TODO Add a check for number of return values (can only be 1 for now)
       let target
 
       // Inject self
@@ -244,6 +243,11 @@ export class Evaluator {
 
       const inputs = await this.evaluateNodes(node.inputs)
       const outputs = node.outputs
+      const selectedReturnValueIndex = outputs.findIndex((output) => output.selected)
+      if (selectedReturnValueIndex === -1) {
+        this.panic(`No selected return value for function call "${node.callee}"`)
+      }
+      const returnType = outputs[selectedReturnValueIndex].type
 
       const call = ABI.encodeFunctionCall({
         name: node.callee,
@@ -259,8 +263,6 @@ export class Evaluator {
         }))
       }, inputs.map((input) => input.value.toString()))
 
-      const selectedReturnValueIndex = outputs.findIndex((output) => output.selected)
-      const returnType = outputs[selectedReturnValueIndex].type
       return this.eth.call({
         to: target.value,
         data: call
