@@ -225,7 +225,6 @@ export class Evaluator {
     }
 
     if (node.type === 'CallExpression') {
-      // TODO Add a check for number of return values (can only be 1 for now)
       let target
 
       // Inject self
@@ -244,6 +243,11 @@ export class Evaluator {
 
       const inputs = await this.evaluateNodes(node.inputs)
       const outputs = node.outputs
+      const selectedReturnValueIndex = outputs.findIndex((output) => output.selected)
+      if (selectedReturnValueIndex === -1) {
+        this.panic(`No selected return value for function call "${node.callee}"`)
+      }
+      const returnType = outputs[selectedReturnValueIndex].type
 
       const call = ABI.encodeFunctionCall({
         name: node.callee,
@@ -256,16 +260,16 @@ export class Evaluator {
           // For reference: this is the problematic bit in web3.js:
           // https://github.com/ethereum/web3.js/blob/7d1b0eab31ff6b52c170dedc172decebea0a0217/packages/web3-eth-abi/src/index.js#L110
           name: 'nonEmptyName'
-        })),
-        outputs
-      }, inputs.map((input) => input.value))
+        }))
+      }, inputs.map((input) => input.value.toString()))
 
-      const returnType = outputs[0].type
       return this.eth.call({
         to: target.value,
         data: call
       }).then(
-        (data) => new TypedValue(returnType, ABI.decodeParameter(returnType, data))
+        (data) => ABI.decodeParameters(outputs.map((item) => item.type), data)
+      ).then(
+        (returnData) => new TypedValue(returnType, returnData[selectedReturnValueIndex])
       )
     }
 

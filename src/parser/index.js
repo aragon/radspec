@@ -289,9 +289,7 @@ export class Parser {
           this.report('Unterminated call expression')
         }
 
-        node.outputs.push({
-          type: this.type()
-        })
+        node.outputs = this.typeList()
       }
 
       return node
@@ -323,8 +321,7 @@ export class Parser {
       if (this.matches('LEFT_PAREN')) {
         node.inputs = this.functionInputs(astBody)
       } else {
-        // There is actually no good reason not to allow calling a helper without ()
-        // this.report(`Expected '(' for executing helper function`)
+        this.report(`Expected '(' for executing helper function`)
       }
 
       return node
@@ -391,6 +388,73 @@ export class Parser {
   }
 
   /**
+   * Try to parse a type list.
+   *
+   * @return {Array<string>} The list of types
+   */
+  typeList () {
+    if (!this.matches('COLON') &&
+      (this.peek().type !== 'TYPE' || this.peek().type !== 'LEFT_PAREN')) {
+      // TODO Better error
+      this.report(`Expected a type or a list of types, got "${this.peek().type}"`)
+    }
+
+    // We just have a single type
+    if (!this.matches('LEFT_PAREN')) {
+      return [{
+        type: this.consume().value,
+        selected: true
+      }]
+    }
+
+    let typeList = []
+    while (!this.eof() && !this.matches('RIGHT_PAREN')) {
+      // Check if the type is preceded by a < to denote
+      // that this is the type of the return value we want.
+      let selected = this.matches('LESS')
+      if (!this.peek().type === 'TYPE') {
+        this.report(`Unexpected identifier in type list, expected type, got "${this.peek().type}"`)
+      }
+
+      typeList.push({
+        type: this.consume().value,
+        selected
+      })
+
+      // If the type was preceded by a <, then it
+      // should be followed by a >.
+      if (selected && !this.matches('GREATER')) {
+        this.report(`Unclosed selected type`)
+      }
+
+      // If this is true, then types have been specified without delimiting them using commas.
+      if (!this.matches('COMMA') && this.peek().type !== 'RIGHT_PAREN') {
+        this.report('Undelimited parameter type (expected comma delimiter or closing brace)')
+      }
+    }
+
+    if (this.eof()) {
+      // TODO Better error
+      this.report(`Unclosed type list`)
+    }
+
+    // Verify that at least one type in the type list has been selected
+    // as the type of the return value.
+    //
+    // If no type has been selected, and the number of types in the type
+    // list is exactly 1, then we assume that that type should be
+    // marked as selected.
+    const hasSelectedTypeInList = !!typeList.find((item) => item.selected)
+    if (!hasSelectedTypeInList && typeList.length === 1) {
+      typeList[0].selected = true
+    } else if (!hasSelectedTypeInList) {
+      this.report(`Type list has no selected type`)
+    }
+
+    return typeList
+  }
+
+  /**
    * Try to parse function arguments.
    *
    * @param  {Array<Node>} astBody Subtree of AST being walked
@@ -409,11 +473,10 @@ export class Parser {
 
       inputs.push(input)
 
-      // Break if the next character is not a comma or a right parenthesis
-      // If this is true, then we are specifying more parameters without
-      // delimiting them using comma.
-      if (!this.matches('COMMA') &&
-        this.peek().type !== 'RIGHT_PAREN') break
+      // If this is true, then types have been specified without delimiting them using commas.
+      if (!this.matches('COMMA') && this.peek().type !== 'RIGHT_PAREN') {
+        this.report('Undelimited parameter type (expected comma delimiter or closing brace)')
+      }
     }
 
     return inputs

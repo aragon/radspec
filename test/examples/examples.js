@@ -346,6 +346,27 @@ const cases = [
     bindings: { _bool: bool(true), _var: string('ell') }
   }, 'hello'],
 
+  // External calls with multiple return values
+  [{
+    source: "Explicit: Transaction with ID `txId` was sent to `self.getTransaction(txId): (uint64, uint256, uint256, uint64, address, <address>, bool, uint64)`",
+    bindings: { txId: { type: 'uint256', value: 1 } },
+    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' },
+  }, 'Explicit: Transaction with ID 1 was sent to 0x52EC80600642CeddE9De1F570335481C348BE74C'],
+  [{
+    source: "Implicit: `token.symbol(): (string)`",
+    bindings: { token: address('0x960b236a07cf122663c4303350609a66a7b288c0') }
+  }, 'Implicit: ANT'],
+  [{
+    source: "Explicit (last type): `self.getTransaction(txId): (uint64, uint256, uint256, uint64, address, address, bool, <uint64>)`",
+    bindings: { txId: { type: 'uint256', value: 1 } },
+    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' },
+  }, 'Explicit (last type): 1568811601'],
+  [{
+    source: "Explicit (first type): `self.getTransaction(txId): (<uint64>, uint256, uint256, uint64, address, address, bool, uint64)`",
+    bindings: { txId: { type: 'uint256', value: 1 } },
+    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' },
+  }, 'Explicit (first type): 0'],
+
   ...comparisonCases,
   ...helperCases,
   ...dataDecodeCases
