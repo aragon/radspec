@@ -428,11 +428,10 @@ export class Parser {
         this.report(`Unclosed selected type`)
       }
 
-      // Break if the next character is not a comma or a right parenthesis
-      // If this is true, then we are specifying more types without
-      // delimiting them using comma.
-      if (!this.matches('COMMA') &&
-        this.peek().type !== 'RIGHT_PAREN') break
+      // If this is true, then types have been specified without delimiting them using commas.
+      if (!this.matches('COMMA') && this.peek().type !== 'RIGHT_PAREN') {
+        this.report('Undelimited parameter type (expected comma delimiter or closing brace)')
+      }
     }
 
     if (this.eof()) {
@@ -475,11 +474,10 @@ export class Parser {
 
       inputs.push(input)
 
-      // Break if the next character is not a comma or a right parenthesis
-      // If this is true, then we are specifying more parameters without
-      // delimiting them using comma.
-      if (!this.matches('COMMA') &&
-        this.peek().type !== 'RIGHT_PAREN') break
+      // If this is true, then types have been specified without delimiting them using commas.
+      if (!this.matches('COMMA') && this.peek().type !== 'RIGHT_PAREN') {
+        this.report('Undelimited parameter type (expected comma delimiter or closing brace)')
+      }
     }
 
     return inputs
