@@ -321,8 +321,7 @@ export class Parser {
       if (this.matches('LEFT_PAREN')) {
         node.inputs = this.functionInputs(astBody)
       } else {
-        // There is actually no good reason not to allow calling a helper without ()
-        // this.report(`Expected '(' for executing helper function`)
+        this.report(`Expected '(' for executing helper function`)
       }
 
       return node
