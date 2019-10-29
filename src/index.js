@@ -81,6 +81,9 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
 
   const availableHelpers = { ...defaultHelpers, ...userHelpers }
 
+  // Get additional options
+  const { from, to, value } = call.transaction
+
   // Evaluate expression with bindings from the transaction data
   return evaluateRaw(
     source,
@@ -88,7 +91,9 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
     {
       ...options,
       availableHelpers,
-      to: call.transaction.to
+      from,
+      to,
+      value
     }
   )
 }
