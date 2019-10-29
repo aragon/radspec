@@ -379,6 +379,19 @@ const cases = [
     options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' },
   }, 'Explicit (first type): 0'],
 
+  // msg.value and msg.sender options
+  [{
+    source:"No value: Send `@tokenAmount(token, msg.value)` from `msg.sender` to `reciever`",
+    bindings: { token: address(ETH), reciever:  address('0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb') },
+    options: { from: '0xb4124cEB3451635DAcedd11767f004d8a28c6eE7'},
+  }, 'No value: Send 0 ETH from 0xb4124cEB3451635DAcedd11767f004d8a28c6eE7 to 0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb'],
+
+  [{
+    source:"With value: Send `@tokenAmount(token, msg.value)` from `msg.sender` to `reciever`",
+    bindings: { token: address(ETH), reciever:  address('0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb') },
+    options: { from: '0xb4124cEB3451635DAcedd11767f004d8a28c6eE7', value: '1000000000000000000' },
+  }, 'With value: Send 1 ETH from 0xb4124cEB3451635DAcedd11767f004d8a28c6eE7 to 0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb'],
+
   ...comparisonCases,
   ...helperCases,
   ...dataDecodeCases
