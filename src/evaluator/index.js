@@ -61,13 +61,14 @@ class TypedValue {
  * @property {radspec/Bindings} bindings
  */
 export class Evaluator {
-  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, from, to, value = '0' } = {}) {
+  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, from, to, value = '0', data } = {}) {
     this.ast = ast
     this.bindings = bindings
     this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE)
     this.from = from && new TypedValue('address', from)
     this.to = to && new TypedValue('address', to)
     this.value = new TypedValue('uint', new BN(value))
+    this.data = data && new TypedValue('bytes', data)
     this.helpers = new HelperManager(availableHelpers)
   }
 
@@ -304,7 +305,11 @@ export class Evaluator {
         return this.from
       }
 
-      this.panic(`Expecting value or sender property for msg identifier but got: ${node.property}`)
+      if (node.property === 'data') {
+        return this.data
+      }
+
+      this.panic(`Expecting value, sender or data property for msg identifier but got: ${node.property}`)
     }
 
     if (node.type === 'Identifier') {
