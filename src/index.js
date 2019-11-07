@@ -81,7 +81,6 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
 
   const availableHelpers = { ...defaultHelpers, ...userHelpers }
 
-  console.log('call tx', call.transaction)
   // Get additional options
   const { from, to, value, data } = call.transaction
 
