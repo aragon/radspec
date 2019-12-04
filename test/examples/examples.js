@@ -359,6 +359,18 @@ const cases = [
     source: "`_bool ? 'h' + _var + 'o' : 'bye'`",
     bindings: { _bool: bool(true), _var: string('ell') }
   }, 'hello'],
+  [{
+    source: 'get a past date: `@blockTime(block, showBlock)`',
+    bindings: { block: int('8765432'), showBlock: bool(false) }
+  }, 'get a past date: Fri Oct 18 2019'],
+  //[{
+  //  source: 'get a future date: `@blockTime(block)`',
+  //  bindings: { block: int('20976543') }
+  //}, 'get a future date: Wed Mar 19 2025 (block number: 20976543)'],
+  [{
+    source: 'see if block is mined: `@isBlockMined(block)`',
+    bindings: { block: int('98765430') }
+  }, 'see if block is mined: false'],
 
   // External calls with multiple return values
   [{

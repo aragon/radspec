@@ -6,6 +6,7 @@ import formatPct from './formatPct'
 import tokenAmount from './tokenAmount'
 import transformTime from './transformTime'
 import radspec from './radspec'
+import { blockTime, isBlockMined } from './blockTime'
 
 const defaultHelpers = {
   formatDate,
@@ -14,7 +15,9 @@ const defaultHelpers = {
   formatPct,
   fromHex,
   radspec,
-  echo
+  echo,
+  blockTime,
+  isBlockMined
 }
 
 export {
@@ -27,5 +30,7 @@ export {
   fromHex,
   radspec,
   transformTime,
-  tokenAmount
+  tokenAmount,
+  blockTime,
+  isBlockMined
 }
