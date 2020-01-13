@@ -6,6 +6,7 @@ import formatPct from './formatPct'
 import tokenAmount from './tokenAmount'
 import transformTime from './transformTime'
 import radspec from './radspec'
+import parseIpfs from './parseIpfs'
 
 const defaultHelpers = {
   formatDate,
@@ -14,7 +15,8 @@ const defaultHelpers = {
   formatPct,
   fromHex,
   radspec,
-  echo
+  echo,
+  parseIpfs
 }
 
 export {
@@ -27,5 +29,6 @@ export {
   fromHex,
   radspec,
   transformTime,
-  tokenAmount
+  tokenAmount,
+  parseIpfs
 }
