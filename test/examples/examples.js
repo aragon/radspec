@@ -226,6 +226,13 @@ const dataDecodeCases = [
     }
   }, 'Payroll: Get owed Payroll allowance!'],
   [{
+    source: 'Decentraland: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x1206dc5f00000000000000000000000031ab1f92344e3277ce9404e4e097dab7514e6d27') // transferMarketplaceOwnership(), on decentraland's knownFunctions
+    }
+  }, 'Decentraland: Transfer ownership of the marketplace to 0x31AB1f92344e3277ce9404E4e097dab7514E6D27'],
+  [{
     source: 'Transfer: `@radspec(addr, data)`',
     bindings: {
       addr: address('0x960b236a07cf122663c4303350609a66a7b288c0'),
