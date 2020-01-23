@@ -2,7 +2,7 @@ import ABI from 'web3-eth-abi'
 import { keccak256 } from 'web3-utils'
 import MethodRegistry from './lib/methodRegistry'
 import { evaluateRaw } from '../lib/'
-import knownFunctions from '../data/knownFunctions'
+import { knownFunctions } from '../data/'
 
 const makeUnknownFunctionNode = (methodId) => ({
   type: 'string',
