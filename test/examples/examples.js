@@ -229,7 +229,14 @@ const dataDecodeCases = [
     source: 'Decentraland: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
-      data: bytes('0x1206dc5f00000000000000000000000031ab1f92344e3277ce9404e4e097dab7514e6d27') // transferMarketplaceOwnership(), on decentraland's knownFunctions
+      data: bytes('0x19dad16d0000000000000000000000000000000000000000000000000000000000004e20') // setOwnerCutPerMillion(uint256), on decentraland's knownFunctions
+    }
+  }, 'Decentraland: Set marketplace fees to 2%'],
+  [{
+    source: 'Decentraland: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x1206dc5f00000000000000000000000031ab1f92344e3277ce9404e4e097dab7514e6d27') // transferMarketplaceOwnership(address), on decentraland's knownFunctions
     }
   }, 'Decentraland: Transfer ownership of the marketplace to 0x31AB1f92344e3277ce9404E4e097dab7514E6D27'],
   [{
