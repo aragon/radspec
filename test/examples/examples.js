@@ -207,7 +207,19 @@ const helperCases = [
     source: 'Bar `@bar(shift)` foo `@foo(n)`',
     bindings: { shift: bool(true), n: int(7) },
     options: { userHelpers: { bar: () => shift => ({ type: 'string', value: shift ? 'BAR' : 'bar' }), foo: () => n => ({ type: 'number', value: n * 7 }) } }
-  }, 'Bar BAR foo 49']
+  }, 'Bar BAR foo 49'],
+  [{
+    source: 'get a past date: `@blockTime(block, showBlock)`',
+    bindings: { block: int('8765432'), showBlock: bool(false) }
+  }, 'get a past date: 2019-10-18'],
+  [{
+    source: 'get a past date: `@blockTime(block, showBlock)`',
+    bindings: { block: int('8765432'), showBlock: bool(true) }
+  }, 'get a past date: 2019-10-18 (block number: 8765432)'],
+  [{
+    source: 'See if block is mined: `@isBlockMined(block)`',
+    bindings: { block: int('98765430') }
+  }, 'See if block is mined: false']
 ]
 
 const dataDecodeCases = [
@@ -359,18 +371,6 @@ const cases = [
     source: "`_bool ? 'h' + _var + 'o' : 'bye'`",
     bindings: { _bool: bool(true), _var: string('ell') }
   }, 'hello'],
-  [{
-    source: 'get a past date: `@blockTime(block, showBlock)`',
-    bindings: { block: int('8765432'), showBlock: bool(false) }
-  }, 'get a past date: Fri Oct 18 2019'],
-  //[{
-  //  source: 'get a future date: `@blockTime(block)`',
-  //  bindings: { block: int('20976543') }
-  //}, 'get a future date: Wed Mar 19 2025 (block number: 20976543)'],
-  [{
-    source: 'see if block is mined: `@isBlockMined(block)`',
-    bindings: { block: int('98765430') }
-  }, 'see if block is mined: false'],
 
   // External calls with multiple return values
   [{
@@ -439,6 +439,36 @@ cases.forEach(([input, expected], index) => {
       actual,
       expected,
       `Expected "${input.source}" to evaluate to "${expected}", but evaluated to "${actual}"`
+    )
+  })
+})
+
+const fuzzyCases = [
+  [{
+    source: 'Get a future date: `@blockTime(block)`',
+    bindings: { block: int('20976543') }
+  }, /^Get a future date: 202\d(?:-\d\d){2} \(estimated\) \(block number: 20976543\)$/],
+  [{
+    source: 'Get a future date without showing block number: `@blockTime(block, false)`',
+    bindings: { block: int('20976543') }
+  }, /^Get a future date without showing block number: 202\d(?:-\d\d){2} \(estimated\)$/]
+]
+
+fuzzyCases.forEach(([input, regExp], index) => {
+  test(`${index} - ${input.source}`, async (t) => {
+    const { userHelpers } = input.options || {}
+    const actual = await evaluateRaw(
+      input.source,
+      input.bindings,
+      {
+        ...input.options,
+        availableHelpers: { ...defaultHelpers, ...userHelpers }
+      }
+    )
+    t.regex(
+      actual,
+      regExp,
+      `Expected "${input.source}" to match "${regExp}", but evaluated to "${actual}"`
     )
   })
 })
