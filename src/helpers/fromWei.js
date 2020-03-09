@@ -7,7 +7,7 @@ export default (eth) =>
    * Format token amounts taking decimals into account
    *
    * @param {*} amount The absolute amount for the token quantity (wei)
-   * @param {*} precision The number of decimal places to format to. If set, the precision is always enforced.
+   * @param precision The number of decimal places to format to. If set, the precision is always enforced.
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
   async (amount, precision = 18) => {
