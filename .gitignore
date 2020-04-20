@@ -6,6 +6,7 @@ dist
 
 # Coverage
 /.nyc_output
+coverage
 
 # Ignore package-lock files (only use yarn.lock)
 package-lock.json
