@@ -4,6 +4,8 @@ on: push
 jobs:
   tests:
     runs-on: ubuntu-latest
+    env:
+      CI: true
     strategy:
       matrix:
         node-version: [8.x, 10.x, 12.x]
@@ -19,8 +21,6 @@ jobs:
         run: yarn lint
       - name: Run tests
         run: yarn test:coverage
-        env:
-          CI: true
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
