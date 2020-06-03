@@ -110,9 +110,13 @@ const helperCases = [
     bindings: {}
   }, 'helper hi hi '],
   [{
-    source: 'Balance: `@fromWei(balance, 18)` ANT',
+    source: 'Balance: `@withDecimals(balance, 18)` ETH',
     bindings: { balance: int('647413054590000000000000') }
-  }, 'Balance: 647413.05459 ANT'],
+  }, 'Balance: 647413.05459 ETH'],
+  [{
+    source: 'Balance: `@withDecimals(balance, 6)` USDC',
+    bindings: { balance: int('647413054590000000000000') }
+  }, 'Balance: 647413054590000000 USDC'],
   [{
     source: 'Balance: `@tokenAmount(token, balance, false, 5)` ANT',
     bindings: { token: address('0x960b236A07cf122663c4303350609A66A7B288C0'), balance: int('647413054590000000000000') }

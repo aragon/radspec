@@ -1,13 +1,12 @@
 import BN from 'bn.js'
-import { toUtf8 } from 'web3-utils'
 import { formatBN, tenPow } from './lib/formatBN'
 
-export default (eth) =>
+export default () =>
   /**
-   * Format token amounts taking decimals into account
+   * Format an numerical amount with its decimals
    *
-   * @param {*} amount The absolute amount for the token quantity (wei)
-   * @param precision The number of decimal places to format to. If set, the precision is always enforced.
+   * @param {*} amount The absolute amount, without any decimals.
+   * @param decimals The number of decimal places to format to. Defaults to 18.
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
   async (amount, precision = 18) => {
