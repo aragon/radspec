@@ -9,10 +9,10 @@ export default () =>
    * @param decimals The number of decimal places to format to. Defaults to 18.
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
-  async (amount, precision = 18) => {
+  async (amount, decimals = 18) => {
     const amountBn = new BN(amount)
 
-    const formattedAmount = formatBN(amountBn, tenPow(precision), Number(precision), false)
+    const formattedAmount = formatBN(amountBn, tenPow(decimals), Number(decimals), false)
 
     return {
       type: 'string',
