@@ -3,18 +3,20 @@ import echo from './echo'
 import formatDate from './formatDate'
 import fromHex from './fromHex'
 import formatPct from './formatPct'
+import withDecimals from './withDecimals'
 import tokenAmount from './tokenAmount'
 import transformTime from './transformTime'
 import radspec from './radspec'
 
 const defaultHelpers = {
+  echo,
   formatDate,
-  transformTime,
-  tokenAmount,
   formatPct,
   fromHex,
   radspec,
-  echo
+  tokenAmount,
+  transformTime,
+  withDecimals
 }
 
 export {
@@ -27,5 +29,6 @@ export {
   fromHex,
   radspec,
   transformTime,
-  tokenAmount
+  tokenAmount,
+  withDecimals
 }
