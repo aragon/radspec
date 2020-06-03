@@ -419,49 +419,49 @@ const cases = [
 
   // External calls with multiple return values
   [{
-    source: "Explicit: Transaction with ID `txId` was sent to `self.getTransaction(txId): (uint64, uint256, uint256, uint64, address, <address>, bool, uint64)`",
+    source: 'Explicit: Transaction with ID `txId` was sent to `self.getTransaction(txId): (uint64, uint256, uint256, uint64, address, <address>, bool, uint64)`',
     bindings: { txId: { type: 'uint256', value: 1 } },
-    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' },
+    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' }
   }, 'Explicit: Transaction with ID 1 was sent to 0x52EC80600642CeddE9De1F570335481C348BE74C'],
   [{
-    source: "Implicit: `token.symbol(): (string)`",
+    source: 'Implicit: `token.symbol(): (string)`',
     bindings: { token: address('0x960b236a07cf122663c4303350609a66a7b288c0') }
   }, 'Implicit: ANT'],
   [{
-    source: "Explicit (last type): `self.getTransaction(txId): (uint64, uint256, uint256, uint64, address, address, bool, <uint64>)`",
+    source: 'Explicit (last type): `self.getTransaction(txId): (uint64, uint256, uint256, uint64, address, address, bool, <uint64>)`',
     bindings: { txId: { type: 'uint256', value: 1 } },
-    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' },
+    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' }
   }, 'Explicit (last type): 1568811601'],
   [{
-    source: "Explicit (first type): `self.getTransaction(txId): (<uint64>, uint256, uint256, uint64, address, address, bool, uint64)`",
+    source: 'Explicit (first type): `self.getTransaction(txId): (<uint64>, uint256, uint256, uint64, address, address, bool, uint64)`',
     bindings: { txId: { type: 'uint256', value: 1 } },
-    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' },
+    options: { to: '0xf562B25Db6e707694ceC3A4908dC58fF6bDABa40' }
   }, 'Explicit (first type): 0'],
 
   // msg.(sender | value | data) options
   [{
-    source: "No value: Send `@tokenAmount(token, msg.value)` from `msg.sender` to `receiver`",
-    bindings: { token: address(ETH), receiver:  address('0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb') },
-    options: { from: '0xb4124cEB3451635DAcedd11767f004d8a28c6eE7'},
+    source: 'No value: Send `@tokenAmount(token, msg.value)` from `msg.sender` to `receiver`',
+    bindings: { token: address(ETH), receiver: address('0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb') },
+    options: { from: '0xb4124cEB3451635DAcedd11767f004d8a28c6eE7' }
   }, 'No value: Send 0 ETH from 0xb4124cEB3451635DAcedd11767f004d8a28c6eE7 to 0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb'],
 
   [{
-    source: "With value: Send `@tokenAmount(token, msg.value)` from `msg.sender` to `receiver`",
-    bindings: { token: address(ETH), receiver:  address('0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb') },
-    options: { from: '0xb4124cEB3451635DAcedd11767f004d8a28c6eE7', value: '1000000000000000000' },
+    source: 'With value: Send `@tokenAmount(token, msg.value)` from `msg.sender` to `receiver`',
+    bindings: { token: address(ETH), receiver: address('0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb') },
+    options: { from: '0xb4124cEB3451635DAcedd11767f004d8a28c6eE7', value: '1000000000000000000' }
   }, 'With value: Send 1 ETH from 0xb4124cEB3451635DAcedd11767f004d8a28c6eE7 to 0x8401Eb5ff34cc943f096A32EF3d5113FEbE8D4Eb'],
 
   [{
-    source: "Sending tx with data `msg.data` to contract at `contract`",
+    source: 'Sending tx with data `msg.data` to contract at `contract`',
     bindings: { contract: address('0x960b236A07cf122663c4303350609A66A7B288C0') },
-    options: { data: '0xabcdef'}
-  }, "Sending tx with data 0xabcdef to contract at 0x960b236A07cf122663c4303350609A66A7B288C0"],
-  
+    options: { data: '0xabcdef' }
+  }, 'Sending tx with data 0xabcdef to contract at 0x960b236A07cf122663c4303350609A66A7B288C0'],
+
   // using msg.data on a helper
   [{
-    source: "Performs a call to `@radspec(contract, msg.data)`",
+    source: 'Performs a call to `@radspec(contract, msg.data)`',
     bindings: { contract: address('0x960b236A07cf122663c4303350609A66A7B288C0') },
-    options: { data: keccak256(Object.keys(knownFunctions)[3]).slice(0,10) }
+    options: { data: keccak256(Object.keys(knownFunctions)[3]).slice(0, 10) }
   }, `Performs a call to ${Object.values(knownFunctions)[3]}`],
 
   ...comparisonCases,
