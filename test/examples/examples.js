@@ -408,6 +408,40 @@ const cases = [
     source: "`_bool ? 'h' + _var + 'o' : 'bye'`",
     bindings: { _bool: bool(true), _var: string('ell') }
   }, 'hello'],
+  [{
+    source: 'parse this ipfs hash: `@parseIpfs(test)`',
+    bindings: { test: string('Qmc3zqKcwzbbvw3MQm3hXdg8BQoFjGdZiGdAfXAyAGGdLi') }
+  }, 'parse this ipfs hash: Don\'t we all.'],
+  [{
+    source: 'get registry address: `@parseIpfs(test,"", "env", "registry")`',
+    bindings: { 
+      test: string('QmWP9roMebu5LyV6Q4RNooAw6yj18zKUqXqAc5Lxy1YVFh'),
+    }
+  }, 'get registry address: 0x5f6F7E8cc7346a11ca2dEf8f827b7a0b612c56a1'],
+  [{
+    source: 'works with invalid custom node: `@parseIpfs(test,"http://invalidaddress", "env", "registry")`',
+    bindings: { 
+      test: string('QmWP9roMebu5LyV6Q4RNooAw6yj18zKUqXqAc5Lxy1YVFh'),
+    }
+  }, 'works with invalid custom node: 0x5f6F7E8cc7346a11ca2dEf8f827b7a0b612c56a1'],
+  [{
+    source: 'fails to get networkId: `@parseIpfs(test,"", "env", "networkId")` (undefined key)',
+    bindings: { 
+      test: string('QmWP9roMebu5LyV6Q4RNooAw6yj18zKUqXqAc5Lxy1YVFh'),
+    }
+  }, 'fails to get networkId: failed to find value for key: networkId (undefined key)'],
+  [{
+    source: 'fails to get registry address: `@parseIpfs(test,"", "env", "registry")` (invalid CID)',
+    bindings: { 
+      test: string('Qm'),
+    }
+  }, 'fails to get registry address: failed getting data from IPFS: Error: Request failed with status code 500 (invalid CID)'],
+  [{
+    source: 'returns links for non-string values: `@parseIpfs(test,"", "env")`',
+    bindings: { 
+      test: string('QmWP9roMebu5LyV6Q4RNooAw6yj18zKUqXqAc5Lxy1YVFh'),
+    }
+  }, 'returns links for non-string values: https://ipfs.autark.xyz:5001/api/v0/cat?arg=QmWP9roMebu5LyV6Q4RNooAw6yj18zKUqXqAc5Lxy1YVFh'],
 
   // External calls with multiple return values
   [{
