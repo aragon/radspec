@@ -240,6 +240,41 @@ const dataDecodeCases = [
     }
   }, 'Decentraland: Transfer ownership of the marketplace to 0x31AB1f92344e3277ce9404E4e097dab7514E6D27'],
   [{
+    source: 'NuCypher: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x0900f01000000000000000000000000031ab1f92344e3277ce9404e4e097dab7514e6d27') // upgrade(address), on NuCypher's knownFunctions
+    }
+  }, 'NuCypher: Upgrade target of this proxy contract to address 0x31AB1f92344e3277ce9404E4e097dab7514E6D27'],
+  [{
+    source: 'NuCypher: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x9afd9d78') // rollback(), on NuCypher's knownFunctions
+    }
+  }, 'NuCypher: Rollback this proxy contract to previous target'],
+  [{
+    source: 'NuCypher: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x715018a6') // renounceOwnership(), on NuCypher's knownFunctions
+    }
+  }, 'NuCypher: Relinquish control of this contract, making it non-ownable forever'],
+  [{
+    source: 'NuCypher: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xfe4b84df000000000000000000000000000000000000000000000000000000000000002a') // initialize(uint256), on NuCypher's knownFunctions
+    }
+  }, 'NuCypher: Initialize StakingEscrow and transfer 42 NuNits for rewards'],
+  [{
+    source: 'NuCypher: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x631722f2000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000014000000000000000000000000000000000000000000000000000000000000001e') // setFeeRateRange(uint128,uint128,uint128), on NuCypher's knownFunctions
+    }
+  }, 'NuCypher: Set minimum, default & maximum fee rate for all stakers and all policies (global fee range) to (10, 20, 30)'],
+  [{
     source: 'Transfer: `@radspec(addr, data)`',
     bindings: {
       addr: address('0x960b236a07cf122663c4303350609a66a7b288c0'),
