@@ -1,22 +1,10 @@
+import { ethers } from 'ethers'
+
 import * as radspec from '../../src'
-import web3Utils from 'web3-utils'
 
 const expression = '`@toUtf8(gretting)` world.'
 const call = {
-  abi: [
-    {
-      name: 'sayHi',
-      constant: false,
-      type: 'function',
-      inputs: [
-        {
-          name: 'gretting',
-          type: 'bytes'
-        }
-      ],
-      outputs: []
-    }
-  ],
+  abi: ['function sayHi(bytes gretting) public'],
   transaction: {
     data: '0x2e8dedd00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
   }
@@ -26,7 +14,7 @@ const options = {
     toUtf8: () => async (hex) => {
       return {
         type: 'string',
-        value: web3Utils.toUtf8(hex)
+        value: ethers.toUtf8String(hex)
       }
     }
   }
