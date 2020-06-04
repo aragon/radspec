@@ -10,7 +10,7 @@
 /**
  * @module radspec
  */
-import ABI from 'web3-eth-abi'
+import { ethers } from 'ethers'
 import { defaultHelpers } from './helpers'
 import { evaluateRaw } from './lib'
 
@@ -50,34 +50,29 @@ import { evaluateRaw } from './lib'
  * @param {string} call.transaction.to The destination address for this transaction
  * @param {string} call.transaction.data The transaction data
  * @param {?Object} options An options object
- * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
+ * @param {?ethers.providers.Provider} options.provider Ethers provider
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?Object} options.userHelpers User defined helpers
  * @return {Promise<string>} The result of the evaluation
  */
 function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
-  // Get method ID
-  const methodId = call.transaction.data.substr(0, 10)
+  // Create ethers interface object
+  const ethersInterface = new ethers.utils.Interface(call.abi)
 
-  // Find method ABI
-  const method = call.abi.find((abi) =>
-    abi.type === 'function' &&
-    methodId === ABI.encodeFunctionSignature(abi))
-
-  // Decode parameters
-  const parameterValues = ABI.decodeParameters(
-    method.inputs,
-    '0x' + call.transaction.data.substr(10)
+  // Parse as an ethers TransactionDescription
+  const { args, functionFragment } = ethersInterface.parseTransaction(
+    call.transaction
   )
-  const parameters = method.inputs.reduce((parameters, input) =>
-    Object.assign(
-      parameters, {
+
+  const parameters = functionFragment.inputs.reduce(
+    (parameters, input) =>
+      Object.assign(parameters, {
         [input.name]: {
           type: input.type,
-          value: parameterValues[input.name]
+          value: args[input.name]
         }
       }
-    ), {})
+      ), {})
 
   const availableHelpers = { ...defaultHelpers, ...userHelpers }
 

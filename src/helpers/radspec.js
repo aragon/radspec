@@ -1,5 +1,5 @@
-import ABI from 'web3-eth-abi'
-import { keccak256 } from 'web3-utils'
+import { ethers } from 'ethers'
+
 import MethodRegistry from './lib/methodRegistry'
 import { evaluateRaw } from '../lib/'
 import { knownFunctions } from '../data/'
@@ -10,21 +10,21 @@ const makeUnknownFunctionNode = (methodId) => ({
 })
 
 const getSig = (fn) =>
-  keccak256(fn).substr(0, 10)
+  ethers.utils.keccak256(ethers.utils.toUtf8Bytes(fn)).substr(0, 10)
 
 // Convert from the knownFunctions data format into the needed format
 // Input: { "signature(type1,type2)": "Its radspec string", ... }
 // Output: { "0xabcdef12": { "sig": "signature(type1,type2)", "source": "Its radspec string" }, ...}
-const processFunctions = (functions) => (
+const processFunctions = (functions) =>
   Object.keys(functions).reduce(
-    (acc, key) => (
-      {
-        [getSig(key)]: { source: functions[key], sig: key },
-        ...acc
-      }
-    ), {})
-)
-export default (eth, evaluator) =>
+    (acc, key) => ({
+      [getSig(key)]: { source: functions[key], sig: key },
+      ...acc
+    }),
+    {}
+  )
+
+export default (provider, evaluator) =>
   /**
    * Interpret calldata using radspec recursively. If the function signature is not in the package's known
    * functions, it fallbacks to looking for the function name using github.com/parity-contracts/signature-registry
@@ -48,53 +48,46 @@ export default (eth, evaluator) =>
     if (!fn) {
       // Even if we pass the ETH object, if it is not on mainnet it will use Aragon's ETH mainnet node
       // As the registry is the only available on mainnet
-      const registry = new MethodRegistry({ networkId: '1', eth })
-      const result = await registry.lookup(methodId)
+      const registry = new MethodRegistry({ networkId: '1', provider })
 
-      if (result) {
+      try {
+        const result = await registry.lookup(methodId)
         const { name } = registry.parse(result)
         return {
           type: 'string',
           value: name // TODO: should we decode and print the arguments as well?
         }
-      } else {
+      } catch {
         return makeUnknownFunctionNode(methodId)
       }
     }
     // If the function was found in local radspec registry. Decode and evaluate.
     const { source, sig } = fn
 
-    // get the array of input types from the function signature
-    const inputString = sig.replace(')', '').split('(')[1]
+    const fragment = ethers.utils.FunctionFragment.from(sig)
 
-    let parameters = []
+    const ethersInterface = new ethers.utils.Interface([fragment])
 
-    // If the function has parameters
-    if (inputString !== '') {
-      const inputs = inputString.split(',')
+    // Decode parameters
+    const args = ethersInterface.decodeFunctionData(fragment.name, data)
 
-      // Decode parameters
-      const parameterValues = ABI.decodeParameters(inputs, '0x' + data.substr(10))
-      parameters = inputs.reduce((acc, input, i) => (
-        {
-          [`$${i + 1}`]: {
-            type: input,
-            value: parameterValues[i]
-          },
-          ...acc
-        }), {})
-    }
+    const parameters = fragment.inputs.reduce(
+      (parameters, input, index) =>
+        Object.assign(parameters, {
+          [`$${index + 1}`]: {
+            type: input.type,
+            value: args[index]
+          }
+        }),
+      {}
+    )
 
     return {
       type: 'string',
-      value: await evaluateRaw(
-        source,
-        parameters,
-        {
-          eth,
-          availableHelpers: evaluator.helpers.getHelpers(),
-          to: addr
-        }
-      )
+      value: await evaluateRaw(source, parameters, {
+        provider,
+        availableHelpers: evaluator.helpers.getHelpers(),
+        to: addr
+      })
     }
   }

@@ -1,4 +1,4 @@
-import BN from 'bn.js'
+import { BigNumber } from 'ethers'
 import { formatBN, tenPow } from './lib/formatBN'
 
 export default () =>
@@ -11,11 +11,15 @@ export default () =>
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
   async (value, base = tenPow(18), precision = 2) => {
-    const valueBn = new BN(value)
-    const baseBn = new BN(base)
+    const valueBn = BigNumber.from(value)
+    const baseBn = BigNumber.from(base)
 
     const oneHundred = tenPow(2)
-    const formattedAmount = formatBN(valueBn.mul(oneHundred), baseBn, Number(precision))
+    const formattedAmount = formatBN(
+      valueBn.mul(oneHundred),
+      baseBn,
+      Number(precision)
+    )
 
     return {
       type: 'string',

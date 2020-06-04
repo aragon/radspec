@@ -1,29 +1,10 @@
 // From: https://github.com/danfinlay/eth-method-registry
+import { ethers } from 'ethers'
 
-import Eth from 'web3-eth'
 import { DEFAULT_ETH_NODE } from '../../defaults'
 
-/* eslint-disable key-spacing, quotes */
 const REGISTRY_LOOKUP_ABI = [
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "bytes4"
-      }
-    ],
-    "name": "entries",
-    "outputs":
-    [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "payable": false,
-    "type": "function"
-  }
+  'function entries(bytes4) public view returns (string)'
 ]
 
 // networkId -> registry address
@@ -33,14 +14,16 @@ const REGISTRY_MAP = {
 
 export default class MethodRegistry {
   constructor (opts = {}) {
-    this.eth = opts.eth || new Eth(DEFAULT_ETH_NODE)
+    this.provider =
+      opts.provider || new ethers.providers.WebSocketProvider(DEFAULT_ETH_NODE)
     this.network = opts.network || '1'
   }
 
-  // !!! This function can mutate `this.eth`
+  // !!! This function can mutate `this.provider`
   async initRegistry () {
-    if (await this.eth.net.getId() !== '1') {
-      this.eth = new Eth(DEFAULT_ETH_NODE)
+    const network = await this.provider.getNetwork()
+    if (network.chainId !== 1) {
+      this.provider = new ethers.providers.WebSocketProvider(DEFAULT_ETH_NODE)
     }
 
     const address = REGISTRY_MAP[this.network]
@@ -49,7 +32,11 @@ export default class MethodRegistry {
       throw new Error('No method registry found on the requested network.')
     }
 
-    this.registry = new this.eth.Contract(REGISTRY_LOOKUP_ABI, address)
+    this.registry = new ethers.Contract(
+      address,
+      REGISTRY_LOOKUP_ABI,
+      this.provider
+    )
   }
 
   async lookup (sigBytes) {
@@ -57,20 +44,22 @@ export default class MethodRegistry {
       await this.initRegistry()
     }
 
-    return this.registry.methods.entries(sigBytes).call()
+    return this.registry.entries(sigBytes)
   }
 
   parse (signature) {
-    // TODO: Throw if there are unknown types in the signature or there if is any chars after the closing parenthesis
-    let name = signature.match(/^.+(?=\()/)[0]
-    name = name.charAt(0).toUpperCase() + name.slice(1)
-      .split(/(?=[A-Z])/).join(' ')
-
-    const args = signature.match(/\(.+\)/)[0].slice(1, -1).split(',')
+    const fragment = ethers.utils.FunctionFragment.from(signature)
 
     return {
-      name,
-      args: args.map((arg) => { return { type: arg } })
+      name:
+        fragment.name.charAt(0).toUpperCase() +
+        fragment.name
+          .slice(1)
+          .split(/(?=[A-Z])/)
+          .join(' '),
+      args: fragment.inputs.map((input) => {
+        return { type: input.type }
+      })
     }
   }
 }

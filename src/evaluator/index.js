@@ -2,10 +2,8 @@
  * @module radspec/evaluator
  */
 
-import ABI from 'web3-eth-abi'
-import Eth from 'web3-eth'
-import Web3Utils from 'web3-utils'
-import BN from 'bn.js'
+import { ethers, BigNumber } from 'ethers'
+
 import types from '../types'
 import HelperManager from '../helpers/HelperManager'
 import { DEFAULT_ETH_NODE } from '../defaults'
@@ -24,15 +22,18 @@ class TypedValue {
     this.type = type
     this.value = value
 
-    if (types.isInteger(this.type) && !BN.isBN(this.value)) {
-      this.value = new BN(this.value)
+    if (
+      types.isInteger(this.type) &&
+      !BigNumber.isBigNumber(this.value)
+    ) {
+      this.value = BigNumber.from(this.value)
     }
 
     if (this.type === 'address') {
-      if (!Web3Utils.isAddress(this.value)) {
+      if (!ethers.utils.isAddress(this.value)) {
         throw new Error(`Invalid address "${this.value}"`)
       }
-      this.value = Web3Utils.toChecksumAddress(this.value)
+      this.value = ethers.utils.getAddress(this.value)
     }
   }
 
@@ -54,20 +55,34 @@ class TypedValue {
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
  * @param {?Object} options.availablehelpers Available helpers
- * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
+ * @param {?ethers.providers.Provider} options.provider Ethers provider
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?string} options.to The destination address for this expression's transaction
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
  */
 export class Evaluator {
-  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, from, to, value = '0', data } = {}) {
+  constructor (
+    ast,
+    bindings,
+    {
+      availableHelpers = {},
+      provider,
+      ethNode,
+      from,
+      to,
+      value = '0',
+      data
+    } = {}
+  ) {
     this.ast = ast
     this.bindings = bindings
-    this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE)
+    this.provider =
+      provider ||
+      new ethers.providers.WebSocketProvider(ethNode || DEFAULT_ETH_NODE)
     this.from = from && new TypedValue('address', from)
     this.to = to && new TypedValue('address', to)
-    this.value = new TypedValue('uint', new BN(value))
+    this.value = new TypedValue('uint', BigNumber.from(value))
     this.data = data && new TypedValue('bytes', data)
     this.helpers = new HelperManager(availableHelpers)
   }
@@ -79,9 +94,7 @@ export class Evaluator {
    * @return {Promise<Array<string>>}
    */
   async evaluateNodes (nodes) {
-    return Promise.all(
-      nodes.map(this.evaluateNode.bind(this))
-    )
+    return Promise.all(nodes.map(this.evaluateNode.bind(this)))
   }
 
   /**
@@ -129,16 +142,21 @@ export class Evaluator {
       const right = await this.evaluateNode(node.right)
 
       // String concatenation
-      if ((left.type === 'string' ||
-        right.type === 'string') &&
-        node.operator === 'PLUS') {
-        return new TypedValue('string', left.value.toString() + right.value.toString())
+      if (
+        (left.type === 'string' || right.type === 'string') &&
+        node.operator === 'PLUS'
+      ) {
+        return new TypedValue(
+          'string',
+          left.value.toString() + right.value.toString()
+        )
       }
 
       // TODO Additionally check that the type is signed if subtracting
-      if (!types.isInteger(left.type) ||
-        !types.isInteger(right.type)) {
-        this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer types "${left.type}" and "${right.type}"`)
+      if (!types.isInteger(left.type) || !types.isInteger(right.type)) {
+        this.panic(
+          `Cannot evaluate binary expression "${node.operator}" for non-integer types "${left.type}" and "${right.type}"`
+        )
       }
 
       switch (node.operator) {
@@ -166,26 +184,24 @@ export class Evaluator {
       let leftValue = left.value
       let rightValue = right.value
 
-      const bothTypesAddress = (left, right) => (
+      const bothTypesAddress = (left, right) =>
         // isAddress is true if type is address or bytes with size less than 20
-        types.isAddress(left.type) &&
-        types.isAddress(right.type)
-      )
+        types.isAddress(left.type) && types.isAddress(right.type)
 
-      const bothTypesBytes = (left, right) => (
+      const bothTypesBytes = (left, right) =>
         types.types.bytes.isType(left.type) &&
         types.types.bytes.isType(right.type)
-      )
 
-      // Conversion to BN for comparison will happen if:
+      // Conversion to BigNumber for comparison will happen if:
       // - Both types are addresses or bytes of any size (can be different sizes)
       // - If one of the types is an address and the other bytes with size less than 20
       if (bothTypesAddress(left, right) || bothTypesBytes(left, right)) {
-        leftValue = Web3Utils.toBN(leftValue)
-        rightValue = Web3Utils.toBN(rightValue)
-      } else if (!types.isInteger(left.type) ||
-        !types.isInteger(right.type)) {
-        this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer or fixed-size bytes types "${left.type}" and "${right.type}"`)
+        leftValue = BigNumber.from(leftValue)
+        rightValue = BigNumber.from(rightValue)
+      } else if (!types.isInteger(left.type) || !types.isInteger(right.type)) {
+        this.panic(
+          `Cannot evaluate binary expression "${node.operator}" for non-integer or fixed-size bytes types "${left.type}" and "${right.type}"`
+        )
       }
 
       switch (node.operator) {
@@ -237,43 +253,51 @@ export class Evaluator {
         target = await this.evaluateNode(node.target)
       }
 
-      if (target.type !== 'bytes20' &&
-        target.type !== 'address') {
+      if (target.type !== 'bytes20' && target.type !== 'address') {
         this.panic('Target of call expression was not an address')
-      } else if (!Web3Utils.checkAddressChecksum(target.value)) {
+      } else if (!ethers.utils.getAddress(target.value)) {
         this.panic(`Checksum failed for address "${target.value}"`)
       }
 
       const inputs = await this.evaluateNodes(node.inputs)
       const outputs = node.outputs
-      const selectedReturnValueIndex = outputs.findIndex((output) => output.selected)
+      const selectedReturnValueIndex = outputs.findIndex(
+        (output) => output.selected
+      )
       if (selectedReturnValueIndex === -1) {
-        this.panic(`No selected return value for function call "${node.callee}"`)
+        this.panic(
+          `No selected return value for function call "${node.callee}"`
+        )
       }
       const returnType = outputs[selectedReturnValueIndex].type
 
-      const call = ABI.encodeFunctionCall({
-        name: node.callee,
-        type: 'function',
+      const ethersInterface = new ethers.utils.Interface([
+        {
+          name: node.callee,
+          type: 'function',
+          inputs: inputs.map(({ type }) => ({
+            type
+          })),
+          outputs: outputs.map(({ type }) => ({
+            type
+          })),
+          stateMutability: 'view'
+        }
+      ])
 
-        inputs: inputs.map(({ type }) => ({
-          type,
-          // web3.js 1.x requires the inputs to have names, otherwise it assumes the type is a tuple
-          // We can remove this if web3.js 1.x fixes this, or we upgrade to a newer major version
-          // For reference: this is the problematic bit in web3.js:
-          // https://github.com/ethereum/web3.js/blob/7d1b0eab31ff6b52c170dedc172decebea0a0217/packages/web3-eth-abi/src/index.js#L110
-          name: 'nonEmptyName'
-        }))
-      }, inputs.map((input) => input.value.toString()))
+      const call = ethersInterface.encodeFunctionData(
+        node.callee,
+        inputs.map((input) => input.value.toString())
+      )
 
-      return this.eth.call({
+      const data = await this.provider.call({
         to: target.value,
         data: call
-      }).then(
-        (data) => ABI.decodeParameters(outputs.map((item) => item.type), data)
-      ).then(
-        (returnData) => new TypedValue(returnType, returnData[selectedReturnValueIndex])
-      )
+      })
+
+      const decodeData = ethersInterface.decodeFunctionResult(node.callee, data)
+
+      return new TypedValue(returnType, decodeData[selectedReturnValueIndex])
     }
 
     if (node.type === 'HelperFunction') {
@@ -284,19 +308,18 @@ export class Evaluator {
       }
 
       const inputs = await this.evaluateNodes(node.inputs)
-      const result = await this.helpers.execute(
-        helperName,
-        inputs,
-        {
-          eth: this.eth,
-          evaluator: this
-        }
-      )
+      const result = await this.helpers.execute(helperName, inputs, {
+        provider: this.provider,
+        evaluator: this
+      })
 
       return new TypedValue(result.type, result.value)
     }
 
-    if (node.type === 'PropertyAccessExpression' && node.target.value === 'msg') {
+    if (
+      node.type === 'PropertyAccessExpression' &&
+      node.target.value === 'msg'
+    ) {
       if (node.property === 'value') {
         return this.value
       }
@@ -309,7 +332,9 @@ export class Evaluator {
         return this.data
       }
 
-      this.panic(`Expecting value, sender or data property for msg identifier but got: ${node.property}`)
+      this.panic(
+        `Expecting value, sender or data property for msg identifier but got: ${node.property}`
+      )
     }
 
     if (node.type === 'Identifier') {
@@ -332,10 +357,8 @@ export class Evaluator {
    * @return {string}
    */
   async evaluate () {
-    return this.evaluateNodes(
-      this.ast.body
-    ).then(
-      (evaluatedNodes) => evaluatedNodes.join('')
+    return this.evaluateNodes(this.ast.body).then((evaluatedNodes) =>
+      evaluatedNodes.join('')
     )
   }
 
@@ -356,6 +379,8 @@ export class Evaluator {
  * @param {radspec/parser/AST} ast The AST to evaluate
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
+ * @param {?Object} options.availablehelpers Available helpers
+ * @param {?ethers.providers.Provider} options.provider Ethers provider
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?string} options.to The destination address for this expression's transaction
  * @return {string}
