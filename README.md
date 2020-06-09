@@ -95,9 +95,7 @@ radspec.evaluate(expression, call)
   .then(console.log) // => "Set the tree age to 10 years"
 ```
 
-or
-
-See more examples [here](examples) and in the [tests](test/examples/examples.js).
+Or see more examples [here](examples) and in the [tests](test/examples/examples.js).
 
 Please let us know if there's anything else you'd like Radspec to be able to evaluate by filing an [issue](https://github.com/aragon/radspec/issues/new)!
 

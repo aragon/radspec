@@ -2,9 +2,9 @@ import { ethers } from 'ethers'
 
 import * as radspec from '../../src'
 
-const expression = '`@toUtf8(gretting)` world.'
+const expression = '`@toUtf8(greeting)` world.'
 const call = {
-  abi: ['function sayHi(bytes gretting) public'],
+  abi: ['function sayHi(bytes greeting) public'],
   transaction: {
     data: '0x2e8dedd00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000548656c6c6f000000000000000000000000000000000000000000000000000000'
   }

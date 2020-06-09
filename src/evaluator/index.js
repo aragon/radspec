@@ -285,7 +285,7 @@ export class Evaluator {
         }
       ])
 
-      const call = ethersInterface.encodeFunctionData(
+      const txData = ethersInterface.encodeFunctionData(
         node.callee,
         inputs.map((input) => input.value.toString())
       )

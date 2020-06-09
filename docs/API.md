@@ -53,7 +53,7 @@ Evaluate a radspec expression (`source`) for a transaction (`call`)
 
 -   `source` **[string][7]** The radspec expression
 -   `call` **[Object][6]** The call that determines the bindings for this evaluation
-    -   `call.abi` **[Array][11]** The ABI used to decode the transaction data. Support [JSON and Human-Redable formats][13].
+    -   `call.abi` **[Array][11]** The ABI used to decode the transaction data. Supports [JSON and Human-Readable formats][13].
     -   `call.transaction` **[Object][6]** The transaction to decode for this evaluation
         -   `call.transaction.to` **[string][7]** The destination address for this transaction
         -   `call.transaction.data` **[string][7]** The transaction data
