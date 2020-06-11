@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
-    "date-fns": "^2.0.0",
+    "date-fns": "2.0.0-alpha.22",
+    "dayjs": "^1.8.28",
     "ethers": "^5.0.0-beta.190"
   },
   "ava": {

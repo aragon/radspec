@@ -53,14 +53,11 @@ Evaluate a radspec expression (`source`) for a transaction (`call`)
 
 -   `source` **[string][7]** The radspec expression
 -   `call` **[Object][6]** The call that determines the bindings for this evaluation
-    -   `call.abi` **[Array][11]** The ABI used to decode the transaction data. Supports [JSON and Human-Readable formats][13].
+    -   `call.abi` **[Array][11]** The ABI used to decode the transaction data. Supports [JSON and Human-Readable formats][12].
     -   `call.transaction` **[Object][6]** The transaction to decode for this evaluation
         -   `call.transaction.to` **[string][7]** The destination address for this transaction
         -   `call.transaction.data` **[string][7]** The transaction data
 -   `options` **[Object][6]?** An options object (optional, default `{}`)
-    -   `options.ethNode` **[string][7]?** The URL to an Ethereum node
-    -   `options.provider` **[ethers.providers.Provider][12]?** Ethers provider
-    -   `options.userHelpers` **[Object]?** User defined helpers
 
 **Examples**
 
@@ -105,6 +102,4 @@ Returns **[Promise][10]&lt;[string][7]>** The result of the evaluation
 
 [11]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[12]: https://docs-beta.ethers.io/api/providers/provider/
-
-[13]: https://docs-beta.ethers.io/api/utils/abi/interface/#Interface--creating-instances
+[12]: https://docs-beta.ethers.io/api/utils/abi/interface/#Interface--creating-instances
