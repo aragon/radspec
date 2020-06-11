@@ -7,7 +7,7 @@ import { DEFAULT_API_4BYTES } from '../defaults'
 
 const makeUnknownFunctionNode = (methodId) => ({
   type: 'string',
-  value: `Unknown function (${methodId})`,
+  value: `Unknown function (${methodId})`
 })
 
 const parse = (signature) => {
@@ -22,7 +22,7 @@ const parse = (signature) => {
         .join(' '),
     args: fragment.inputs.map((input) => {
       return { type: input.type }
-    }),
+    })
   }
 }
 
@@ -37,7 +37,7 @@ const processFunctions = (functions) =>
     const fragment = ethers.utils.FunctionFragment.from(key)
     return {
       [getSigHah(fragment.format())]: { source: functions[key], fragment },
-      ...acc,
+      ...acc
     }
   }, {})
 
@@ -71,13 +71,13 @@ export default (provider, evaluator) =>
           provider,
           network: registryAddress
             ? undefined
-            : (await provider.getNetwork()).chainId,
+            : (await provider.getNetwork()).chainId
         })
         const result = await registry.lookup(methodId)
         const { name } = parse(result)
         return {
           type: 'string',
-          value: name, // TODO: should we decode and print the arguments as well?
+          value: name // TODO: should we decode and print the arguments as well?
         }
       } catch {
         // Try fetching 4bytes API
@@ -88,7 +88,7 @@ export default (provider, evaluator) =>
           const { name } = parse(results[0].text_signature)
           return {
             type: 'string',
-            value: name,
+            value: name
           }
         }
         // Fallback to unknown function
@@ -107,9 +107,9 @@ export default (provider, evaluator) =>
       (parameters, input, index) => ({
         [`$${index + 1}`]: {
           type: input.type,
-          value: args[index],
+          value: args[index]
         },
-        ...parameters,
+        ...parameters
       }),
       {}
     )
@@ -119,7 +119,7 @@ export default (provider, evaluator) =>
       value: await evaluateRaw(source, parameters, {
         provider,
         availableHelpers: evaluator.helpers.getHelpers(),
-        to: addr,
-      }),
+        to: addr
+      })
     }
   }
