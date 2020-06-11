@@ -1,16 +1,19 @@
-import formatDate from 'date-fns/format'
+import dayjs from 'dayjs'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+
+dayjs.extend(advancedFormat)
 
 export default () =>
   /**
    * Format a timestamp as a string
    *
    * @param {*} timestamp Unix timestamp in seconds
-   * @param {string} [format='MMM. do y'] Format for the date, defaults to a format like "Jan. 1st 2000"
-   *                                      Uses unicode TR35 symbols; see https://date-fns.org/v2.0.0-alpha.22/docs/format
+   * @param {string} [format='MMM. Do YYYY'] Format for the date, defaults to a format like "Jan. 1st 2000"
+   *
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
-  async (timestamp, format = 'MMM. do y') =>
+  async (timestamp, format = 'MMM. Do YYYY') =>
     ({
       type: 'string',
-      value: formatDate(new Date(Number(timestamp) * 1000), format)
+      value: dayjs(new Date(Number(timestamp) * 1000)).format(format)
     })
