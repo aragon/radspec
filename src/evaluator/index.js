@@ -22,10 +22,7 @@ class TypedValue {
     this.type = type
     this.value = value
 
-    if (
-      types.isInteger(this.type) &&
-      !BigNumber.isBigNumber(this.value)
-    ) {
+    if (types.isInteger(this.type) && !BigNumber.isBigNumber(this.value)) {
       this.value = BigNumber.from(this.value)
     }
 
@@ -55,8 +52,7 @@ class TypedValue {
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
  * @param {?Object} options.availablehelpers Available helpers
- * @param {?ethers.providers.Provider} options.provider Ethers provider
- * @param {?string} options.ethNode The URL to an Ethereum node
+ * @param {?ethers.providers.Provider} options.provider EIP 1193 provider
  * @param {?string} options.to The destination address for this expression's transaction
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
@@ -65,21 +61,12 @@ export class Evaluator {
   constructor (
     ast,
     bindings,
-    {
-      availableHelpers = {},
-      provider,
-      ethNode,
-      from,
-      to,
-      value = '0',
-      data
-    } = {}
+    { availableHelpers = {}, provider, from, to, value = '0', data } = {}
   ) {
     this.ast = ast
     this.bindings = bindings
     this.provider =
-      provider ||
-      new ethers.providers.WebSocketProvider(ethNode || DEFAULT_ETH_NODE)
+      provider || new ethers.providers.WebSocketProvider(DEFAULT_ETH_NODE)
     this.from = from && new TypedValue('address', from)
     this.to = to && new TypedValue('address', to)
     this.value = new TypedValue('uint', BigNumber.from(value))
@@ -255,8 +242,8 @@ export class Evaluator {
 
       if (target.type !== 'bytes20' && target.type !== 'address') {
         this.panic('Target of call expression was not an address')
-      } else if (!ethers.utils.getAddress(target.value)) {
-        this.panic(`Checksum failed for address "${target.value}"`)
+      } else if (!ethers.utils.isAddress(target.value)) {
+        this.panic(`Invalid address "${this.value}"`)
       }
 
       const inputs = await this.evaluateNodes(node.inputs)
@@ -271,7 +258,7 @@ export class Evaluator {
       }
       const returnType = outputs[selectedReturnValueIndex].type
 
-      const ethersInterface = new ethers.utils.Interface([
+      const abi = [
         {
           name: node.callee,
           type: 'function',
@@ -283,7 +270,8 @@ export class Evaluator {
           })),
           stateMutability: 'view'
         }
-      ])
+      ]
+      const ethersInterface = new ethers.utils.Interface(abi)
 
       const txData = ethersInterface.encodeFunctionData(
         node.callee,
@@ -292,7 +280,7 @@ export class Evaluator {
 
       const data = await this.provider.call({
         to: target.value,
-        data: call
+        data: txData
       })
 
       const decodeData = ethersInterface.decodeFunctionResult(node.callee, data)
@@ -380,8 +368,7 @@ export class Evaluator {
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
  * @param {?Object} options.availablehelpers Available helpers
- * @param {?ethers.providers.Provider} options.provider Ethers provider
- * @param {?string} options.ethNode The URL to an Ethereum node
+ * @param {?ethers.providers.Provider} options.provider EIP 1193 provider
  * @param {?string} options.to The destination address for this expression's transaction
  * @return {string}
  */

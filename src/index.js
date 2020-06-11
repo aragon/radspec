@@ -22,19 +22,7 @@ import { evaluateRaw } from './lib'
  *
  * const expression = 'Will multiply `a` by 7 and return `a * 7`.'
  * const call = {
- *   abi: [{
- *     name: 'multiply',
- *     constant: false,
- *     type: 'function',
- *     inputs: [{
- *       name: 'a',
- *       type: 'uint256'
- *     }],
- *     outputs: [{
- *       name: 'd',
- *       type: 'uint256'
- *     }]
- *   }],
+ *   abi: ['function multiply(uint256 a) public view returns(uint256)'],
  *   transaction: {
  *     to: '0x8521742d3f456bd237e312d6e30724960f72517a',
  *     data: '0xc6888fa1000000000000000000000000000000000000000000000000000000000000007a'
@@ -50,8 +38,7 @@ import { evaluateRaw } from './lib'
  * @param {string} call.transaction.to The destination address for this transaction
  * @param {string} call.transaction.data The transaction data
  * @param {?Object} options An options object
- * @param {?ethers.providers.Provider} options.provider Ethers provider
- * @param {?string} options.ethNode The URL to an Ethereum node
+ * @param {?ethers.providers.Provider} options.provider EIP 1193 provider
  * @param {?Object} options.userHelpers User defined helpers
  * @return {Promise<string>} The result of the evaluation
  */
@@ -65,14 +52,15 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   )
 
   const parameters = functionFragment.inputs.reduce(
-    (parameters, input) =>
-      Object.assign(parameters, {
-        [input.name]: {
-          type: input.type,
-          value: args[input.name]
-        }
-      }
-      ), {})
+    (parameters, input) => ({
+      [input.name]: {
+        type: input.type,
+        value: args[input.name]
+      },
+      ...parameters
+    }),
+    {}
+  )
 
   const availableHelpers = { ...defaultHelpers, ...userHelpers }
 
@@ -80,18 +68,14 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   const { from, to, value, data } = call.transaction
 
   // Evaluate expression with bindings from the transaction data
-  return evaluateRaw(
-    source,
-    parameters,
-    {
-      ...options,
-      availableHelpers,
-      from,
-      to,
-      value,
-      data
-    }
-  )
+  return evaluateRaw(source, parameters, {
+    ...options,
+    availableHelpers,
+    from,
+    to,
+    value,
+    data
+  })
 }
 
 export default evaluate
