@@ -305,7 +305,7 @@ const helperCases = [
   [
     {
       source:
-        "Ethereum launched on a `@formatDate(date, 'EEEE')` in `@formatDate(date, 'MMMM yyyy')`",
+        "Ethereum launched on a `@formatDate(date, 'dddd')` in `@formatDate(date, 'MMMM YYYY')`",
       bindings: { date: int('1438269793') }
     },
     'Ethereum launched on a Thursday in July 2015'
@@ -528,6 +528,16 @@ const dataDecodeCases = [
       }
     },
     'Cast a Vote'
+  ],
+  [
+    {
+      source: 'Perform action: `@radspec(addr, data)`',
+      bindings: {
+        addr: address(),
+        data: bytes('0x0b30a8d7') // getLocators(address,uint256), from 4bytes api
+      }
+    },
+    'Perform action: Get Locators'
   ],
   [
     {

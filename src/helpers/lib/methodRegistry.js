@@ -16,24 +16,16 @@ export default class MethodRegistry {
   constructor (opts = {}) {
     this.provider =
       opts.provider || new ethers.providers.WebSocketProvider(DEFAULT_ETH_NODE)
-    this.network = opts.network || '1'
+    this.registryAddres = opts.registry || REGISTRY_MAP[opts.network]
   }
 
-  // !!! This function can mutate `this.provider`
   async initRegistry () {
-    const network = await this.provider.getNetwork()
-    if (network.chainId !== 1) {
-      this.provider = new ethers.providers.WebSocketProvider(DEFAULT_ETH_NODE)
-    }
-
-    const address = REGISTRY_MAP[this.network]
-
-    if (!address) {
-      throw new Error('No method registry found on the requested network.')
+    if (!this.registryAddres) {
+      throw new Error('No method registry found for the network.')
     }
 
     this.registry = new ethers.Contract(
-      address,
+      this.registryAddres,
       REGISTRY_LOOKUP_ABI,
       this.provider
     )
@@ -45,21 +37,5 @@ export default class MethodRegistry {
     }
 
     return this.registry.entries(sigBytes)
-  }
-
-  parse (signature) {
-    const fragment = ethers.utils.FunctionFragment.from(signature)
-
-    return {
-      name:
-        fragment.name.charAt(0).toUpperCase() +
-        fragment.name
-          .slice(1)
-          .split(/(?=[A-Z])/)
-          .join(' '),
-      args: fragment.inputs.map((input) => {
-        return { type: input.type }
-      })
-    }
   }
 }
