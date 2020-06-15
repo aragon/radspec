@@ -1,5 +1,5 @@
 {
-  "name": "@aragon/radspec",
+  "name": "radspec",
   "version": "2.0.0-rc.1",
   "description": "Radspec is a safe alternative to Ethereum's natspec",
   "main": "dist/index.js",
