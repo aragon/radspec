@@ -290,6 +290,13 @@ const dataDecodeCases = [
     }
   }, 'Transfer: Transfer 150 ANT to 0x31AB1f92344e3277ce9404E4e097dab7514E6D27'],
   [{
+    source: 'ApproveAndCall: `@radspec(addr, data)`',
+    bindings: {
+      addr: address('0x960b236a07cf122663c4303350609a66a7b288c0'),
+      data: bytes('0xcae9ca510000000000000000000000000256bf39b5f51c6b151edd897a1f2ab97a1c7aba0000000000000000000000000000000000000000000000056bc75e2d63100000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000') // approveAndCall(address,uint256,bytes), on knownFunctions requiring helpers
+    }
+  }, 'ApproveAndCall: Approve 0x0256bF39B5f51c6B151edd897a1f2ab97A1C7aBA to spend 100 ANT on your behalf and trigger a function in the contract at 0x0256bF39B5f51c6B151edd897a1f2ab97A1C7aBA'],
+  [{
     source: 'Cast a `@radspec(addr, data)`',
     bindings: {
       addr: address(),
