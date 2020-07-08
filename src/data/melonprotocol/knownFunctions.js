@@ -1,6 +1,6 @@
 export default {
   'registerAsset(address,string,string,string,uint,uint[],bytes4[])': 'Register new asset `$3` (`$2`) at `$1` (reserve min: `$5`)',
-  'registerExchangeAdapter(address,address,bool,bytes4[])': 'Register new adapter `$1` for exchange `$2`',
+  'registerExchangeAdapter(address,address,bool,bytes4[])': 'Register new adapter `$2` for exchange `$1`',
   'registerVersion(address,bytes32)': 'Register new version `$1`',
   'setIncentive(uint)': 'Set incentive to `$1`',
   'setPriceSource(address)': 'Set price source to `$1`',
