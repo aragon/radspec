@@ -248,6 +248,41 @@ const dataDecodeCases = [
     }
   }, 'Decentraland: Transfer ownership of the marketplace to 0x31AB1f92344e3277ce9404E4e097dab7514E6D27'],
   [{
+    source: 'Decentraland: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xc987336c000000000000000000000000f87e31492faf9a91b02ee0deaad50d51d56d5d4d00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000') // upgrade(address,bytes), on decentraland's knownFunctions
+    }
+  }, 'Decentraland: Upgrade the contract to 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'], 
+  [{
+    source: 'Decentraland: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x3659cfe6000000000000000000000000f87e31492faf9a91b02ee0deaad50d51d56d5d4d') // upgradeTo(address), on decentraland's knownFunctions
+    }
+  }, 'Decentraland: Upgrade the contract to 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'],
+  [{
+    source: 'Decentraland: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x4f1ef286000000000000000000000000f87e31492faf9a91b02ee0deaad50d51d56d5d4d00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000') // upgradeToAndCall(address,bytes), on decentraland's knownFunctions
+    }
+  }, 'Decentraland: Upgrade the contract to 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'],
+  [{
+    source: 'Decentraland: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x61a822f9000000000000000000000000F87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d') // setLandBalanceToken(address), on decentraland's knownFunctions
+    }
+  }, 'Decentraland: Set LAND balance token 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'],
+  [{
+    source: 'Decentraland: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xc95243d3000000000000000000000000F87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d') // setLandBalanceToken(address), on decentraland's knownFunctions
+    }
+  }, 'Decentraland: Set LAND balance token 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'],
+  [{
     source: 'NuCypher: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
