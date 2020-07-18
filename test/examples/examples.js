@@ -279,7 +279,7 @@ const dataDecodeCases = [
     source: 'Decentraland: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
-      data: bytes('0xc95243d3000000000000000000000000F87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d') // setLandBalanceToken(address), on decentraland's knownFunctions
+      data: bytes('0xc95243d3000000000000000000000000F87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d') // setEstateLandBalanceToken(address), on decentraland's knownFunctions
     }
   }, 'Decentraland: Set LAND balance token 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'],
   [{
