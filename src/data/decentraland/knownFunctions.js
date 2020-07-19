@@ -6,7 +6,7 @@ export default {
   'pause()': 'Pause contract',
   'unpause()': 'Unpause Contract`',
   'upgrade(address,bytes)': 'Upgrade the contract to `$1`',
-  'upgradeTo(address)' : 'Upgrade the contract to `$1`',
+  'upgradeTo(address)': 'Upgrade the contract to `$1`',
   'upgradeToAndCall(address,bytes)': 'Upgrade the contract to `$1`',
   'setLandBalanceToken(address)': 'Set LAND balance token `$1`',
   'setEstateLandBalanceToken(address)': 'Set LAND balance token `$1`'
