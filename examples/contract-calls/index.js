@@ -4,19 +4,7 @@ const expressions = [
   {
     expression: 'Allocate `_amount _token.symbol(): string`.',
     call: {
-      abi: [{
-        name: 'allocate',
-        constant: false,
-        type: 'function',
-        inputs: [{
-          name: '_token',
-          type: 'address'
-        }, {
-          name: '_amount',
-          type: 'uint256'
-        }],
-        outputs: []
-      }],
+      abi: ['function allocate(address _token, uint256 _amount) public view'],
       transaction: {
         data: '0xb78b52df000000000000000000000000960b236a07cf122663c4303350609a66a7b288c00000000000000000000000000000000000000000000000000000000000000064'
       }
@@ -25,19 +13,7 @@ const expressions = [
   {
     expression: 'Send `_amount` wei to `(_token.controller(): address).sale(): address` to buy `_token.symbol(): string`',
     call: {
-      abi: [{
-        name: 'allocate',
-        constant: false,
-        type: 'function',
-        inputs: [{
-          name: '_token',
-          type: 'address'
-        }, {
-          name: '_amount',
-          type: 'uint256'
-        }],
-        outputs: []
-      }],
+      abi: ['function allocate(address _token, uint256 _amount) public view'],
       transaction: {
         data: '0xb78b52df000000000000000000000000960b236a07cf122663c4303350609a66a7b288c00000000000000000000000000000000000000000000000000000000000000064'
       }

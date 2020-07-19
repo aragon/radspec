@@ -70,6 +70,13 @@ and
 }]
 ```
 
+Note you can also use [Human-Redable abis](https://blog.ricmoo.com/human-readable-contract-abis-in-ethers-js-141902f4d917). For the above example that would be:
+
+```json
+["function setAge(uint256 numYears) public view"]
+```
+---
+
 Write a simple tool using radspec to interpret this:
 
 ```js
@@ -88,7 +95,7 @@ radspec.evaluate(expression, call)
   .then(console.log) // => "Set the tree age to 10 years"
 ```
 
-See more examples [here](examples) and in the [tests](test/examples/examples.js).
+Or see more examples [here](examples) and in the [tests](test/examples/examples.js).
 
 Please let us know if there's anything else you'd like Radspec to be able to evaluate by filing an [issue](https://github.com/aragon/radspec/issues/new)!
 

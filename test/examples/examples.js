@@ -1,11 +1,10 @@
 import test from 'ava'
-import BN from 'bn.js'
+import { BigNumber, ethers } from 'ethers'
 import { evaluateRaw } from '../../src/lib'
 import { defaultHelpers } from '../../src/helpers'
 import { tenPow } from '../../src/helpers/lib/formatBN'
 import { ETH } from '../../src/helpers/lib/token'
 import knownFunctions from '../../src/data/knownFunctions'
-import { keccak256 } from 'web3-utils'
 
 const int = (value) => ({
   type: 'int256',
@@ -143,27 +142,27 @@ const helperCases = [
   }, 'Balance: 10 🦄'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
-    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('10000000000000000000') }
+    bindings: { token: address('0x6b175474e89094c44da98b954eedeac495271d0f'), balance: int('10000000000000000000') }
   }, 'Balance: 10 DAI'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
-    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000') }
+    bindings: { token: address('0x6b175474e89094c44da98b954eedeac495271d0f'), balance: int('1000000000000000') }
   }, 'Balance: 0.001 DAI'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
-    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1') }
+    bindings: { token: address('0x6b175474e89094c44da98b954eedeac495271d0f'), balance: int('1') }
   }, 'Balance: 0.000000000000000001 DAI'],
   [{
     source: 'Balance: `@tokenAmount(token, balance, true, 3)`',
-    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1') }
+    bindings: { token: address('0x6b175474e89094c44da98b954eedeac495271d0f'), balance: int('1') }
   }, 'Balance: ~0.000 DAI'],
   [{
     source: 'Balance: `@tokenAmount(token, balance, true, 3)`',
-    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000001') }
+    bindings: { token: address('0x6b175474e89094c44da98b954eedeac495271d0f'), balance: int('1000000000000000001') }
   }, 'Balance: ~1.000 DAI'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
-    bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000001') }
+    bindings: { token: address('0x6b175474e89094c44da98b954eedeac495271d0f'), balance: int('1000000000000000001') }
   }, 'Balance: 1.000000000000000001 DAI'],
   [{
     source: 'Balance: `@tokenAmount(self.token(): address, balance)`',
@@ -200,16 +199,16 @@ const helperCases = [
   }, 'Hello Douglas Adams, 42 is the definitive response.'],
   [{
     source: 'Change required support to `@formatPct(support)`%',
-    bindings: { support: int((new BN(50)).mul(tenPow(16))) } // 50 * 10^16
+    bindings: { support: int((BigNumber.from(50)).mul(tenPow(16))) } // 50 * 10^16
   }, 'Change required support to 50%'],
   [{
     source: 'Change required support to `@formatPct(support, 10 ^ 18, 1)`%',
-    bindings: { support: int((new BN(40)).mul(tenPow(16)).add((new BN(43)).mul(tenPow(14)))) } // 40 * 10^16 + 43 * 10^14
+    bindings: { support: int((BigNumber.from(40)).mul(tenPow(16)).add((BigNumber.from(43)).mul(tenPow(14)))) } // 40 * 10^16 + 43 * 10^14
   }, 'Change required support to ~40.4%'],
   [{
     source: 'The genesis block is #`@getBlock(n)`',
     bindings: { n: int(0) },
-    options: { userHelpers: { getBlock: (eth) => async (n) => ({ type: 'string', value: (await eth.getBlock(n)).number }) } }
+    options: { userHelpers: { getBlock: (provider) => async (n) => ({ type: 'string', value: (await provider.getBlock(n.toNumber())).number }) } }
   }, 'The genesis block is #0'],
   [{
     source: 'Bar `@bar(shift)` foo `@foo(n)`',
@@ -339,12 +338,19 @@ const dataDecodeCases = [
     }
   }, 'Cast a Vote'],
   [{
+    source: 'Cast a `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xdf133bca') // vote(uint256,bool,bool), from on-chain registry
+    }
+  }, 'Cast a Vote'],
+  [{
     source: 'Perform action: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
-      data: bytes('0x12345678') // random signature
+      data: bytes('0x0b30a8d7') // getLocators(address,uint256), from 4bytes api
     }
-  }, 'Perform action: Unknown function (0x12345678)'],
+  }, 'Perform action: Get Locators'],
   [{
     source: 'Perform action: `@radspec(addr, data)`',
     bindings: {
@@ -452,7 +458,7 @@ const cases = [
   }, 'Vote nay'],
   [{
     source: 'Token `_amount / 10^18`',
-    bindings: { _amount: int(new BN(10).mul(new BN(10).pow(new BN(18)))) }
+    bindings: { _amount: int(BigNumber.from(10).mul(BigNumber.from(10).pow(BigNumber.from(18)))) }
   }, 'Token 10'],
   [{
     source: "`_bool ? 'h' + _var + 'o' : 'bye'`",
@@ -503,7 +509,7 @@ const cases = [
   [{
     source: 'Performs a call to `@radspec(contract, msg.data)`',
     bindings: { contract: address('0x960b236A07cf122663c4303350609A66A7B288C0') },
-    options: { data: keccak256(Object.keys(knownFunctions)[3]).slice(0, 10) }
+    options: { data: ethers.utils.keccak256(ethers.utils.toUtf8Bytes(Object.keys(knownFunctions)[3])).slice(0, 10) }
   }, `Performs a call to ${Object.values(knownFunctions)[3]}`],
 
   ...comparisonCases,

@@ -10,7 +10,7 @@
 /**
  * @module radspec
  */
-import ABI from 'web3-eth-abi'
+import { ethers } from 'ethers'
 import { defaultHelpers } from './helpers'
 import { evaluateRaw } from './lib'
 
@@ -22,19 +22,7 @@ import { evaluateRaw } from './lib'
  *
  * const expression = 'Will multiply `a` by 7 and return `a * 7`.'
  * const call = {
- *   abi: [{
- *     name: 'multiply',
- *     constant: false,
- *     type: 'function',
- *     inputs: [{
- *       name: 'a',
- *       type: 'uint256'
- *     }],
- *     outputs: [{
- *       name: 'd',
- *       type: 'uint256'
- *     }]
- *   }],
+ *   abi: ['function multiply(uint256 a) public view returns(uint256)'],
  *   transaction: {
  *     to: '0x8521742d3f456bd237e312d6e30724960f72517a',
  *     data: '0xc6888fa1000000000000000000000000000000000000000000000000000000000000007a'
@@ -50,34 +38,29 @@ import { evaluateRaw } from './lib'
  * @param {string} call.transaction.to The destination address for this transaction
  * @param {string} call.transaction.data The transaction data
  * @param {?Object} options An options object
- * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
- * @param {?string} options.ethNode The URL to an Ethereum node
+ * @param {?ethers.providers.Provider} options.provider EIP 1193 provider
  * @param {?Object} options.userHelpers User defined helpers
  * @return {Promise<string>} The result of the evaluation
  */
 function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
-  // Get method ID
-  const methodId = call.transaction.data.substr(0, 10)
+  // Create ethers interface object
+  const ethersInterface = new ethers.utils.Interface(call.abi)
 
-  // Find method ABI
-  const method = call.abi.find((abi) =>
-    abi.type === 'function' &&
-    methodId === ABI.encodeFunctionSignature(abi))
-
-  // Decode parameters
-  const parameterValues = ABI.decodeParameters(
-    method.inputs,
-    '0x' + call.transaction.data.substr(10)
+  // Parse as an ethers TransactionDescription
+  const { args, functionFragment } = ethersInterface.parseTransaction(
+    call.transaction
   )
-  const parameters = method.inputs.reduce((parameters, input) =>
-    Object.assign(
-      parameters, {
-        [input.name]: {
-          type: input.type,
-          value: parameterValues[input.name]
-        }
-      }
-    ), {})
+
+  const parameters = functionFragment.inputs.reduce(
+    (parameters, input) => ({
+      [input.name]: {
+        type: input.type,
+        value: args[input.name]
+      },
+      ...parameters
+    }),
+    {}
+  )
 
   const availableHelpers = { ...defaultHelpers, ...userHelpers }
 
@@ -85,18 +68,14 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   const { from, to, value, data } = call.transaction
 
   // Evaluate expression with bindings from the transaction data
-  return evaluateRaw(
-    source,
-    parameters,
-    {
-      ...options,
-      availableHelpers,
-      from,
-      to,
-      value,
-      data
-    }
-  )
+  return evaluateRaw(source, parameters, {
+    ...options,
+    availableHelpers,
+    from,
+    to,
+    value,
+    data
+  })
 }
 
 export default evaluate

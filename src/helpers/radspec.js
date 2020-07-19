@@ -1,39 +1,57 @@
-import ABI from 'web3-eth-abi'
-import { keccak256 } from 'web3-utils'
+import { ethers } from 'ethers'
+
 import MethodRegistry from './lib/methodRegistry'
 import { evaluateRaw } from '../lib/'
 import { knownFunctions } from '../data/'
+import { DEFAULT_API_4BYTES } from '../defaults'
 
 const makeUnknownFunctionNode = (methodId) => ({
   type: 'string',
   value: `Unknown function (${methodId})`
 })
 
-const getSig = (fn) =>
-  keccak256(fn).substr(0, 10)
+const parse = (signature) => {
+  const fragment = ethers.utils.FunctionFragment.from(signature)
+
+  return {
+    name:
+      fragment.name.charAt(0).toUpperCase() +
+      fragment.name
+        .slice(1)
+        .split(/(?=[A-Z])/)
+        .join(' '),
+    args: fragment.inputs.map((input) => {
+      return { type: input.type }
+    })
+  }
+}
+
+// Hash signature with Ethereum Identity and silce bytes
+const getSigHah = (sig) => ethers.utils.hexDataSlice(ethers.utils.id(sig), 0, 4)
 
 // Convert from the knownFunctions data format into the needed format
 // Input: { "signature(type1,type2)": "Its radspec string", ... }
-// Output: { "0xabcdef12": { "sig": "signature(type1,type2)", "source": "Its radspec string" }, ...}
-const processFunctions = (functions) => (
-  Object.keys(functions).reduce(
-    (acc, key) => (
-      {
-        [getSig(key)]: { source: functions[key], sig: key },
-        ...acc
-      }
-    ), {})
-)
-export default (eth, evaluator) =>
+// Output: { "0xabcdef12": { "fragment": FunctionFragment, "source": "Its radspec string" }, ...}
+const processFunctions = (functions) =>
+  Object.keys(functions).reduce((acc, key) => {
+    const fragment = ethers.utils.FunctionFragment.from(key)
+    return {
+      [getSigHah(fragment.format())]: { source: functions[key], fragment },
+      ...acc
+    }
+  }, {})
+
+export default (provider, evaluator) =>
   /**
    * Interpret calldata using radspec recursively. If the function signature is not in the package's known
    * functions, it fallbacks to looking for the function name using github.com/parity-contracts/signature-registry
    *
    * @param {address} addr The target address of the call
    * @param {bytes} data The calldata of the call
+   * @param {string} [registryAddress] The registry address to lookup descriptions
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
-  async (addr, data) => {
+  async (addr, data, registryAddress) => {
     const functions = processFunctions(knownFunctions)
 
     if (data.length < 10) {
@@ -44,57 +62,64 @@ export default (eth, evaluator) =>
     const methodId = data.substr(0, 10)
     const fn = functions[methodId]
 
-    // If function is not a known function, execute fallback checking Parity's on-chain signature registry
+    // If function is not a known function
     if (!fn) {
-      // Even if we pass the ETH object, if it is not on mainnet it will use Aragon's ETH mainnet node
-      // As the registry is the only available on mainnet
-      const registry = new MethodRegistry({ networkId: '1', eth })
-      const result = await registry.lookup(methodId)
-
-      if (result) {
-        const { name } = registry.parse(result)
+      try {
+        // Try checking on-chain signature registry
+        const registry = new MethodRegistry({
+          registryAddress,
+          provider,
+          network: registryAddress
+            ? undefined
+            : (await provider.getNetwork()).chainId
+        })
+        const result = await registry.lookup(methodId)
+        const { name } = parse(result)
         return {
           type: 'string',
           value: name // TODO: should we decode and print the arguments as well?
         }
-      } else {
+      } catch {
+        // Try fetching 4bytes API
+        const { results } = await ethers.utils.fetchJson(
+          `${DEFAULT_API_4BYTES}?hex_signature=${methodId}`
+        )
+        if (Array.isArray(results) && results.length > 0) {
+          const { name } = parse(results[0].text_signature)
+          return {
+            type: 'string',
+            value: name
+          }
+        }
+        // Fallback to unknown function
         return makeUnknownFunctionNode(methodId)
       }
     }
     // If the function was found in local radspec registry. Decode and evaluate.
-    const { source, sig } = fn
+    const { source, fragment } = fn
 
-    // get the array of input types from the function signature
-    const inputString = sig.replace(')', '').split('(')[1]
+    const ethersInterface = new ethers.utils.Interface([fragment])
 
-    let parameters = []
+    // Decode parameters
+    const args = ethersInterface.decodeFunctionData(fragment.name, data)
 
-    // If the function has parameters
-    if (inputString !== '') {
-      const inputs = inputString.split(',')
-
-      // Decode parameters
-      const parameterValues = ABI.decodeParameters(inputs, '0x' + data.substr(10))
-      parameters = inputs.reduce((acc, input, i) => (
-        {
-          [`$${i + 1}`]: {
-            type: input,
-            value: parameterValues[i]
-          },
-          ...acc
-        }), {})
-    }
+    const parameters = fragment.inputs.reduce(
+      (parameters, input, index) => ({
+        [`$${index + 1}`]: {
+          type: input.type,
+          value: args[index]
+        },
+        ...parameters
+      }),
+      {}
+    )
 
     return {
       type: 'string',
-      value: await evaluateRaw(
-        source,
-        parameters,
-        {
-          eth,
-          availableHelpers: evaluator.helpers.getHelpers(),
-          to: addr
-        }
-      )
+      value: await evaluateRaw(source, parameters, {
+        provider,
+        availableHelpers: evaluator.helpers.getHelpers(),
+        to: addr
+      })
     }
   }

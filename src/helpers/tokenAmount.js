@@ -1,9 +1,13 @@
-import BN from 'bn.js'
-import { toUtf8 } from 'web3-utils'
-import { ERC20_SYMBOL_BYTES32_ABI, ERC20_SYMBOL_DECIMALS_ABI, ETH } from './lib/token'
+import { ethers, BigNumber } from 'ethers'
+
+import {
+  ERC20_SYMBOL_BYTES32_ABI,
+  ERC20_SYMBOL_DECIMALS_ABI,
+  ETH
+} from './lib/token'
 import { formatBN, tenPow } from './lib/formatBN'
 
-export default (eth) =>
+export default (provider) =>
   /**
    * Format token amounts taking decimals into account
    *
@@ -14,36 +18,49 @@ export default (eth) =>
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
   async (tokenAddress, amount, showSymbol = true, precision) => {
-    const amountBn = new BN(amount)
+    const amountBn = BigNumber.from(amount)
     const fixed = !!precision
 
     let decimals
     let symbol
 
     if (tokenAddress === ETH) {
-      decimals = new BN(18)
+      decimals = BigNumber.from(18)
       if (showSymbol) {
         symbol = 'ETH'
       }
     } else {
-      let token = new eth.Contract(ERC20_SYMBOL_DECIMALS_ABI, tokenAddress)
+      let token = new ethers.Contract(
+        tokenAddress,
+        ERC20_SYMBOL_DECIMALS_ABI,
+        provider
+      )
 
-      decimals = new BN(await token.methods.decimals().call())
+      decimals = BigNumber.from(await token.decimals())
       if (showSymbol) {
         try {
-          symbol = await token.methods.symbol().call() || ''
+          symbol = (await token.symbol()) || ''
         } catch (err) {
           // Some tokens (e.g. DS-Token) use bytes32 for their symbol()
-          token = new eth.Contract(ERC20_SYMBOL_BYTES32_ABI, tokenAddress)
-          symbol = await token.methods.symbol().call() || ''
-          symbol = symbol && toUtf8(symbol)
+          token = new ethers.Contract(
+            tokenAddress,
+            ERC20_SYMBOL_BYTES32_ABI,
+            provider
+          )
+          symbol = (await token.symbol()) || ''
+          symbol = symbol && ethers.utils.toUtf8String(symbol)
         }
       }
     }
 
     precision = precision || decimals
 
-    const formattedAmount = formatBN(amountBn, tenPow(decimals), Number(precision), fixed)
+    const formattedAmount = formatBN(
+      amountBn,
+      tenPow(decimals),
+      Number(precision),
+      fixed
+    )
 
     return {
       type: 'string',
