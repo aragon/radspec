@@ -233,6 +233,118 @@ const dataDecodeCases = [
     }
   }, 'Payroll: Get owed Payroll allowance!'],
   [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xf34ada68000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c9189200000000000000000000000000000000000000000000000000000000000000e0000000000000000000000000000000000000000000000000000000000000012000000000000000000000000000000000000000000000000000000000000001600000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000018000000000000000000000000000000000000000000000000000000000000001c0000000000000000000000000000000000000000000000000000000000000000b4d656c6f6e20546f6b656e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000034d4c4e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000') // registerAsset(address,string,string,string,uint256,uint256[],bytes4[]), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Register new asset MLN (Melon Token) at 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892 (reserve min: 1)'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x336790fa000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000016100000000000000000000000000000000000000000000000000000000000000') // registerExchangeAdapter(address,address,bool,bytes4[]), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Register new adapter 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892 for exchange 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x18e467f700000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001') // registerVersion(address,bytes32), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Register new version 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x0129df11000000000000000000000000000000000000000000000000002386F26FC10000') // setIncentive(uint256), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set incentive to 10000000000000000'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xbda5310700000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setPriceSource(address), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set price source to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x9e0a457000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setMlnToken(address), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set Melon token to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x671521e8000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setNativeAsset(address), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set native asset to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x0e830e49000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setEngine(address), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set engine to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xc35d8621000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setMGM(address), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set MGM to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x8b522db9000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setEthfinexWrapperRegistry(address), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set Ethfinex wrapper registry to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x2317ef67000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001') // removeAsset(address,uint256), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Remove asset 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xf31507df000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001') // removeExchangeAdapter(address,uint256), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Remove exchange adapter 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x24da4f1900000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // registerFees(address[]), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Register fees 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xe2a1b39800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // deregisterFees(address[]), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: De-register fees 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xa91ee0dc000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setRegistry(address), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set registry to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Melonprotocol: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xd69ec025000000000000000000000000000000000000000000000000000000003B9ACA00') // setAmguPrice(uint256), on melonprotocol's knownFunctions
+    }
+  }, 'Melonprotocol: Set AMGU price to 1000000000'],
+  [{
     source: 'Decentraland: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
