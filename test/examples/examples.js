@@ -418,9 +418,9 @@ const dataDecodeCases = [
     source: 'NuCypher: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
-      data: bytes('0xfe4b84df000000000000000000000000000000000000000000000000000000000000002a') // initialize(uint256), on NuCypher's knownFunctions
+      data: bytes('0xda35a26f000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000fabadaacabadafabadaacabadafabadaacabada') // initialize(uint256,address), on NuCypher's knownFunctions
     }
-  }, 'NuCypher: Initialize StakingEscrow and transfer 42 NuNits for rewards'],
+  }, 'NuCypher: Initialize StakingEscrow and transfer 42 NuNits from 0x0fABadaACaBadafaBadaACAbadAFabaDAaCabada for rewards'],
   [{
     source: 'NuCypher: `@radspec(addr, data)`',
     bindings: {
