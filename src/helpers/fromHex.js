@@ -1,4 +1,4 @@
-import { ethers, BigNumber } from 'ethers'
+import { BigNumber, utils as ethersUtils } from 'ethers'
 
 export default () =>
   /**
@@ -13,5 +13,5 @@ export default () =>
     value:
       to === 'number'
         ? BigNumber.from(hex).toNumber()
-        : ethers.utils.toUtf8String(hex)
+        : ethersUtils.toUtf8String(hex)
   })

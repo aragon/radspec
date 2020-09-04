@@ -1,10 +1,10 @@
 import test from 'ava'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, utils as ethersUtils } from 'ethers'
+import { knownFunctions } from '../../src/data'
 import { evaluateRaw } from '../../src/lib'
 import { defaultHelpers } from '../../src/helpers'
 import { tenPow } from '../../src/helpers/lib/formatBN'
 import { ETH } from '../../src/helpers/lib/token'
-import knownFunctions from '../../src/data/knownFunctions'
 
 const int = (value) => ({
   type: 'int256',
@@ -621,7 +621,7 @@ const cases = [
   [{
     source: 'Performs a call to `@radspec(contract, msg.data)`',
     bindings: { contract: address('0x960b236A07cf122663c4303350609A66A7B288C0') },
-    options: { data: ethers.utils.keccak256(ethers.utils.toUtf8Bytes(Object.keys(knownFunctions)[3])).slice(0, 10) }
+    options: { data: ethersUtils.keccak256(ethersUtils.toUtf8Bytes(Object.keys(knownFunctions)[3])).slice(0, 10) }
   }, `Performs a call to ${Object.values(knownFunctions)[3]}`],
 
   ...comparisonCases,
@@ -631,13 +631,14 @@ const cases = [
 
 cases.forEach(([input, expected], index) => {
   test(`${index} - ${input.source}`, async (t) => {
-    const { userHelpers } = input.options || {}
+    const { userHelpers, userFunctions } = input.options || {}
     const actual = await evaluateRaw(
       input.source,
       input.bindings,
       {
         ...input.options,
-        availableHelpers: { ...defaultHelpers, ...userHelpers }
+        availableHelpers: { ...defaultHelpers, ...userHelpers },
+        availableFunctions: { ...knownFunctions, ...userFunctions }
       }
     )
     t.is(

@@ -1,4 +1,4 @@
-import { ethers, BigNumber } from 'ethers'
+import { BigNumber, Contract, utils as ethersUtils } from 'ethers'
 
 import {
   ERC20_SYMBOL_BYTES32_ABI,
@@ -30,7 +30,7 @@ export default (provider) =>
         symbol = 'ETH'
       }
     } else {
-      let token = new ethers.Contract(
+      let token = new Contract(
         tokenAddress,
         ERC20_SYMBOL_DECIMALS_ABI,
         provider
@@ -42,13 +42,13 @@ export default (provider) =>
           symbol = (await token.symbol()) || ''
         } catch (err) {
           // Some tokens (e.g. DS-Token) use bytes32 for their symbol()
-          token = new ethers.Contract(
+          token = new Contract(
             tokenAddress,
             ERC20_SYMBOL_BYTES32_ABI,
             provider
           )
           symbol = (await token.symbol()) || ''
-          symbol = symbol && ethers.utils.toUtf8String(symbol)
+          symbol = symbol && ethersUtils.toUtf8String(symbol)
         }
       }
     }

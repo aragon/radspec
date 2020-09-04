@@ -29,7 +29,7 @@ export default class HelperManager {
    * @param  {string} helper Helper name
    * @param  {Array<radspec/evaluator/TypedValue>} inputs
    * @param  {Object} config Configuration for running helper
-   * @param  {ethers.providers.Provider} config.provider Current provider
+   * @param  {ethersProvider.Provider} config.provider Current provider
    * @param  {radspec/evaluator/Evaluator} config.evaluator Current evaluator
    * @param  {Object} config.functions Current function signatures
    * @return {Promise<radspec/evaluator/TypedValue>}
