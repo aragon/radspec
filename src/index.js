@@ -1,3 +1,5 @@
+import { knownFunctions } from './data'
+
 /**
  * @typedef {Object} Binding
  * @property {string} type The type of the binding (a valid Radspec type)
@@ -40,9 +42,10 @@ import { evaluateRaw } from './lib'
  * @param {?Object} options An options object
  * @param {?ethers.providers.Provider} options.provider EIP 1193 provider
  * @param {?Object} options.userHelpers User defined helpers
+ * @param {?Object} options.userFunctions User defined function signatures
  * @return {Promise<string>} The result of the evaluation
  */
-function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
+function evaluate (source, call, { userHelpers = {}, userFunctions = {}, ...options } = {}) {
   // Create ethers interface object
   const ethersInterface = new ethers.utils.Interface(call.abi)
 
@@ -64,6 +67,8 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
 
   const availableHelpers = { ...defaultHelpers, ...userHelpers }
 
+  const availableFunctions = { ...knownFunctions, ...userFunctions }
+
   // Get additional options
   const { from, to, value, data } = call.transaction
 
@@ -71,6 +76,7 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   return evaluateRaw(source, parameters, {
     ...options,
     availableHelpers,
+    availableFunctions,
     from,
     to,
     value,
