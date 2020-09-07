@@ -29,13 +29,14 @@ export default class HelperManager {
    * @param  {string} helper Helper name
    * @param  {Array<radspec/evaluator/TypedValue>} inputs
    * @param  {Object} config Configuration for running helper
-   * @param {ethers.providers.Provider} config.provider Current provider
+   * @param  {ethersProvider.Provider} config.provider Current provider
    * @param  {radspec/evaluator/Evaluator} config.evaluator Current evaluator
+   * @param  {Object} config.functions Current function signatures
    * @return {Promise<radspec/evaluator/TypedValue>}
    */
-  execute (helper, inputs, { provider, evaluator }) {
+  execute (helper, inputs, { provider, evaluator, functions }) {
     inputs = inputs.map((input) => input.value) // pass values directly
-    return this.availableHelpers[helper](provider, evaluator)(...inputs)
+    return this.availableHelpers[helper](provider, evaluator, functions)(...inputs)
   }
 
   /**

@@ -1,3 +1,5 @@
+import { knownFunctions } from './data'
+
 /**
  * @typedef {Object} Binding
  * @property {string} type The type of the binding (a valid Radspec type)
@@ -10,7 +12,7 @@
 /**
  * @module radspec
  */
-import { ethers } from 'ethers'
+import { utils as ethersUtils } from 'ethers'
 import { defaultHelpers } from './helpers'
 import { evaluateRaw } from './lib'
 
@@ -38,13 +40,14 @@ import { evaluateRaw } from './lib'
  * @param {string} call.transaction.to The destination address for this transaction
  * @param {string} call.transaction.data The transaction data
  * @param {?Object} options An options object
- * @param {?ethers.providers.Provider} options.provider EIP 1193 provider
+ * @param {?ethersProvider.Provider} options.provider EIP 1193 provider
  * @param {?Object} options.userHelpers User defined helpers
+ * @param {?Object} options.userFunctions User defined function signatures
  * @return {Promise<string>} The result of the evaluation
  */
-function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
+function evaluate (source, call, { userHelpers = {}, userFunctions = {}, ...options } = {}) {
   // Create ethers interface object
-  const ethersInterface = new ethers.utils.Interface(call.abi)
+  const ethersInterface = new ethersUtils.Interface(call.abi)
 
   // Parse as an ethers TransactionDescription
   const { args, functionFragment } = ethersInterface.parseTransaction(
@@ -64,6 +67,8 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
 
   const availableHelpers = { ...defaultHelpers, ...userHelpers }
 
+  const availableFunctions = { ...knownFunctions, ...userFunctions }
+
   // Get additional options
   const { from, to, value, data } = call.transaction
 
@@ -71,6 +76,7 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   return evaluateRaw(source, parameters, {
     ...options,
     availableHelpers,
+    availableFunctions,
     from,
     to,
     value,

@@ -2,7 +2,7 @@
  * @module radspec/evaluator
  */
 
-import { ethers, BigNumber } from 'ethers'
+import { BigNumber, providers as ethersProvider, utils as ethersUtils } from 'ethers'
 
 import types from '../types'
 import HelperManager from '../helpers/HelperManager'
@@ -27,10 +27,10 @@ class TypedValue {
     }
 
     if (this.type === 'address') {
-      if (!ethers.utils.isAddress(this.value)) {
+      if (!ethersUtils.isAddress(this.value)) {
         throw new Error(`Invalid address "${this.value}"`)
       }
-      this.value = ethers.utils.getAddress(this.value)
+      this.value = ethersUtils.getAddress(this.value)
     }
   }
 
@@ -52,7 +52,8 @@ class TypedValue {
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
  * @param {?Object} options.availablehelpers Available helpers
- * @param {?ethers.providers.Provider} options.provider EIP 1193 provider
+ * @param {?Object} options.availableFunctions Available function signatures
+ * @param {?ethersProvider.Provider} options.provider EIP 1193 provider
  * @param {?string} options.to The destination address for this expression's transaction
  * @property {radspec/parser/AST} ast
  * @property {radspec/Bindings} bindings
@@ -61,17 +62,18 @@ export class Evaluator {
   constructor (
     ast,
     bindings,
-    { availableHelpers = {}, provider, from, to, value = '0', data } = {}
+    { availableHelpers = {}, availableFunctions = {}, provider, from, to, value = '0', data } = {}
   ) {
     this.ast = ast
     this.bindings = bindings
     this.provider =
-      provider || new ethers.providers.WebSocketProvider(DEFAULT_ETH_NODE)
+      provider || new ethersProvider.WebSocketProvider(DEFAULT_ETH_NODE)
     this.from = from && new TypedValue('address', from)
     this.to = to && new TypedValue('address', to)
     this.value = new TypedValue('uint', BigNumber.from(value))
     this.data = data && new TypedValue('bytes', data)
     this.helpers = new HelperManager(availableHelpers)
+    this.functions = availableFunctions
   }
 
   /**
@@ -242,7 +244,7 @@ export class Evaluator {
 
       if (target.type !== 'bytes20' && target.type !== 'address') {
         this.panic('Target of call expression was not an address')
-      } else if (!ethers.utils.isAddress(target.value)) {
+      } else if (!ethersUtils.isAddress(target.value)) {
         this.panic(`Invalid address "${this.value}"`)
       }
 
@@ -271,7 +273,7 @@ export class Evaluator {
           stateMutability: 'view'
         }
       ]
-      const ethersInterface = new ethers.utils.Interface(abi)
+      const ethersInterface = new ethersUtils.Interface(abi)
 
       const txData = ethersInterface.encodeFunctionData(
         node.callee,
@@ -298,7 +300,8 @@ export class Evaluator {
       const inputs = await this.evaluateNodes(node.inputs)
       const result = await this.helpers.execute(helperName, inputs, {
         provider: this.provider,
-        evaluator: this
+        evaluator: this,
+        functions: this.functions
       })
 
       return new TypedValue(result.type, result.value)
@@ -368,7 +371,8 @@ export class Evaluator {
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
  * @param {?Object} options.availablehelpers Available helpers
- * @param {?ethers.providers.Provider} options.provider EIP 1193 provider
+ * @param {?Object} options.availableFunctions Available function signatures
+ * @param {?ethersProvider.Provider} options.provider EIP 1193 provider
  * @param {?string} options.to The destination address for this expression's transaction
  * @return {string}
  */

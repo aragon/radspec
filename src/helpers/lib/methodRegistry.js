@@ -1,5 +1,5 @@
 // From: https://github.com/danfinlay/eth-method-registry
-import { ethers } from 'ethers'
+import { Contract, providers as ethersProviders } from 'ethers'
 
 import { DEFAULT_ETH_NODE } from '../../defaults'
 
@@ -15,7 +15,7 @@ const REGISTRY_MAP = {
 export default class MethodRegistry {
   constructor (opts = {}) {
     this.provider =
-      opts.provider || new ethers.providers.WebSocketProvider(DEFAULT_ETH_NODE)
+      opts.provider || new ethersProviders.WebSocketProvider(DEFAULT_ETH_NODE)
     this.registryAddres = opts.registry || REGISTRY_MAP[opts.network]
   }
 
@@ -24,7 +24,7 @@ export default class MethodRegistry {
       throw new Error('No method registry found for the network.')
     }
 
-    this.registry = new ethers.Contract(
+    this.registry = new Contract(
       this.registryAddres,
       REGISTRY_LOOKUP_ABI,
       this.provider
