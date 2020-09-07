@@ -250,7 +250,7 @@ const dataDecodeCases = [
     source: 'Melonprotocol: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
-      data: bytes('0x18e467f700000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001') // registerVersion(address,bytes32), on melonprotocol's knownFunctions
+      data: bytes('0x18e467f7000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001') // registerVersion(address,bytes32), on melonprotocol's knownFunctions
     }
   }, 'Melonprotocol: Register new version 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
   [{
@@ -264,14 +264,14 @@ const dataDecodeCases = [
     source: 'Melonprotocol: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
-      data: bytes('0xbda5310700000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setPriceSource(address), on melonprotocol's knownFunctions
+      data: bytes('0xbda53100700000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setPriceSource(address), on melonprotocol's knownFunctions
     }
   }, 'Melonprotocol: Set price source to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
   [{
     source: 'Melonprotocol: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
-      data: bytes('0x9e0a457000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setMlnToken(address), on melonprotocol's knownFunctions
+      data: bytes('0x9e0a4570000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setMlnToken(address), on melonprotocol's knownFunctions
     }
   }, 'Melonprotocol: Set Melon token to 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
   [{
