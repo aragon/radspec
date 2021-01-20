@@ -346,6 +346,48 @@ const dataDecodeCases = [
     }
   }, 'Melonprotocol: Set AMGU price to 1000000000'],
   [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xee37ebcf00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // deregisterPolicies(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: De-register policies 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x9c532bac00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // registerPolicies(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Register policies 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xa7f3b0a400000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // deregisterAdapters(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: De-register adapters 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x972b3de100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // registerAdapters(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Register adapters 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x4ce13fb000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // addAllowedMakers(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Add allowed makers 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xc960260d00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // removeAllowedMakers(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Remove allowed makers 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
     source: 'Decentraland: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
@@ -365,7 +407,7 @@ const dataDecodeCases = [
       addr: address(),
       data: bytes('0xc987336c000000000000000000000000f87e31492faf9a91b02ee0deaad50d51d56d5d4d00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000') // upgrade(address,bytes), on decentraland's knownFunctions
     }
-  }, 'Decentraland: Upgrade the contract to 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'], 
+  }, 'Decentraland: Upgrade the contract to 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'],
   [{
     source: 'Decentraland: `@radspec(addr, data)`',
     bindings: {
