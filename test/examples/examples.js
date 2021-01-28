@@ -349,6 +349,20 @@ const dataDecodeCases = [
     source: 'Enzyme: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
+      data: bytes('0x24da4f1900000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // registerFees(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Register fees 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xe2a1b39800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // deregisterFees(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: De-register fees 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
       data: bytes('0xee37ebcf00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // deregisterPolicies(address[]), on enzyme's knownFunctions
     }
   }, 'Enzyme: De-register policies 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
