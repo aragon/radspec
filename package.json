@@ -1,6 +1,6 @@
 {
   "name": "radspec",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "Radspec is a safe alternative to Ethereum's natspec",
   "main": "dist/index.js",
   "files": [
