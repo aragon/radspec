@@ -346,6 +346,216 @@ const dataDecodeCases = [
     }
   }, 'Melonprotocol: Set AMGU price to 1000000000'],
   [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x24da4f1900000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // registerFees(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Register fees 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xe2a1b39800000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // deregisterFees(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: De-register fees 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xee37ebcf00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // deregisterPolicies(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: De-register policies 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x9c532bac00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // registerPolicies(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Register policies 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xa7f3b0a400000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // deregisterAdapters(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: De-register adapters 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x972b3de100000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // registerAdapters(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Register adapters 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x4ce13fb000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // addAllowedMakers(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Add allowed makers 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xc960260d00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // removeAllowedMakers(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Remove allowed makers 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x757bc0dd00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000004454e5a4600000000000000000000000000000000000000000000000000000000') // setSharesTokenSymbol(string), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Set shares token symbol ENZF'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x8156eecf') // removeNominatedOwner(), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Remove nominated owner'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x97af7050000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setCurrentFundDeployer(address), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Set current fund deployer 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x728e17a0000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setNominatedOwner(address), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Set nominated owner 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x1df419f7000000000000000000000000000000000000000000000000000000000001e240') // setMigrationTimelock(uint256), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Set migration time lock 123456'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x0d2fcd76000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setComptrollerLib(address), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Set comptroller lib 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x0fe6972b000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892000000000000000000000000000000000000000000000000000000000000000124ee009700000000000000000000000000000000000000000000000000000000') // deregisterVaultCalls(address[],bytes4[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: De-register vault calls _contracts 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892 _selectors 0x24ee0097'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xda29fcfe000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892000000000000000000000000000000000000000000000000000000000000000124ee009700000000000000000000000000000000000000000000000000000000') // registerVaultCalls(address[],bytes4[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Register vault calls _contracts 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892 _selectors 0x24ee0097'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x39cbb63c000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001000000000000000000000000beb9ef514a379b997e0798fdcc901ee474b6d9a1') // addDerivatives(address[],address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Add derivatives _derivatives 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892 _priceFeeds 0xBEB9eF514a379B997e0798FDcC901Ee474B6D9A1'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x8f72b13600000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // removeDerivatives(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Remove derivatives 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xb3d3af3b000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001000000000000000000000000beb9ef514a379b997e0798fdcc901ee474b6d9a1') // updateDerivatives(address[],address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Update derivatives _derivatives 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892 _priceFeeds 0xBEB9eF514a379B997e0798FDcC901Ee474B6D9A1'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xa98acadc000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // setEthUsdAggregator(address), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Set ETH-USD aggregator 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x137aea7d000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001000000000000000000000000beb9ef514a379b997e0798fdcc901ee474b6d9a100000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001') // addPrimitives(address[],address[],uint256[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Add primitives _primatives 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892 _aggregators 0xBEB9eF514a379B997e0798FDcC901Ee474B6D9A1 _rateAssets 1'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xe106264f00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // removePrimitives(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Remove primitives 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xa8527ea8000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c918920000000000000000000000000000000000000000000000000000000000000001000000000000000000000000beb9ef514a379b997e0798fdcc901ee474b6d9a1') // updatePrimitives(address[],address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Update primitives _primatives 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892 _aggregators 0xBEB9eF514a379B997e0798FDcC901Ee474B6D9A1'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x09157f950000000000000000000000000000000000000000000000000000000000000e10') // setStaleRateThreshold(uint256), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Set staleRateThreshold 3600'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x32db4ed500000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // addPoolTokens(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Add pool tokens 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x1d24935400000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // addCTokens(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Add cTokens 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x47a9b6db00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // addSynths(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Add Synths 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xe0b9ae4000000000000000000000000000000000000000000000000000000000000003e8') // setRedemptionWindowBuffer(uint256), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Set redemptionWindowBuffer 1000'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0xef877c0f00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // addRedemptionBlockingAdapters(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Add redemption blocking adapters 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
+    source: 'Enzyme: `@radspec(addr, data)`',
+    bindings: {
+      addr: address(),
+      data: bytes('0x9c2f61d600000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000ec67005c4e498ec7f55e092bd1d35cbc47c91892') // removeRedemptionBlockingAdapters(address[]), on enzyme's knownFunctions
+    }
+  }, 'Enzyme: Remove redemption blocking adapters 0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'],
+  [{
     source: 'Decentraland: `@radspec(addr, data)`',
     bindings: {
       addr: address(),
@@ -365,7 +575,7 @@ const dataDecodeCases = [
       addr: address(),
       data: bytes('0xc987336c000000000000000000000000f87e31492faf9a91b02ee0deaad50d51d56d5d4d00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000') // upgrade(address,bytes), on decentraland's knownFunctions
     }
-  }, 'Decentraland: Upgrade the contract to 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'], 
+  }, 'Decentraland: Upgrade the contract to 0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d'],
   [{
     source: 'Decentraland: `@radspec(addr, data)`',
     bindings: {
