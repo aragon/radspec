@@ -9,5 +9,6 @@ export default {
   'upgradeTo(address)': 'Upgrade the contract to `$1`',
   'upgradeToAndCall(address,bytes)': 'Upgrade the contract to `$1`',
   'setLandBalanceToken(address)': 'Set LAND balance token `$1`',
-  'setEstateLandBalanceToken(address)': 'Set LAND balance token `$1`'
+  'setEstateLandBalanceToken(address)': 'Set LAND balance token `$1`',
+  'revoke()': 'Revoke vesting contract'
 }
