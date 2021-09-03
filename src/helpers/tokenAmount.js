@@ -1,9 +1,13 @@
 import BN from 'bn.js'
 import { toUtf8 } from 'web3-utils'
-import { ERC20_SYMBOL_BYTES32_ABI, ERC20_SYMBOL_DECIMALS_ABI, ETH } from './lib/token'
+import {
+   ERC20_SYMBOL_BYTES32_ABI,
+   ERC20_SYMBOL_DECIMALS_ABI,
+   NON_TOKEN_ADDRESS
+} from './lib/token'
 import { formatBN, tenPow } from './lib/formatBN'
 
-export default (eth) =>
+export default (eth, evaluator) =>
   /**
    * Format token amounts taking decimals into account
    *
@@ -20,10 +24,10 @@ export default (eth) =>
     let decimals
     let symbol
 
-    if (tokenAddress === ETH) {
-      decimals = new BN(18)
+    if (tokenAddress === NON_TOKEN_ADDRESS) {
+      decimals = new BN(evaluator.currency.decimals)
       if (showSymbol) {
-        symbol = 'ETH'
+        symbol = evaluator.currency.symbol
       }
     } else {
       let token = new eth.Contract(ERC20_SYMBOL_DECIMALS_ABI, tokenAddress)
