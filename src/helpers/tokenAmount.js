@@ -1,9 +1,9 @@
 import BN from 'bn.js'
 import { toUtf8 } from 'web3-utils'
 import {
-   ERC20_SYMBOL_BYTES32_ABI,
-   ERC20_SYMBOL_DECIMALS_ABI,
-   NON_TOKEN_ADDRESS
+  ERC20_SYMBOL_BYTES32_ABI,
+  ERC20_SYMBOL_DECIMALS_ABI,
+  NON_TOKEN_ADDRESS
 } from './lib/token'
 import { formatBN, tenPow } from './lib/formatBN'
 

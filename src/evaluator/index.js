@@ -62,7 +62,7 @@ class TypedValue {
  * @property {radspec/Bindings} bindings
  */
 export class Evaluator {
-  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, from, to, value = '0', data } = {}) {
+  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, from, to, value = '0', data, currency } = {}) {
     this.ast = ast
     this.bindings = bindings
     this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE)
