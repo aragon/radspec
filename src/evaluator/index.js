@@ -8,7 +8,7 @@ import Web3Utils from 'web3-utils'
 import BN from 'bn.js'
 import types from '../types'
 import HelperManager from '../helpers/HelperManager'
-import { DEFAULT_ETH_NODE } from '../defaults'
+import { DEFAULT_ETH_NODE, DEFAULT_CURRENCY } from '../defaults'
 
 /**
  * A value coupled with a type
@@ -54,6 +54,7 @@ class TypedValue {
  * @param {radspec/Bindings} bindings An object of bindings and their values
  * @param {?Object} options An options object
  * @param {?Object} options.availablehelpers Available helpers
+ * @param {?Object} options.currency Native currency of the blockchain
  * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?string} options.to The destination address for this expression's transaction
@@ -61,7 +62,7 @@ class TypedValue {
  * @property {radspec/Bindings} bindings
  */
 export class Evaluator {
-  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, from, to, value = '0', data } = {}) {
+  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, from, to, value = '0', data, currency } = {}) {
     this.ast = ast
     this.bindings = bindings
     this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE)
@@ -70,6 +71,7 @@ export class Evaluator {
     this.value = new TypedValue('uint', new BN(value))
     this.data = data && new TypedValue('bytes', data)
     this.helpers = new HelperManager(availableHelpers)
+    this.currency = currency || DEFAULT_CURRENCY
   }
 
   /**
@@ -358,6 +360,7 @@ export class Evaluator {
  * @param {?Object} options An options object
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?string} options.to The destination address for this expression's transaction
+ * @param {?Object} options.currency The native currency of the blockchain
  * @return {string}
  */
 export function evaluate (ast, bindings, options) {

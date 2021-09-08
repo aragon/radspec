@@ -53,6 +53,7 @@ import { evaluateRaw } from './lib'
  * @param {?Web3} options.eth Web3 instance (used over options.ethNode)
  * @param {?string} options.ethNode The URL to an Ethereum node
  * @param {?Object} options.userHelpers User defined helpers
+ * @param {?Object} options.currency Native currency of the blockchain
  * @return {Promise<string>} The result of the evaluation
  */
 function evaluate (source, call, { userHelpers = {}, ...options } = {}) {

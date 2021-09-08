@@ -166,9 +166,8 @@ const helperCases = [
     bindings: { token: address('0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'), balance: int('1000000000000000001') }
   }, 'Balance: 1.000000000000000001 DAI'],
   [{
-    source: 'Balance: `@tokenAmount(self.token(): address, balance)`',
-    bindings: { balance: int('10000000000000000000') },
-    options: { to: '0xD39902f046B5885D70e9E66594b65f84D4d1c952' }
+    source: 'Balance: `@tokenAmount(token, balance)`',
+    bindings: { balance: int('10000000000000000000'), token: address('0x960b236A07cf122663c4303350609A66A7B288C0') },
   }, 'Balance: 10 ANT'],
   [{
     source: 'Ethereum launched `@formatDate(date)`',
@@ -760,10 +759,10 @@ const cases = [
     options: { to: '0x960b236A07cf122663c4303350609A66A7B288C0' }
   }, 'Burns the ANT balance of 0x0000000000000000000000000000000000000001 (balance is 0)'],
   [{
-    source: 'Send ETH to the sale at block `((self.controller(): address).sale(): address).initialBlock(): uint` from `person`',
+    source: 'Send ETH to the sale at block `self.creationBlock(): uint` from `person`',
     bindings: { person: address('0x0000000000000000000000000000000000000001') },
     options: { to: '0x960b236A07cf122663c4303350609A66A7B288C0' }
-  }, 'Send ETH to the sale at block 3723000 from 0x0000000000000000000000000000000000000001'],
+  }, 'Send ETH to the sale at block 3711733 from 0x0000000000000000000000000000000000000001'],
   [{
     source: "Initialize Finance app for Vault at `_vault` with period length of `(_periodDuration - _periodDuration % 86400) / 86400` day`_periodDuration >= 172800 ? 's' : ' '`",
     bindings: { _periodDuration: int(86400 * 2), _vault: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
