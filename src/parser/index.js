@@ -369,6 +369,13 @@ export class Parser {
       }
     }
 
+    if (this.matches('COLON')) {
+      return {
+        type: 'StringLiteral',
+        value: null
+      }
+    }
+
     this.report(`Unknown token "${this.consume().type}"`)
   }
 
@@ -507,8 +514,22 @@ export class Parser {
 
       this.matches('TICK')
 
+      let loopDetectorCursor = 0;
+      let loopDetector = false
       while (!this.eof() && this.peek().type !== 'TICK') {
         node.body.push(this.walk(node.body))
+        loopDetectorCursor++;
+        if (loopDetectorCursor >= 10000) {
+          loopDetector = true;
+          break;        
+        }
+      }
+
+      if (loopDetector) {
+        while (!this.eof() && this.peek().type !== 'TICK') {
+          this.cursor++;
+        }
+        this.report('Infinite loop detected')
       }
 
       if (this.eof()) {
