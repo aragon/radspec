@@ -739,6 +739,14 @@ const cases = [
     source: "`a == 0x0 ? 'concat ' + a : 'else'`",
     bindings: { a: address('0x0000000000000000000000000000000000000001') }
   }, 'else'],
+  [{
+    source: "`a : 'concat ' + a : 'else'`",
+    bindings: { a: address('0x0000000000000000000000000000000000000001') }
+  }, '0x0000000000000000000000000000000000000001'],
+  [{
+    source: "`a == 0x0 : 'concat ' + a : 'else'`",
+    bindings: { a: address('0x0000000000000000000000000000000000000001') }
+  }, 'false  concat 0x0000000000000000000000000000000000000001  else'],
 
   // External calls
   [{
