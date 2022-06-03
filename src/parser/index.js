@@ -514,20 +514,20 @@ export class Parser {
 
       this.matches('TICK')
 
-      let loopDetectorCursor = 0;
+      let loopDetectorCursor = 0
       let loopDetector = false
       while (!this.eof() && this.peek().type !== 'TICK') {
         node.body.push(this.walk(node.body))
-        loopDetectorCursor++;
+        loopDetectorCursor++
         if (loopDetectorCursor >= 10000) {
-          loopDetector = true;
-          break;        
+          loopDetector = true
+          break
         }
       }
 
       if (loopDetector) {
         while (!this.eof() && this.peek().type !== 'TICK') {
-          this.cursor++;
+          this.cursor++
         }
         this.report('Infinite loop detected')
       }
