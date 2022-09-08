@@ -9,7 +9,7 @@
   "scripts": {
     "docs": "documentation build src/index.js -f md -o docs/API.md --shallow",
     "lint": "standard \"src/**/*.js\" && documentation lint \"src/**/*.js\"",
-    "test": "ava",
+    "test": "nyc ava",
     "test:coverage": "nyc --all --reporter=lcov --reporter=text-summary --reporter=html npm test",
     "build": "babel src -d dist -s",
     "prepublishOnly": "env NODE_ENV=production npm run build"
