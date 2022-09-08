@@ -1,5 +1,4 @@
-import ABI from 'web3-eth-abi'
-import { keccak256 } from 'web3-utils'
+import Web3 from 'web3'
 import MethodRegistry from './lib/methodRegistry'
 import { evaluateRaw } from '../lib/'
 import { knownFunctions } from '../data/'
@@ -10,7 +9,7 @@ const makeUnknownFunctionNode = (methodId) => ({
 })
 
 const getSig = (fn) =>
-  keccak256(fn).substr(0, 10)
+  Web3.utils.keccak256(fn).substr(0, 10)
 
 // Convert from the knownFunctions data format into the needed format
 // Input: { "signature(type1,type2)": "Its radspec string", ... }
@@ -24,7 +23,7 @@ const processFunctions = (functions) => (
       }
     ), {})
 )
-export default (eth, evaluator) =>
+export default (web3, evaluator) =>
   /**
    * Interpret calldata using radspec recursively. If the function signature is not in the package's known
    * functions, it fallbacks to looking for the function name using github.com/parity-contracts/signature-registry
@@ -48,7 +47,7 @@ export default (eth, evaluator) =>
     if (!fn) {
       // Even if we pass the ETH object, if it is not on mainnet it will use Aragon's ETH mainnet node
       // As the registry is the only available on mainnet
-      const registry = new MethodRegistry({ networkId: '1', eth })
+      const registry = new MethodRegistry({ networkId: '1', web3 })
       const result = await registry.lookup(methodId)
 
       if (result) {
@@ -74,7 +73,7 @@ export default (eth, evaluator) =>
       const inputs = inputString.split(',')
 
       // Decode parameters
-      const parameterValues = ABI.decodeParameters(inputs, '0x' + data.substr(10))
+      const parameterValues = web3.eth.abi.decodeParameters(inputs, '0x' + data.substr(10))
       parameters = inputs.reduce((acc, input, i) => (
         {
           [`$${i + 1}`]: {
@@ -91,7 +90,7 @@ export default (eth, evaluator) =>
         source,
         parameters,
         {
-          eth,
+          web3,
           availableHelpers: evaluator.helpers.getHelpers(),
           to: addr
         }

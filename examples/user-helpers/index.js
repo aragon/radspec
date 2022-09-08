@@ -1,5 +1,5 @@
 import * as radspec from '../../src'
-import web3Utils from 'web3-utils'
+import Web3 from 'web3'
 
 const expression = '`@toUtf8(gretting)` world.'
 const call = {
@@ -26,7 +26,7 @@ const options = {
     toUtf8: () => async (hex) => {
       return {
         type: 'string',
-        value: web3Utils.toUtf8(hex)
+        value: Web3.utils.hexToUtf8(hex)
       }
     }
   }
