@@ -1,6 +1,6 @@
 // From: https://github.com/danfinlay/eth-method-registry
 
-import Eth from 'web3-eth'
+import Web3 from 'web3'
 import { DEFAULT_ETH_NODE } from '../../defaults'
 
 /* eslint-disable key-spacing, quotes */
@@ -33,15 +33,15 @@ const REGISTRY_MAP = {
 
 export default class MethodRegistry {
   constructor (opts = {}) {
-    this.eth = opts.eth || new Eth(DEFAULT_ETH_NODE)
+    this.web3 = opts.web3 || new Web3(DEFAULT_ETH_NODE)
     this.network = opts.network || '1'
   }
 
-  // !!! This function can mutate `this.eth`
+  // !!! This function can mutate `this.web3`
   async initRegistry () {
-    if (await this.eth.net.getId() !== '1') {
-      this.eth = new Eth(DEFAULT_ETH_NODE)
-    }
+    /* if (await this.web3.net.getId() !== '1') {
+      this.web3 = new Web3(DEFAULT_ETH_NODE)
+    } */
 
     const address = REGISTRY_MAP[this.network]
 
@@ -49,7 +49,7 @@ export default class MethodRegistry {
       throw new Error('No method registry found on the requested network.')
     }
 
-    this.registry = new this.eth.Contract(REGISTRY_LOOKUP_ABI, address)
+    this.registry = new this.web3.eth.Contract(REGISTRY_LOOKUP_ABI, address)
   }
 
   async lookup (sigBytes) {

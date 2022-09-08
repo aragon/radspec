@@ -2,13 +2,11 @@
  * @module radspec/evaluator
  */
 
-import ABI from 'web3-eth-abi'
-import Eth from 'web3-eth'
-import Web3Utils from 'web3-utils'
 import BN from 'bn.js'
 import types from '../types'
 import HelperManager from '../helpers/HelperManager'
 import { DEFAULT_ETH_NODE, DEFAULT_CURRENCY } from '../defaults'
+import Web3 from 'web3'
 
 /**
  * A value coupled with a type
@@ -29,10 +27,10 @@ class TypedValue {
     }
 
     if (this.type === 'address') {
-      if (!Web3Utils.isAddress(this.value)) {
+      if (!Web3.utils.isAddress(this.value)) {
         throw new Error(`Invalid address "${this.value}"`)
       }
-      this.value = Web3Utils.toChecksumAddress(this.value)
+      this.value = Web3.utils.toChecksumAddress(this.value)
     }
   }
 
@@ -62,10 +60,10 @@ class TypedValue {
  * @property {radspec/Bindings} bindings
  */
 export class Evaluator {
-  constructor (ast, bindings, { availableHelpers = {}, eth, ethNode, from, to, value = '0', data, currency } = {}) {
+  constructor (ast, bindings, { availableHelpers = {}, web3, ethNode, from, to, value = '0', data, currency } = {}) {
     this.ast = ast
     this.bindings = bindings
-    this.eth = eth || new Eth(ethNode || DEFAULT_ETH_NODE)
+    this.web3 = web3 || new Web3(ethNode || DEFAULT_ETH_NODE)
     this.from = from && new TypedValue('address', from)
     this.to = to && new TypedValue('address', to)
     this.value = new TypedValue('uint', new BN(value))
@@ -183,8 +181,8 @@ export class Evaluator {
       // - Both types are addresses or bytes of any size (can be different sizes)
       // - If one of the types is an address and the other bytes with size less than 20
       if (bothTypesAddress(left, right) || bothTypesBytes(left, right)) {
-        leftValue = Web3Utils.toBN(leftValue)
-        rightValue = Web3Utils.toBN(rightValue)
+        leftValue = Web3.utils.toBN(leftValue)
+        rightValue = Web3.utils.toBN(rightValue)
       } else if (!types.isInteger(left.type) ||
         !types.isInteger(right.type)) {
         this.panic(`Cannot evaluate binary expression "${node.operator}" for non-integer or fixed-size bytes types "${left.type}" and "${right.type}"`)
@@ -242,7 +240,7 @@ export class Evaluator {
       if (target.type !== 'bytes20' &&
         target.type !== 'address') {
         this.panic('Target of call expression was not an address')
-      } else if (!Web3Utils.checkAddressChecksum(target.value)) {
+      } else if (!Web3.utils.checkAddressChecksum(target.value)) {
         this.panic(`Checksum failed for address "${target.value}"`)
       }
 
@@ -254,7 +252,7 @@ export class Evaluator {
       }
       const returnType = outputs[selectedReturnValueIndex].type
 
-      const call = ABI.encodeFunctionCall({
+      const call = this.web3.eth.abi.encodeFunctionCall({
         name: node.callee,
         type: 'function',
 
@@ -268,11 +266,11 @@ export class Evaluator {
         }))
       }, inputs.map((input) => input.value.toString()))
 
-      return this.eth.call({
+      return this.web3.eth.call({
         to: target.value,
         data: call
       }).then(
-        (data) => ABI.decodeParameters(outputs.map((item) => item.type), data)
+        (data) => this.web3.eth.abi.decodeParameters(outputs.map((item) => item.type), data)
       ).then(
         (returnData) => new TypedValue(returnType, returnData[selectedReturnValueIndex])
       )
@@ -290,7 +288,7 @@ export class Evaluator {
         helperName,
         inputs,
         {
-          eth: this.eth,
+          eth: this.web3,
           evaluator: this
         }
       )

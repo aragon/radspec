@@ -1,5 +1,5 @@
 import BN from 'bn.js'
-import { toUtf8 } from 'web3-utils'
+import Web3 from 'web3'
 import {
   ERC20_SYMBOL_BYTES32_ABI,
   ERC20_SYMBOL_DECIMALS_ABI,
@@ -30,7 +30,7 @@ export default (eth, evaluator) =>
         symbol = evaluator.currency.symbol
       }
     } else {
-      let token = new eth.Contract(ERC20_SYMBOL_DECIMALS_ABI, tokenAddress)
+      let token = new eth.eth.Contract(ERC20_SYMBOL_DECIMALS_ABI, tokenAddress)
 
       decimals = new BN(await token.methods.decimals().call())
       if (showSymbol) {
@@ -38,9 +38,9 @@ export default (eth, evaluator) =>
           symbol = await token.methods.symbol().call() || ''
         } catch (err) {
           // Some tokens (e.g. DS-Token) use bytes32 for their symbol()
-          token = new eth.Contract(ERC20_SYMBOL_BYTES32_ABI, tokenAddress)
+          token = new eth.eth.Contract(ERC20_SYMBOL_BYTES32_ABI, tokenAddress)
           symbol = await token.methods.symbol().call() || ''
-          symbol = symbol && toUtf8(symbol)
+          symbol = symbol && Web3.utils.hexToUtf8(symbol)
         }
       }
     }

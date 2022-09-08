@@ -1,4 +1,4 @@
-import { toUtf8, toDecimal, toAscii } from 'web3-utils'
+import Web3 from 'web3'
 export default () =>
   /**
    * Returns the string representation of a given hex value
@@ -12,8 +12,8 @@ export default () =>
       type: 'string',
       value:
         to === 'utf8'
-          ? toUtf8(hex)
+          ? Web3.utils.hexToUtf8(hex)
           : to === 'ascii'
-            ? toAscii(hex)
-            : toDecimal(hex)
+            ? Web3.utils.hexToAscii(hex)
+            : Web3.utils.hexToNumber(hex)
     })

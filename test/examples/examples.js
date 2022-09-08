@@ -5,7 +5,7 @@ import { defaultHelpers } from '../../src/helpers'
 import { tenPow } from '../../src/helpers/lib/formatBN'
 import { ETH } from '../../src/helpers/lib/token'
 import knownFunctions from '../../src/data/knownFunctions'
-import { keccak256 } from 'web3-utils'
+import Web3 from 'web3'
 
 const int = (value) => ({
   type: 'int256',
@@ -167,7 +167,7 @@ const helperCases = [
   }, 'Balance: 1.000000000000000001 DAI'],
   [{
     source: 'Balance: `@tokenAmount(token, balance)`',
-    bindings: { balance: int('10000000000000000000'), token: address('0x960b236A07cf122663c4303350609A66A7B288C0') },
+    bindings: { balance: int('10000000000000000000'), token: address('0x960b236A07cf122663c4303350609A66A7B288C0') }
   }, 'Balance: 10 ANT'],
   [{
     source: 'Ethereum launched `@formatDate(date)`',
@@ -208,7 +208,7 @@ const helperCases = [
   [{
     source: 'The genesis block is #`@getBlock(n)`',
     bindings: { n: int(0) },
-    options: { userHelpers: { getBlock: (eth) => async (n) => ({ type: 'string', value: (await eth.getBlock(n)).number }) } }
+    options: { userHelpers: { getBlock: (web3) => async (n) => ({ type: 'string', value: (await web3.eth.getBlock(n)).number }) } }
   }, 'The genesis block is #0'],
   [{
     source: 'Bar `@bar(shift)` foo `@foo(n)`',
@@ -832,7 +832,7 @@ const cases = [
   [{
     source: 'Performs a call to `@radspec(contract, msg.data)`',
     bindings: { contract: address('0x960b236A07cf122663c4303350609A66A7B288C0') },
-    options: { data: keccak256(Object.keys(knownFunctions)[3]).slice(0, 10) }
+    options: { data: Web3.utils.keccak256(Object.keys(knownFunctions)[3]).slice(0, 10) }
   }, `Performs a call to ${Object.values(knownFunctions)[3]}`],
 
   ...comparisonCases,

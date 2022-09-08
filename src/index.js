@@ -10,7 +10,7 @@
 /**
  * @module radspec
  */
-import ABI from 'web3-eth-abi'
+import Web3 from 'web3'
 import { defaultHelpers } from './helpers'
 import { evaluateRaw } from './lib'
 
@@ -60,13 +60,14 @@ function evaluate (source, call, { userHelpers = {}, ...options } = {}) {
   // Get method ID
   const methodId = call.transaction.data.substr(0, 10)
 
+  const web3 = new Web3()
   // Find method ABI
   const method = call.abi.find((abi) =>
     abi.type === 'function' &&
-    methodId === ABI.encodeFunctionSignature(abi))
+    methodId === web3.eth.abi.encodeFunctionSignature(abi))
 
   // Decode parameters
-  const parameterValues = ABI.decodeParameters(
+  const parameterValues = web3.eth.abi.decodeParameters(
     method.inputs,
     '0x' + call.transaction.data.substr(10)
   )
